@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/head :: head">
+    <meta charset="UTF-8">
+    <title>상품 목록</title>
+</head>
+<body>
+
+<div th:replace="layout/header :: header"></div>
+
+<div class="container my-5">
+    <h2 class="text-center mb-4">상품 목록</h2>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <table class="table table-hover align-middle text-center">
+                <thead class="table-primary">
+                    <tr>
+                        <th style="width:10%">ID</th>
+                        <th style="width:50%">상품명</th>
+                        <th style="width:20%">가격</th>
+                        <th style="width:20%">상세</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="p : ${products}">
+                        <td th:text="${p.id}"></td>
+                        <td class="text-start" th:text="${p.name}"></td>
+                        <td>
+                            <span class="fw-bold text-primary"
+                                  th:text="${#numbers.formatInteger(p.price, 3, 'COMMA')} + '원'"></span>
+                        </td>
+                        <td>
+                            <a th:href="@{'/product/' + ${p.id}}"
+                               class="btn btn-sm btn-outline-primary">
+                                보기
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<div th:replace="layout/footer :: footer"></div>
+
+</body>
+</html>
