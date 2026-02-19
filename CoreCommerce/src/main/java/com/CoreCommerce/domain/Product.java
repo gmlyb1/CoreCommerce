@@ -2,9 +2,23 @@ package com.CoreCommerce.domain;
 
 import java.time.LocalDateTime;
 
-import lombok.Data;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
-@Data
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name = "product")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Product {
 
 	private Long id;

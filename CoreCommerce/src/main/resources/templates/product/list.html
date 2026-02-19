@@ -1,51 +1,65 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="layout/head :: head">
-    <meta charset="UTF-8">
-    <title>상품 목록</title>
-</head>
-<body>
+<head th:replace="layout/head :: head"></head>
+<body class="d-flex flex-column min-vh-100">
 
+<!-- 헤더 -->
 <div th:replace="layout/header :: header"></div>
 
-<div class="container my-5">
-    <h2 class="text-center mb-4">상품 목록</h2>
+<!-- 메인 컨테이너 -->
+<div class="container flex-grow-1 mt-5 mb-5">
+    <h3 class="mb-4">상품 목록</h3>
 
-    <div class="card shadow-sm">
-        <div class="card-body">
-
-            <table class="table table-hover align-middle text-center">
-                <thead class="table-primary">
-                    <tr>
-                        <th style="width:10%">ID</th>
-                        <th style="width:50%">상품명</th>
-                        <th style="width:20%">가격</th>
-                        <th style="width:20%">상세</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="p : ${products}">
-                        <td th:text="${p.id}"></td>
-                        <td class="text-start" th:text="${p.name}"></td>
-                        <td>
-                            <span class="fw-bold text-primary"
-                                  th:text="${#numbers.formatInteger(p.price, 3, 'COMMA')} + '원'"></span>
-                        </td>
-                        <td>
-                            <a th:href="@{'/product/' + ${p.id}}"
-                               class="btn btn-sm btn-outline-primary">
-                                보기
-                            </a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col" th:each="p : ${products}">
+            <div class="card h-100 shadow-sm">
+                <!-- 이미지 -->
+                <img th:src="${p.imageUrl}" 
+				     class="card-img-top" 
+				     style="height:200px; object-fit:cover;" 
+				     alt="상품 이미지">
+                <div class="card-body">
+                    <!-- 상품명 -->
+                    <h5 class="card-title" th:text="${p.name}">상품명</h5>
+                    <!-- 상품 설명 -->
+                    <p class="card-text text-truncate" th:text="${p.description}">설명</p>
+                    <!-- 가격 -->
+                    <p class="mb-1"><strong th:text="${T(java.lang.String).format('%,d원', p.price)}"></strong></p>
+                    <!-- 재고 -->
+                    <p class="mb-0 text-muted" th:text="'재고: ' + ${p.stock}">재고</p>
+                </div>
+                <div class="card-footer d-flex justify-content-between">
+                    <a th:href="@{/product/form(id=${p.id})}" class="btn btn-sm btn-info">수정</a>
+                    <button class="btn btn-sm btn-danger" 
+                            th:onclick="'deleteProduct(' + ${p.id} + ')'">삭제</button>
+                </div>
+            </div>
         </div>
+    </div>
+
+    <!-- 상품 없을 때 -->
+    <div class="mt-3" th:if="${#lists.isEmpty(products)}">
+        <p class="text-center text-muted">등록된 상품이 없습니다.</p>
     </div>
 </div>
 
+<!-- 푸터 -->
 <div th:replace="layout/footer :: footer"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    const apiBase = '/product'; // 실제 컨트롤러 경로
+
+    async function deleteProduct(id) {
+        if (!confirm('정말 삭제하시겠습니까?')) return;
+        try {
+            await axios.delete(`${apiBase}/${id}`);
+            location.reload();
+        } catch (err) {
+            alert(err.response?.data?.message || '삭제 실패');
+        }
+    }
+</script>
 
 </body>
 </html>

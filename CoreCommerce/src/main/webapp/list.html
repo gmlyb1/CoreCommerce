@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/head :: head"></head>
+<body class="d-flex flex-column min-vh-100">
+
+<div th:replace="layout/header :: header"></div>
+
+<div class="container flex-grow-1 mt-5 mb-5">
+    <h3 class="mb-4">상품 목록</h3>
+
+    <div class="card p-4 shadow-sm">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>상품명</th>
+                    <th>설명</th>
+                    <th>가격</th>
+                    <th>재고</th>
+                    <th>이미지</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="p : ${products}">
+                    <td th:text="${p.id}"></td>
+                    <td th:text="${p.name}"></td>
+                    <td th:text="${p.description}"></td>
+                    <td th:text="${p.price}"></td>
+                    <td th:text="${p.stock}"></td>
+                    <td>
+                        <img th:if="${p.imageUrl}" th:src="${p.imageUrl}" style="width:50px;">
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(products)}">
+                    <td colspan="6" class="text-center">상품이 없습니다.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div th:replace="layout/footer :: footer"></div>
+</body>
+</html>

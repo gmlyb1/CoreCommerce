@@ -4,10 +4,53 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.CoreCommerce.repository.ProductRepository">
-
-    <select id="findAll" resultType="com.CoreCommerce.domain.Product">
+	
+	<resultMap id="ProductMap" type="com.CoreCommerce.domain.Product">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="price" column="price"/>
+        <result property="stock" column="stock"/>
+        <result property="imageUrl" column="image_url"/>
+    </resultMap>
+	
+	
+     <!-- 전체 상품 조회 -->
+    <select id="findAll" resultMap="ProductMap">
         SELECT *
         FROM product
+        ORDER BY id DESC
     </select>
+
+    <!-- ID로 단일 상품 조회 -->
+    <select id="findById" parameterType="long" resultMap="ProductMap">
+        SELECT *
+        FROM product
+        WHERE id = #{id}
+    </select>
+
+    <!-- 상품 등록 -->
+    <insert id="save" parameterType="com.CoreCommerce.domain.Product" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO product (name, description, price, stock, image_url)
+        VALUES (#{name}, #{description}, #{price}, #{stock}, #{imageUrl})
+    </insert>
+
+    <!-- 상품 수정 -->
+    <update id="update" parameterType="com.CoreCommerce.domain.Product">
+        UPDATE product
+        SET
+            name = #{name},
+            description = #{description},
+            price = #{price},
+            stock = #{stock},
+            image_url = #{imageUrl}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 상품 삭제 -->
+    <delete id="delete" parameterType="long">
+        DELETE FROM product
+        WHERE id = #{id}
+    </delete>
 
 </mapper>

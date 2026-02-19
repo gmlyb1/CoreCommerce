@@ -50,31 +50,6 @@ public class SecurityConfig {
 
           .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     	
-//    	http
-//        // REST API이므로 CSRF 비활성화
-//        .csrf().disable()
-//        
-//        // 세션 사용 안함 (JWT 기반)
-//        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//        .and()
-//        
-//        // 접근 권한 설정
-//        .authorizeHttpRequests()
-//            // 회원가입/로그인은 인증 없이 접근 허용
-//            .requestMatchers(new AntPathRequestMatcher("/api/auth/**")).permitAll()
-//            .anyRequest().authenticated()
-//        .and()
-//        
-//        // JWT 필터 추가
-//        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-//        http.csrf().disable()
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
-//                .authorizeHttpRequests()
-//                .requestMatchers(new AntPathRequestMatcher("/login")).permitAll()
-//                .anyRequest().authenticated();
-//
-//        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/head :: head"></head>
+<body class="d-flex flex-column min-vh-100">
+
+<!-- 헤더 -->
+<div th:replace="layout/header :: header"></div>
+
+<div class="container flex-grow-1 mt-5 mb-5">
+    <h3 class="mb-4">상품 관리</h3>
+
+    <!-- 상품 등록 폼 -->
+    <div class="card p-4 mb-4 shadow-sm" style="max-width:600px;">
+        <h5>상품 등록 / 수정</h5>
+        <form id="productForm">
+            <input type="hidden" id="productId">
+            <div class="mb-3">
+                <label class="form-label">상품명</label>
+                <input type="text" id="name" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">설명</label>
+                <input type="text" id="description" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">가격</label>
+                <input type="number" id="price" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">재고</label>
+                <input type="number" id="stock" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">이미지 URL</label>
+                <input type="text" id="imageUrl" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary w-100 mb-2">저장</button>
+            <button type="button" id="clearBtn" class="btn btn-secondary w-100">폼 초기화</button>
+        </form>
+    </div>
+
+    <!-- 상품 리스트 -->
+    <div class="card p-4 shadow-sm">
+        <h5>상품 목록</h5>
+        <table class="table table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>상품명</th>
+                    <th>설명</th>
+                    <th>가격</th>
+                    <th>재고</th>
+                    <th>이미지</th>
+                    <th>관리</th>
+                </tr>
+            </thead>
+            <tbody id="productTableBody">
+                <!-- JS로 동적 생성 -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- 푸터 -->
+<div th:replace="layout/footer :: footer"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+const apiBase = '/product';
+
+// 폼 초기화
+function clearForm() {
+    document.getElementById('productId').value = '';
+    document.getElementById('name').value = '';
+    document.getElementById('description').value = '';
+    document.getElementById('price').value = '';
+    document.getElementById('stock').value = '';
+    document.getElementById('imageUrl').value = '';
+}
+
+// 상품 리스트 렌더링
+async function loadProducts() {
+    const res = await axios.get(apiBase);
+    const tbody = document.getElementById('productTableBody');
+    tbody.innerHTML = '';
+    res.data.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${p.id}</td>
+            <td>${p.name}</td>
+            <td>${p.description || ''}</td>
+            <td>${p.price}</td>
+            <td>${p.stock}</td>
+            <td>${p.imageUrl ? `<img src="${p.imageUrl}" style="width:50px;">` : ''}</td>
+            <td>
+                <button class="btn btn-sm btn-info me-1" onclick="editProduct(${p.id})">수정</button>
+                <button class="btn btn-sm btn-danger" onclick="deleteProduct(${p.id})">삭제</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+// 상품 등록/수정
+document.getElementById('productForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const id = document.getElementById('productId').value;
+    const payload = {
+        name: document.getElementById('name').value,
+        description: document.getElementById('description').value,
+        price: parseFloat(document.getElementById('price').value),
+        stock: parseInt(document.getElementById('stock').value),
+        imageUrl: document.getElementById('imageUrl').value
+    };
+
+    try {
+        if (id) {
+            await axios.put(`${apiBase}/${id}`, payload);
+            alert('상품 수정 완료');
+        } else {
+            await axios.post(apiBase, payload);
+            alert('상품 등록 완료');
+        }
+        clearForm();
+        loadProducts();
+    } catch (err) {
+        alert(err.response?.data?.message || '실패');
+    }
+});
+
+// 수정 버튼 클릭
+async function editProduct(id) {
+    const res = await axios.get(`${apiBase}/${id}`);
+    const p = res.data;
+    document.getElementById('productId').value = p.id;
+    document.getElementById('name').value = p.name;
+    document.getElementById('description').value = p.description;
+    document.getElementById('price').value = p.price;
+    document.getElementById('stock').value = p.stock;
+    document.getElementById('imageUrl').value = p.imageUrl;
+}
+
+// 삭제 버튼 클릭
+async function deleteProduct(id) {
+    if (!confirm('정말 삭제하시겠습니까?')) return;
+    await axios.delete(`${apiBase}/${id}`);
+    loadProducts();
+}
+
+// 초기화 버튼
+document.getElementById('clearBtn').addEventListener('click', clearForm);
+
+// 페이지 로드 시 상품 가져오기
+loadProducts();
+</script>
+</body>
+</html>
