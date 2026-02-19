@@ -22,6 +22,5 @@ public interface ProductRepository{
 
     void delete(@Param("id") Long id);
 
-	void save(Product product);
 
 }
