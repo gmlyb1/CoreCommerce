@@ -37,10 +37,15 @@ public class AuthController {
     // 회원가입
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Member member){
-        member.setPassword(passwordEncoder.encode(member.getPassword()));
-        member.setRole("USER");
-        Member saved = memberRepository.save(member);
-        return ResponseEntity.ok(saved);
+    	member.setPassword(passwordEncoder.encode(member.getPassword()));
+	    member.setRole("USER");
+	    
+	    int result = memberRepository.save(member); // int 반환
+	    if(result > 0) {
+	        return ResponseEntity.ok(member); // 저장된 Member 객체 그대로 반환
+	    } else {
+	        return ResponseEntity.status(500).body("회원가입 실패");
+	    }
     }
 
     @PostMapping("/login")

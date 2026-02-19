@@ -9,6 +9,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,6 +43,16 @@ public class Member {
 	    @Column(nullable = false)
 	    private String role = "USER";  // USER / ADMIN 등 권한
 
-	    @Column(name = "created_at", nullable = false, updatable = false)
-	    private LocalDateTime createdAt = LocalDateTime.now();
+	    private String phone;
+	    private String zipcode;
+	    private String address1;
+	    private String address2;
+
+	    @CreatedDate
+	    @Column(name = "created_at", updatable = false)
+	    private LocalDateTime createdAt;
+
+	    @LastModifiedDate
+	    @Column(name = "updated_at")
+	    private LocalDateTime updatedAt;
 }

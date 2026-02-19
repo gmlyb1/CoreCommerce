@@ -12,25 +12,29 @@
 		where email = #{email}
 	</select>
 
-    <insert id="save">
-		insert into member
-		(
-			 id
-			,email
-			,password
-			,name
-			,role
-			,created_at
-		)
-		values
-		(
-			#{id}
-			,#{email}
-			,#{password}
-			,#{name}
-			,#{role}
-			,#{createdAt}
-		)
-    </insert>
+   <insert id="save" parameterType="com.CoreCommerce.domain.Member">
+	    INSERT INTO member
+	    (
+	         email
+	        ,password
+	        ,name
+	        ,role
+	        ,phone
+	        ,zipcode
+	        ,address1
+	        ,address2
+	    )
+	    VALUES
+	    (
+	         #{email}
+	        ,#{password}
+	        ,#{name}
+	        ,#{role}
+	        ,#{phone}
+	        ,#{zipcode}
+	        ,#{address1}
+	        ,#{address2}
+	    )
+	</insert>
 
 </mapper>
