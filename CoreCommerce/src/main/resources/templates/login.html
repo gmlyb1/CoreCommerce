@@ -1,39 +1,61 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="layout/head :: head"></head>
-<body class="d-flex flex-column min-vh-100">
+<body class="d-flex flex-column min-vh-100 bg-light">
 
 <!-- 헤더 -->
 <div th:replace="layout/header :: header"></div>
 
 <!-- 로그인 폼 -->
-<div class="container flex-grow-1 d-flex justify-content-center align-items-center" style="margin-top: 80px; margin-bottom: 80px;">
-    <div class="card p-4 shadow-sm" style="max-width: 400px; width: 100%;">
-        <h3 class="text-center mb-4">로그인</h3>
+<div class="container flex-grow-1 d-flex justify-content-center align-items-center" style="margin-top: 100px; margin-bottom: 100px;">
+    <div class="card shadow-lg p-5" style="max-width: 420px; width: 100%; border-radius: 15px; background: #ffffff;">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold">로그인</h2>
+            <p class="text-muted">계정으로 로그인하세요</p>
+        </div>
 
         <form method="post" id="loginForm">
             <div class="mb-3">
-                <label>아이디</label>
-                <input type="text" name="username" class="form-control" placeholder="이메일 또는 아이디">
+                <label class="form-label fw-semibold">아이디</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                    <input type="text" name="username" class="form-control" placeholder="이메일 또는 아이디" required>
+                </div>
             </div>
 
             <div class="mb-3">
-                <label>비밀번호</label>
-                <input type="password" name="password" class="form-control" placeholder="비밀번호">
+                <label class="form-label fw-semibold">비밀번호</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                    <input type="password" name="password" class="form-control" placeholder="비밀번호" required>
+                </div>
             </div>
 
-            <div class="text-danger mb-3" th:if="${error}" th:text="${error}"></div>
+            <!-- 오류 메시지 -->
+            <div class="text-danger mb-3 text-center" th:if="${error}" th:text="${error}"></div>
 
-            <button class="btn btn-primary w-100">로그인</button>
+            <button class="btn btn-primary w-100 fw-bold py-2" style="border-radius: 10px;">로그인</button>
         </form>
 
-        <p class="text-center mt-3">
-            계정이 없으신가요? 
-            <a href="/register" class="text-decoration-none">회원가입</a>
-        </p>
+        <div class="mt-4 text-center">
+            <span class="text-muted">계정이 없으신가요?</span>
+            <a href="/register" class="text-decoration-none fw-semibold">회원가입</a>
+        </div>
+
+        <hr class="my-4">
+
+        <div class="text-center text-muted">
+            <small>또는 소셜 계정으로 로그인</small>
+        </div>
+
+        <div class="d-flex justify-content-center mt-3 gap-2">
+            <button class="btn btn-outline-primary w-100"><i class="bi bi-google"></i> Google</button>
+            <button class="btn btn-outline-dark w-100"><i class="bi bi-github"></i> GitHub</button>
+        </div>
     </div>
 </div>
 
+<!-- Axios 로그인 스크립트 -->
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
 document.getElementById("loginForm").addEventListener("submit", async function(e) {
@@ -58,6 +80,7 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     }
 });
 </script>
+
 <!-- 푸터 -->
 <div th:replace="layout/footer :: footer"></div>
 

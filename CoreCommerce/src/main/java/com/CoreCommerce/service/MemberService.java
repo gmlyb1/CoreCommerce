@@ -10,19 +10,19 @@ import com.CoreCommerce.repository.MemberRepository;
 @Service
 public class MemberService {
 
-	  private final MemberRepository memberRepository;
+	private final MemberRepository memberRepository;
 
-	    public MemberService(MemberRepository memberRepository) {
-	        this.memberRepository = memberRepository;
-	    }
-	
-	    // 회원가입
-	    public int register(Member member) {
-	        return memberRepository.save(member);
-	    }
-	
-	    // 이메일로 회원 조회
-	    public Optional<Member> findByEmail(String email) {
-	        return memberRepository.findByEmail(email);
-	    }
+    public MemberService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
+
+    // 회원가입
+    public int register(Member member) {
+        return memberRepository.save(member);
+    }
+
+    // 이메일로 회원 조회
+    public Optional<Member> findByEmail(String email) {
+        return memberRepository.findByEmail(email);
+    }
 }

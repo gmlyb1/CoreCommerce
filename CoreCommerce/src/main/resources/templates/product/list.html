@@ -33,8 +33,9 @@
                 </div>
                 <div class="card-footer d-flex justify-content-between">
                     <a th:href="@{/product/form(id=${p.id})}" class="btn btn-sm btn-info">수정</a>
-                    <button class="btn btn-sm btn-danger" 
-                            th:onclick="'deleteProduct(' + ${p.id} + ')'">삭제</button>
+                    <button class="btn btn-sm btn-danger"  th:onclick="'deleteProduct(' + ${p.id} + ')'">삭제</button>
+                	<!-- 장바구니 담기 버튼 추가 -->
+				    <button class="btn btn-sm btn-success" th:onclick="'addToCart(' + ${p.id} + ', 1)'">장바구니 담기</button>
                 </div>
             </div>
         </div>
@@ -52,7 +53,8 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
     const apiBase = '/product'; 
-
+    const cartApiBase = '/cart';
+    
     async function deleteProduct(id) {
         if (!confirm('정말 삭제하시겠습니까?')) return;
         try {
@@ -61,6 +63,17 @@
         } catch (err) {
             console.error(err.response);
             alert(err.response?.data?.message || '삭제 실패');
+        }
+    }
+    
+    async function addToCart(productId, quantity) {
+        const cartId = 1; // 예시용
+        try {
+            await axios.post(`/cart/add?cartId=${cartId}&productId=${productId}&quantity=${quantity}`);
+            alert('장바구니에 추가되었습니다!');
+        } catch (err) {
+            console.error(err.response);
+            alert(err.response?.data?.message || '장바구니 추가 실패');
         }
     }
 </script>
