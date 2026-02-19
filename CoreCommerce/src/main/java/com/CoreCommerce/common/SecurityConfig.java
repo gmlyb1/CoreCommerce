@@ -24,6 +24,49 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    	
+
+    	  http
+          .csrf().disable()
+
+          .sessionManagement()
+              .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+          .and()
+
+//          .authorizeRequests()
+//              // ⭐ 정적 리소스 전부 허용
+//              .antMatchers(
+//                  "/",
+//                  "/login",
+//                  "/register",
+//                  "/api/auth/**",
+//                  "/css/**",
+//                  "/js/**",
+//                  "/images/**",
+//                  "/webjars/**"
+//              ).permitAll()
+//              .anyRequest().authenticated()
+//          .and()
+
+          .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+    	
+//    	http
+//        // REST API이므로 CSRF 비활성화
+//        .csrf().disable()
+//        
+//        // 세션 사용 안함 (JWT 기반)
+//        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//        .and()
+//        
+//        // 접근 권한 설정
+//        .authorizeHttpRequests()
+//            // 회원가입/로그인은 인증 없이 접근 허용
+//            .requestMatchers(new AntPathRequestMatcher("/api/auth/**")).permitAll()
+//            .anyRequest().authenticated()
+//        .and()
+//        
+//        // JWT 필터 추가
+//        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 //        http.csrf().disable()
 //                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 //                .and()

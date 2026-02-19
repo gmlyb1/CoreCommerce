@@ -25,7 +25,11 @@
 
             <div class="col-lg-4 text-center text-lg-end">
                 <div class="d-inline-flex align-items-center" style="height: 45px;">
-
+					
+					<span th:if="${loginUser != null}" class="text-dark me-3">
+			            <b th:text="${loginUser.name}"></b> 고객님! 반갑습니다 😊
+			        </span>
+					
                     <!-- Currency Dropdown -->
                     <div class="dropdown">
                         <a href="#" class="dropdown-toggle text-muted me-2" data-bs-toggle="dropdown"><small>USD</small></a>
@@ -52,34 +56,35 @@
                             <small><i class="fa fa-home me-2"></i> My Dashboard</small>
                         </a>
                         <ul class="dropdown-menu rounded p-0 m-0">
-                            <!-- 로그인 안 된 경우 -->
-                            <li sec:authorize="!isAuthenticated()">
-                                <a class="dropdown-item" href="/login">Login</a>
-                            </li>
-                            <li sec:authorize="!isAuthenticated()">
-                                <a class="dropdown-item" href="/register">Register</a>
-                            </li>
-
-                            <!-- 로그인 된 경우 -->
-                            <li sec:authorize="isAuthenticated()">
-                                <a class="dropdown-item" href="/wishlist">Wishlist</a>
-                            </li>
-                            <li sec:authorize="isAuthenticated()">
-                                <a class="dropdown-item" href="/mycard">My Card</a>
-                            </li>
-                            <li sec:authorize="isAuthenticated()">
-                                <a class="dropdown-item" href="/notifications">Notifications</a>
-                            </li>
-                            <li sec:authorize="isAuthenticated()">
-                                <a class="dropdown-item" href="/account/settings">Account Settings</a>
-                            </li>
-                            <li sec:authorize="isAuthenticated()">
-                                <a class="dropdown-item" href="/account">My Account</a>
-                            </li>
-                            <li sec:authorize="isAuthenticated()">
-                                <a class="dropdown-item" href="#" 
-                                   onclick="event.preventDefault(); document.getElementById('logoutForm').submit();">Log Out</a>
-                            </li>
+                           <!-- 로그인 안 된 경우 -->
+						    <li th:if="${loginUser == null}">
+						        <a class="dropdown-item" href="/login">Login</a>
+						    </li>
+						    <li th:if="${loginUser == null}">
+						        <a class="dropdown-item" href="/register">Register</a>
+						    </li>
+						
+						    <!-- 로그인 된 경우 -->
+						    <th:block th:if="${loginUser != null}">
+						        <li>
+						            <a class="dropdown-item" href="/wishlist">Wishlist</a>
+						        </li>
+						        <li>
+						            <a class="dropdown-item" href="/mycard">My Card</a>
+						        </li>
+						        <li>
+						            <a class="dropdown-item" href="/notifications">Notifications</a>
+						        </li>
+						        <li>
+						            <a class="dropdown-item" href="/account/settings">Account Settings</a>
+						        </li>
+						        <li>
+						            <a class="dropdown-item" href="/account">My Account</a>
+						        </li>
+						        <li>
+						            <a class="dropdown-item" href="/logout">Log Out</a>
+						        </li>
+						    </th:block>
                         </ul>
 
                         <form id="logoutForm" action="/logout" method="post" style="display:none;">

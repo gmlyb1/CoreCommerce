@@ -4,10 +4,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import com.CoreCommerce.common.JwtUtil;
 import com.CoreCommerce.domain.Member;
 import com.CoreCommerce.repository.MemberRepository;
 
@@ -21,6 +25,9 @@ public class AuthController {
 	private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final String JWT_SECRET = "corecommerce-corecommerce-corecommerce-123456";
+    
+    @Autowired
+    private JwtUtil jwtUtil;
 
     // 생성자 주입
     public AuthController(MemberRepository memberRepository) {
@@ -37,7 +44,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Member member){
+    public String login(@RequestBody Member member,HttpSession session){
         Member dbMember = memberRepository.findByEmail(member.getEmail())
                 .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다"));
 
@@ -46,17 +53,15 @@ public class AuthController {
         }
 
         // JWT 토큰 생성
-        String token = Jwts.builder()
-                .setSubject(dbMember.getEmail())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000*60*60)) // 1시간
-                .signWith(SignatureAlgorithm.HS256, JWT_SECRET)
-                .compact();
+//        String token = Jwts.builder()
+//                .setSubject(dbMember.getEmail())
+//                .setIssuedAt(new Date())
+//                .setExpiration(new Date(System.currentTimeMillis() + 1000*60*60)) // 1시간
+//                .signWith(SignatureAlgorithm.HS256, JWT_SECRET)
+//                .compact();
+        String token = jwtUtil.generateToken(dbMember.getEmail());
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("token", token);
-        response.put("member", dbMember);
-
-        return ResponseEntity.ok(response);
+        session.setAttribute("loginUser", dbMember);
+        return "redirect:/";
     }
 }
