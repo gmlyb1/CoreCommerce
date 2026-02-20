@@ -73,10 +73,10 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
         // JWT 저장
         localStorage.setItem("token", res.data.token);
 
-        alert("로그인 성공");
+        alert("로그인에 성공하였습니다. \n 즐거운 쇼핑되세요!");
         window.location.href = "/";
     } catch (err) {
-        alert("로그인 실패");
+        alert("로그인에 실패하였습니다.");
     }
 });
 </script>

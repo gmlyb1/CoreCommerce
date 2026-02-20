@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="layout/head :: head"></head>
+
 <body class="d-flex flex-column min-vh-100">
 
 <!-- 헤더 -->
@@ -8,74 +9,126 @@
 
 <!-- 메인 컨테이너 -->
 <div class="container flex-grow-1 mt-5 mb-5">
-	<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
         <h3>상품 목록</h3>
-        <!-- 상품 등록 버튼 -->
-        <a th:href="@{/product/form}" class="btn btn-primary">상품 등록</a>
+
+        <div>
+            <a th:href="@{/cart/list}" class="btn btn-outline-dark me-2">
+                🛒 장바구니
+            </a>
+            <a th:href="@{/product/form}" class="btn btn-primary">
+                상품 등록
+            </a>
+        </div>
     </div>
+
     <div class="row row-cols-1 row-cols-md-3 g-4">
         <div class="col" th:each="p : ${products}">
             <div class="card h-100 shadow-sm">
-                <!-- 이미지 -->
-                <img th:src="${p.imageUrl}" 
-				     class="card-img-top" 
-				     style="height:200px; object-fit:cover;" 
-				     alt="상품 이미지">
+
+                <!-- 상품 이미지 -->
+                <img th:src="${p.imageUrl}"
+                     class="card-img-top"
+                     style="height:200px; object-fit:cover;"
+                     alt="상품 이미지">
+
                 <div class="card-body">
+
                     <!-- 상품명 -->
                     <h5 class="card-title" th:text="${p.name}">상품명</h5>
+
                     <!-- 상품 설명 -->
-                    <p class="card-text text-truncate" th:text="${p.description}">설명</p>
+                    <p class="card-text text-truncate"
+                       th:text="${p.description}">
+                        설명
+                    </p>
+
                     <!-- 가격 -->
-                    <p class="mb-1"><strong th:text="${T(java.lang.String).format('%,d원', p.price)}"></strong></p>
+                    <p class="mb-1">
+                        <strong th:text="${T(java.lang.String)
+                        .format('%,d원', p.price)}">
+                        </strong>
+                    </p>
+
                     <!-- 재고 -->
-                    <p class="mb-0 text-muted" th:text="'재고: ' + ${p.stock}">재고</p>
+                    <p class="mb-0 text-muted"
+                       th:text="'재고: ' + ${p.stock}">
+                        재고
+                    </p>
+
                 </div>
+
                 <div class="card-footer d-flex justify-content-between">
-                    <a th:href="@{/product/form(id=${p.id})}" class="btn btn-sm btn-info">수정</a>
-                    <button class="btn btn-sm btn-danger"  th:onclick="'deleteProduct(' + ${p.id} + ')'">삭제</button>
-                	<!-- 장바구니 담기 버튼 추가 -->
-				    <button class="btn btn-sm btn-success" th:onclick="'addToCart(' + ${p.id} + ', 1)'">장바구니 담기</button>
+
+                    <a th:href="@{/product/form(id=${p.id})}"
+                       class="btn btn-sm btn-info">
+                        수정
+                    </a>
+
+                    <button class="btn btn-sm btn-danger"
+                            th:onclick="'deleteProduct(' + ${p.id} + ')'">
+                        삭제
+                    </button>
+
+                    <button class="btn btn-sm btn-success"
+                            th:onclick="'addToCart(' + ${p.id} + ', 1)'">
+                        장바구니 담기
+                    </button>
+
                 </div>
             </div>
         </div>
     </div>
 
     <!-- 상품 없을 때 -->
-    <div class="mt-3" th:if="${#lists.isEmpty(products)}">
-        <p class="text-center text-muted">등록된 상품이 없습니다.</p>
+    <div class="mt-4 text-center"
+         th:if="${#lists.isEmpty(products)}">
+        <p class="text-muted">등록된 상품이 없습니다.</p>
     </div>
+
 </div>
 
 <!-- 푸터 -->
 <div th:replace="layout/footer :: footer"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 <script>
-    const apiBase = '/product'; 
-    const cartApiBase = '/cart';
-    
+
     async function deleteProduct(id) {
         if (!confirm('정말 삭제하시겠습니까?')) return;
+
         try {
             await axios.delete(`/product/${id}`);
+            alert('삭제되었습니다.');
             location.reload();
         } catch (err) {
-            console.error(err.response);
+            console.error(err);
             alert(err.response?.data?.message || '삭제 실패');
         }
     }
-    
+
     async function addToCart(productId, quantity) {
-        const cartId = 1; // 예시용
         try {
-            await axios.post(`/cart/add?cartId=${cartId}&productId=${productId}&quantity=${quantity}`);
-            alert('장바구니에 추가되었습니다!');
+
+            await axios.post('/cart/add', null, {
+                params: {
+                    productId: productId,
+                    quantity: quantity
+                }
+            });
+
+            if (confirm('장바구니에 추가되었습니다.\n장바구니로 이동하시겠습니까?')) {
+                location.href = '/cart/list';
+            }
+
         } catch (err) {
-            console.error(err.response);
+            console.error(err);
             alert(err.response?.data?.message || '장바구니 추가 실패');
         }
     }
+
 </script>
 
 </body>
