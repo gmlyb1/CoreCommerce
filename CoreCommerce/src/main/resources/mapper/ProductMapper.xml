@@ -52,5 +52,9 @@
         DELETE FROM product
         WHERE id = #{id}
     </delete>
+    
+    <select id="findMainPage" resultType="com.CoreCommerce.domain.Product">
+    	select * from product order by created_at desc limit 8
+    </select>
 
 </mapper>

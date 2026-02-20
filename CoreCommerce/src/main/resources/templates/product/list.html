@@ -17,7 +17,7 @@
             <a th:href="@{/cart/list}" class="btn btn-outline-dark me-2">
                 🛒 장바구니
             </a>
-            <a th:href="@{/product/form}" class="btn btn-primary">
+            <a th:if="${loginUser.role == 'MANAGER'}" th:href="@{/product/form}" class="btn btn-primary">
                 상품 등록
             </a>
         </div>
@@ -61,13 +61,16 @@
 
                 <div class="card-footer d-flex justify-content-between">
 
-                    <a th:href="@{/product/form(id=${p.id})}"
+                    <a th:if="${loginUser.role == 'MANAGER'}"
+                       th:href="@{/product/form(id=${p.id})}"
                        class="btn btn-sm btn-info">
                         수정
                     </a>
 
                     <button class="btn btn-sm btn-danger"
-                            th:onclick="'deleteProduct(' + ${p.id} + ')'">
+                            th:onclick="'deleteProduct(' + ${p.id} + ')'"
+                            th:if="${loginUser.role == 'MANAGER'}"
+                            >
                         삭제
                     </button>
 

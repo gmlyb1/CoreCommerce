@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.CoreCommerce.repository.PaymentRepository">
+	
+	<insert id="insert" parameterType="com.CoreCommerce.domain.Payment">
+	    INSERT INTO payment
+	    (order_id, payment_key, method, amount, status, approved_at)
+	    VALUES
+	    (#{orderId}, #{paymentKey}, #{method}, #{amount}, #{status}, #{approvedAt})
+	</insert>
+	
+</mapper>

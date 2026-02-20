@@ -3,8 +3,10 @@ package com.CoreCommerce.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
+import com.CoreCommerce.domain.Cart;
 import com.CoreCommerce.domain.CartItem;
 import com.CoreCommerce.repository.CartRepository;
 
@@ -33,6 +35,7 @@ public class CartService {
 
     // 특정 장바구니 아이템 조회
     public List<CartItem> getCartItems(Long cartId) {
+    	
         return cartRepository.findByCartId(cartId);
     }
 
@@ -40,4 +43,14 @@ public class CartService {
     public void removeCartItem(Long id) {
         cartRepository.delete(id);
     }
+
+	public void clearByMember(Long memberId) {
+		cartRepository.clearByMember(memberId);
+	}
+	
+	public Cart findCartByMemberId(Long memberId) {
+		return cartRepository.findCartByMemberId(memberId);
+	}
+	
+    
 }

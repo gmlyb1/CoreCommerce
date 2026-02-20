@@ -30,4 +30,9 @@ public interface CartRepository {
     Cart findCartByUserId(@Param("userId") Long userId);
 
     void createCart(Cart cart); // insert 후 id 세팅
+
+	void clearByMember(Long memberId);
+
+	Cart findCartByMemberId(Long memberId);
+    
 }

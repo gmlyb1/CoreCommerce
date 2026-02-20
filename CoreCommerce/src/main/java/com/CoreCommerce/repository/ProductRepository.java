@@ -22,5 +22,5 @@ public interface ProductRepository{
 
     void delete(@Param("id") Long id);
 
-
+    List<Product> findMainPage();
 }

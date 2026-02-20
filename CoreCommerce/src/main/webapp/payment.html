@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/head :: head"></head>
+<body class="d-flex flex-column min-vh-100">
+
+<div th:replace="layout/header :: header"></div>
+
+<div class="container flex-grow-1 mt-5 mb-5 text-center">
+
+    <h3>💳 결제 페이지</h3>
+
+    <div class="mt-4">
+        <p>주문번호 : <b th:text="${order.id}"></b></p>
+        <p>결제금액 :
+            <b th:text="${T(java.lang.String)
+                 .format('%,d원', order.totalPrice)}"></b>
+        </p>
+    </div>
+
+    <button class="btn btn-primary mt-3"
+	        id="payBtn">
+	    결제 진행
+	</button>
+
+</div>
+
+<div th:replace="layout/footer :: footer"></div>
+
+<script src="https://js.tosspayments.com/v1"></script>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+
+    const tossPayments = TossPayments("test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm");
+
+    const orderId = /*[[${order.id}]]*/ 0;
+    const amount = /*[[${order.totalPrice}]]*/ 0;
+
+    document.getElementById("payBtn").addEventListener("click", function () {
+        requestPayment(orderId, amount);
+    });
+
+    function requestPayment(orderId, amount) {
+        tossPayments.requestPayment("카드", {
+            amount: amount,
+            orderId: orderId.toString(),
+            orderName: "CoreCommerce 주문",
+            successUrl: "http://localhost:8080/payment/success",
+            failUrl: "http://localhost:8080/payment/fail"
+        });
+    }
+
+/*]]>*/
+</script>
+
+</body>
+</html>

@@ -1,5 +1,7 @@
 package com.CoreCommerce.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -9,7 +11,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.CoreCommerce.domain.Member;
+import com.CoreCommerce.domain.Product;
 import com.CoreCommerce.repository.MemberRepository;
+import com.CoreCommerce.repository.ProductRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -20,7 +24,7 @@ public class MainController {
 	private MemberRepository memberRepository;
 	
 	@Autowired
-	private ObjectMapper mapper;
+	private ProductRepository productRepository;
 	
 	@GetMapping("/")
 	public String main(Model model, HttpSession session) throws Exception{
@@ -29,7 +33,10 @@ public class MainController {
 	    if (loginMember != null) {
 	        model.addAttribute("loginUser", loginMember);
 	    }
-
+	    
+	    List<Product> MainPageList = productRepository.findMainPage();
+	    model.addAttribute("MainPageList", MainPageList);
+	    
 	    return "index";
 	}
 }
