@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/head :: head"></head>
+
+<body class="d-flex flex-column min-vh-100">
+
+<!-- 헤더 -->
+<div th:replace="layout/header :: header"></div>
+
+<!-- 메인 컨테이너 -->
+<div class="container flex-grow-1 mt-5 mb-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3>🛒 장바구니</h3>
+        <a th:href="@{/product/list}" class="btn btn-secondary">
+            상품 목록으로
+        </a>
+    </div>
+
+    <!-- 장바구니 테이블 -->
+    <div class="table-responsive" th:if="${!#lists.isEmpty(items)}">
+        <table class="table table-bordered table-hover align-middle text-center">
+            <thead class="table-light">
+                <tr>
+                    <th>이미지</th>
+                    <th>상품명</th>
+                    <th>가격</th>
+                    <th>수량</th>
+                    <th>합계</th>
+                    <th>삭제</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="item : ${items}">
+                    <td>
+                        <img th:src="${item.imageUrl}"
+                             style="width:80px; height:80px; object-fit:cover;"
+                             alt="상품 이미지">
+                    </td>
+
+                    <td th:text="${item.productName}">상품명</td>
+
+                    <td th:text="${T(java.lang.String)
+                         .format('%,d원', item.price)}">
+                    </td>
+
+                    <td th:text="${item.quantity}">수량</td>
+
+                    <td th:text="${T(java.lang.String)
+                         .format('%,d원', item.price * item.quantity)}">
+                    </td>
+
+                    <td>
+                        <button class="btn btn-sm btn-danger"
+                                th:onclick="'deleteCartItem(' + ${item.id} + ')'">
+                            삭제
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- ✅ 총 금액 영역 -->
+        <div class="text-end mt-4">
+            <h4>
+                총 결제 금액 :
+                <span th:text="${T(java.lang.String)
+                     .format('%,d원', totalPrice)}">
+                </span>
+            </h4>
+
+            <button class="btn btn-primary mt-2"
+                    onclick="createOrder()">
+                결제하기
+            </button>
+        </div>
+    </div>
+
+    <!-- 장바구니 비었을 때 -->
+    <div class="text-center mt-5" th:if="${#lists.isEmpty(items)}">
+        <p class="text-muted">장바구니에 담긴 상품이 없습니다.</p>
+        <a th:href="@{/product/list}" class="btn btn-primary mt-3">
+            상품 보러 가기
+        </a>
+    </div>
+
+</div>
+
+<!-- 푸터 -->
+<div th:replace="layout/footer :: footer"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+
+    async function deleteCartItem(itemId) {
+        if (!confirm('정말 삭제하시겠습니까?')) return;
+
+        try {
+            await axios.post('/cart/delete', null, {
+                params: {
+                    itemId: itemId
+                }
+            });
+
+            alert('삭제되었습니다.');
+            location.reload();
+
+        } catch (err) {
+            console.error(err);
+            alert(err.response?.data?.message || '삭제 실패');
+        }
+    }
+
+    async function createOrder() {
+        if (!confirm('결제를 진행하시겠습니까?')) return;
+
+        try {
+            const response = await axios.post('/order/create');
+            const orderId = response.data;
+
+            alert('주문이 생성되었습니다.');
+            location.href = `/payment?orderId=${orderId}`;
+
+        } catch (err) {
+            console.error(err);
+            alert(err.response?.data?.message || '주문 생성 실패');
+        }
+    }
+
+</script>
+
+</body>
+</html>

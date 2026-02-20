@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.CoreCommerce.repository.CartRepository">
+
+   <!-- 1️⃣ Cart 생성 -->
+    <insert id="createCart" parameterType="com.CoreCommerce.domain.Cart" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO cart (member_id, created_at)
+        VALUES (#{userId}, NOW())
+    </insert>
+
+    <!-- 2️⃣ 사용자 장바구니 조회 -->
+    <select id="findCartByUserId" parameterType="long" resultType="com.CoreCommerce.domain.Cart">
+        SELECT * FROM cart WHERE member_id = #{userId}
+    </select>
+
+    <!-- 3️⃣ CartItem 추가 -->
+    <insert id="add" parameterType="map">
+        INSERT INTO cart_item (cart_id, product_id, quantity)
+        VALUES (#{cartId}, #{productId}, #{quantity})
+    </insert>
+
+    <!-- 4️⃣ CartItem 수량 업데이트 -->
+    <update id="updateQuantity" parameterType="map">
+        UPDATE cart_item
+        SET quantity = #{quantity}
+        WHERE id = #{itemId}
+    </update>
+
+	<select id="findByCartId" parameterType="long" resultType="com.CoreCommerce.domain.CartItem">
+        SELECT
+	        ci.id AS id,
+	        ci.cart_id AS cartId,
+	        ci.product_id AS productId,
+	        ci.quantity AS quantity,
+	        p.name AS productName,
+	        p.price AS price,
+	        p.image_url AS imageUrl
+	    FROM cart_item ci
+	    JOIN product p ON ci.product_id = p.id
+	    WHERE ci.cart_id = #{cartId}
+    </select>
+
+    <!-- 5️⃣ CartItem 조회 -->
+    <!-- <select id="findByCartId" parameterType="long" resultType="com.CoreCommerce.domain.CartItem">
+        SELECT * FROM cart_item WHERE cart_id = #{cartId}
+    </select> -->
+
+    <!-- 6️⃣ CartItem 삭제 -->
+    <delete id="delete" parameterType="long">
+        DELETE FROM cart_item WHERE id = #{id}
+    </delete>
+
+    <!-- 7️⃣ CartItem 중복 확인 -->
+    <select id="findByCartIdAndProductId" parameterType="map" resultType="com.CoreCommerce.domain.CartItem">
+        SELECT * FROM cart_item
+        WHERE cart_id = #{cartId} AND product_id = #{productId}
+    </select>
+    
+</mapper>
