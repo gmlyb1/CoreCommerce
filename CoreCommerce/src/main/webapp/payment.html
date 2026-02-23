@@ -18,9 +18,9 @@
     </div>
 
     <button class="btn btn-primary mt-3"
-	        id="payBtn">
-	    결제 진행
-	</button>
+            onclick="requestPayment([[${order.id}]], [[${order.totalPrice}]])">
+        결제 진행
+    </button>
 
 </div>
 
@@ -29,28 +29,21 @@
 <script src="https://js.tosspayments.com/v1"></script>
 
 <script th:inline="javascript">
-/*<![CDATA[*/
 
-    const tossPayments = TossPayments("test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm");
-
-    const orderId = /*[[${order.id}]]*/ 0;
-    const amount = /*[[${order.totalPrice}]]*/ 0;
-
-    document.getElementById("payBtn").addEventListener("click", function () {
-        requestPayment(orderId, amount);
-    });
-
+    const tossPayments = TossPayments("클라이언트키");
+    const baseUrl = window.location.origin;
+    
     function requestPayment(orderId, amount) {
+
         tossPayments.requestPayment("카드", {
             amount: amount,
             orderId: orderId.toString(),
             orderName: "CoreCommerce 주문",
-            successUrl: "http://localhost:8080/payment/success",
-            failUrl: "http://localhost:8080/payment/fail"
+            successUrl: baseUrl + "/payment/success",
+            failUrl: baseUrl + "/payment/fail"
         });
     }
 
-/*]]>*/
 </script>
 
 </body>

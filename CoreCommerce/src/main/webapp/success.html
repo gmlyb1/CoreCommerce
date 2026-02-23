@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/head :: head"></head>
+<body class="bg-light">
+
+<div th:replace="layout/header :: header"></div>
+
+<div class="container d-flex justify-content-center align-items-center"
+     style="min-height: 70vh;">
+
+    <div class="card shadow-lg p-5 text-center" style="max-width: 500px; width:100%; border-radius:20px;">
+
+        <div class="mb-4">
+            <div class="rounded-circle bg-success d-inline-flex justify-content-center align-items-center"
+                 style="width:80px; height:80px;">
+                <span style="font-size:40px; color:white;">✓</span>
+            </div>
+        </div>
+
+        <h3 class="fw-bold mb-3">결제가 완료되었습니다</h3>
+
+        <p class="text-muted mb-2">
+            주문번호 :
+            <b th:text="${order.id}">0</b>
+        </p>
+
+        <p class="text-muted mb-4">
+            결제금액 :
+            <b th:text="${T(java.lang.String).format('%,d원', order.totalPrice)}">
+                0원
+            </b>
+        </p>
+
+        <div class="d-grid gap-2">
+            <a href="/" class="btn btn-dark">홈으로 이동</a>
+            <a href="/orders" class="btn btn-outline-secondary">주문 내역 보기</a>
+        </div>
+
+    </div>
+
+</div>
+
+<div th:replace="layout/footer :: footer"></div>
+
+</body>
+</html>

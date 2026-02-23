@@ -5,9 +5,32 @@
 
 <mapper namespace="com.CoreCommerce.repository.OrderRepository">
 	
+	<resultMap id="OrderMap" type="com.CoreCommerce.domain.Order">
+	    <id property="id" column="id"/>
+	    <result property="memberId" column="member_id"/>
+	    <result property="totalPrice" column="total_price"/>
+	    <result property="status" column="status"/>
+	    <result property="createdAt" column="created_at"/>
+	</resultMap>
+	
+	<select id="findByMemberId"
+	        parameterType="long"
+	        resultMap="OrderMap">
+	
+	    SELECT id,
+	           member_id,
+	           total_price,
+	           status,
+	           created_at
+	    FROM orders
+	    WHERE member_id = #{memberId}
+	    ORDER BY created_at DESC
+	
+	</select>
+	
 	<select id="findById"
 	        parameterType="long"
-	        resultType="com.CoreCommerce.domain.Order">
+	        resultMap="OrderMap">
 	
 	    SELECT
 	        id,
@@ -38,4 +61,11 @@
 	    VALUES (#{orderId}, #{productId}, #{price}, #{quantity})
 	</insert>
 
+	<update id="updateOrderToPaid" parameterType="long">
+	    UPDATE orders
+	    SET status = 'PAID',       <!-- 상태 변경 -->
+	        updated_at = NOW()      <!-- 수정일 업데이트 -->
+	    WHERE id = #{orderId}
+	      AND status = 'READY'   <!-- 이미 결제된 주문은 변경 안함 -->
+	</update>
 </mapper>

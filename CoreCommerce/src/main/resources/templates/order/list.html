@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/head :: head"></head>
+<body class="bg-light">
+
+<div th:replace="layout/header :: header"></div>
+
+<div class="container mt-5 mb-5">
+
+    <h3 class="mb-4 fw-bold">📦 주문 내역</h3>
+
+    <div class="card shadow-sm rounded-4">
+        <div class="card-body p-4">
+
+            <table class="table align-middle text-center">
+                <thead class="table-light">
+                <tr>
+                    <th>주문번호</th>
+                    <th>주문일자</th>
+                    <th>결제금액</th>
+                    <th>상태</th>
+                    <th></th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="order : ${orders}">
+                    <td>
+                        <b th:text="${order.id}"></b>
+                    </td>
+
+                    <td th:text="${#temporals.format(order.createdAt, 'yyyy-MM-dd HH:mm')}">
+                        2025-01-01
+                    </td>
+
+                    <td th:text="${T(java.lang.String).format('%,d원', order.totalPrice)}">
+                        0원
+                    </td>
+
+                    <td>
+                        <span th:if="${order.status == 'PAID'}" class="badge bg-success">결제완료</span>
+						<span th:if="${order.status == 'READY'}" class="badge bg-primary">결제대기</span>
+						<span th:if="${order.status == 'CANCEL'}" class="badge bg-danger">취소</span>
+                    </td>
+
+                    <td>
+                       <a th:href="@{/orders/{id}(id=${order.id})}"
+					      th:text="${order.id}"
+					      class="text-primary fw-bold">
+                            상세보기
+                        </a>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(orders)}">
+                    <td colspan="5" class="text-muted py-4">
+                        주문 내역이 없습니다.
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
+<div th:replace="layout/footer :: footer"></div>
+
+</body>
+</html>

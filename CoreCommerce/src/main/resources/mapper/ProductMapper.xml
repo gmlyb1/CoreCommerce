@@ -30,7 +30,7 @@
     </select>
 
     <!-- 상품 등록 -->
-    <insert id="save" parameterType="com.CoreCommerce.domain.Product" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="com.CoreCommerce.domain.Product" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO product (name, description, price, stock, image_url)
         VALUES (#{name}, #{description}, #{price}, #{stock}, #{imageUrl})
     </insert>

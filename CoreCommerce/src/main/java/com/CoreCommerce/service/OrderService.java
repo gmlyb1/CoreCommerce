@@ -83,8 +83,59 @@ public class OrderService {
     public void updateStatus(Long orderId, String status) {
         orderRepository.updateStatus(orderId, status);
     }
+
+//    @Transactional
+//    public void completeOrder(Long orderId) {
+//    	
+//    	Order order = orderRepository.findById(orderId);
+//
+//        if (order == null) {
+//            throw new IllegalArgumentException("주문이 존재하지 않습니다.");
+//        }
+//
+//        // 🔥 이미 결제 완료면 그냥 리턴 (에러 아님)
+//        if ("PAID".equals(order.getStatus())) {
+//            return;
+//        }
+//    	
+//        int updated = orderRepository.updateOrderToPaid(orderId);
+//        if (updated == 0) {
+//            throw new IllegalStateException("주문 상태를 PAID로 변경할 수 없습니다.");
+//        }
+//    }
+    @Transactional
+    public void completeOrder(Long orderId) {
+
+        Order order = orderRepository.findById(orderId);
+
+        if (order == null) {
+            throw new IllegalArgumentException("주문이 존재하지 않습니다.");
+        }
+
+        // ✅ 이미 결제 완료 → 멱등 처리 (그냥 성공)
+        if ("PAID".equals(order.getStatus())) {
+            return;
+        }
+
+        int updated = orderRepository.updateOrderToPaid(orderId);
+
+        // 🔥 혹시 모를 동시성 대비 (다른 트랜잭션이 먼저 처리했을 경우)
+        if (updated == 0) {
+
+            Order retryOrder = orderRepository.findById(orderId);
+
+            if ("PAID".equals(retryOrder.getStatus())) {
+                return; // 이미 다른 요청에서 성공 처리됨
+            }
+
+            throw new IllegalStateException("주문 상태 변경 실패");
+        }
+    }
     
-    
+    public List<Order> findByMemberId(Long memberId) {
+        return orderRepository.findByMemberId(memberId);
+    }
+
     
     
 }

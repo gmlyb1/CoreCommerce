@@ -1,5 +1,7 @@
 package com.CoreCommerce.domain;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -22,5 +24,5 @@ public class Order {
     private Long memberId;
     private int totalPrice;
     private String status;
-
+    private LocalDateTime createdAt;
 }
