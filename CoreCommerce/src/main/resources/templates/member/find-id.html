@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- 🔥 공통 head -->
+<head th:replace="layout/head :: head"></head>
+
+<body class="d-flex flex-column min-vh-100 bg-light">
+
+<!-- 🔥 공통 header -->
+<div th:replace="layout/header :: header"></div>
+
+<div class="container flex-grow-1"
+     style="margin-top:100px; max-width:500px; padding-bottom:150px;">
+
+    <div class="card shadow-lg p-4">
+
+        <h3 class="text-center mb-4">아이디 찾기</h3>
+
+        <form id="findIdForm">
+
+            <div class="mb-3">
+                <input type="text"
+                       name="name"
+                       class="form-control"
+                       placeholder="이름 입력">
+            </div>
+
+            <div class="mb-3">
+                <input type="text"
+                       name="email"
+                       class="form-control"
+                       placeholder="이메일 입력">
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary w-100">
+                아이디 찾기
+            </button>
+
+        </form>
+
+        <div id="result"
+             class="mt-3 text-center fw-bold text-success">
+        </div>
+
+    </div>
+
+</div>
+
+<!-- 🔥 axios -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+
+document.getElementById("findIdForm")
+.addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+    const formData = new FormData(this);
+
+    try {
+
+        const res = await axios.post("/api/auth/find-id", {
+            name: formData.get("name"),
+            email: formData.get("email")
+        });
+
+        document.getElementById("result").innerText =
+            "아이디 : " + res.data.email;
+
+    } catch(err){
+
+        alert("정보가 일치하지 않습니다.");
+
+    }
+
+});
+
+</script>
+
+<!-- 🔥 footer -->
+<div th:replace="layout/footer :: footer"></div>
+
+</body>
+</html>

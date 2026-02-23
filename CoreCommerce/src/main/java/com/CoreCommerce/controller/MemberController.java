@@ -29,4 +29,14 @@ public class MemberController {
     public String profilePage(HttpSession session, Model model) {
     	return "/member/profile";
     }
+    
+    @GetMapping("/member/find-id")
+    public String findIdPage() {
+    	return "/member/find-id";
+    }
+    
+    @GetMapping("/member/find-password")
+    public String findPwPage() {
+    	return "/member/find-password";
+    }
 }

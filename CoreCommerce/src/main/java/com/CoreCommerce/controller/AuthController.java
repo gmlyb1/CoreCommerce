@@ -85,39 +85,62 @@ public class AuthController {
 	 // ===============================
 	 // 아이디 찾기
 	 // ===============================
-	 @PostMapping("/find-id")
-	 public ResponseEntity<?> findId(@RequestParam String email){
-	
-	     Member member = memberRepository.findByEmail(email)
-	             .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다"));
-	
-	     return ResponseEntity.ok(member.getEmail() != null ? member.getEmail() : "아이디 없음");
-	 }
+    @PostMapping("/find-id")
+    public ResponseEntity<?> findId(@RequestBody Map<String,String> req){
+
+        String name = req.get("name");
+        String email = req.get("email");
+
+        Member member = memberRepository.findByEmail(email)
+                .orElse(null);
+
+        if(member == null){
+            return ResponseEntity.status(404)
+                    .body("회원 정보 없음");
+        }
+
+        // 🔥 이름 검증 (보안용)
+        if(!member.getName().equals(name)){
+            return ResponseEntity.status(400)
+                    .body("정보가 일치하지 않습니다");
+        }
+
+        Map<String,String> result = new HashMap<>();
+        result.put("email", member.getEmail());
+
+        return ResponseEntity.ok(result);
+    }
 	 
 	// ===============================
 	// 비밀번호 찾기 (임시 비번 발급)
 	// ===============================
-	@PostMapping("/find-password")
-	public ResponseEntity<?> resetPassword(@RequestParam String email){
+    @PostMapping("/find-password")
+    public ResponseEntity<?> resetPassword(@RequestBody Map<String,String> req){
 
-	    Member member = memberRepository.findByEmail(email)
-	            .orElseThrow(() -> new RuntimeException("회원 없음"));
+        String email = req.get("email");
 
-	    // 임시 비밀번호 생성
-	    String tempPassword = "tmp" + System.currentTimeMillis()%100000;
+        Member member = memberRepository.findByEmail(email)
+                .orElse(null);
 
-	    // 암호화
-	    member.setPassword(passwordEncoder.encode(tempPassword));
+        if(member == null){
+            return ResponseEntity.status(404)
+                    .body("회원 정보 없음");
+        }
 
-	    memberRepository.save(member);
+        // 🔥 임시 비밀번호 생성
+        String tempPassword = "tmp" + UUID.randomUUID().toString().substring(0,6);
 
-	    // 🔥 실제 프로젝트에서는 여기서 이메일 발송
+        // 🔥 암호화
+        String encodedPassword = passwordEncoder.encode(tempPassword);
 
-	    Map<String, String> result = new HashMap<>();
-	    result.put("tempPassword", tempPassword);
+        // 🔥 DB 업데이트 (반드시 update 사용)
+        memberRepository.updatePassword(member.getId(), encodedPassword);
 
-	    return ResponseEntity.ok(result);
-	}
+        Map<String,String> result = new HashMap<>();
+        result.put("tempPassword", tempPassword);
+
+        return ResponseEntity.ok(result);
+    }
 	
 	// ===============================
 	// 프로필 조회
