@@ -59,6 +59,47 @@
                 </tr>
             </tbody>
         </table>
+        
+        <!-- 🔥 페이징 -->
+		<div class="mt-4"
+		     th:if="${pagination != null and pagination.totalPages > 1}">
+		
+		    <ul class="pagination justify-content-center d-flex flex-row">
+		
+		        <!-- 이전 -->
+		        <li class="page-item"
+		            th:classappend="${pagination.first} ? 'disabled'">
+		
+		            <a class="page-link"
+		               th:href="@{/cart/list(page=${pagination.page - 1})}">
+		                ‹
+		            </a>
+		        </li>
+		
+		        <!-- 번호 -->
+		        <li class="page-item"
+		            th:each="i : ${#numbers.sequence(1, pagination.totalPages)}"
+		            th:classappend="${i == pagination.page} ? 'active'">
+		
+		            <a class="page-link"
+		               th:href="@{/cart/list(page=${i})}"
+		               th:text="${i}">
+		            </a>
+		        </li>
+		
+		        <!-- 다음 -->
+		        <li class="page-item"
+		            th:classappend="${pagination.last} ? 'disabled'">
+		
+		            <a class="page-link"
+		               th:href="@{/cart/list(page=${pagination.page + 1})}">
+		                ›
+		            </a>
+		        </li>
+		
+		    </ul>
+		
+		</div>
 
         <!-- ✅ 총 금액 영역 -->
         <div class="text-end mt-4">

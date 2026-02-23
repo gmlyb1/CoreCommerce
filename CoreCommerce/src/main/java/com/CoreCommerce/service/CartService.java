@@ -33,11 +33,6 @@ public class CartService {
         }
     }
 
-    // 특정 장바구니 아이템 조회
-    public List<CartItem> getCartItems(Long cartId) {
-    	
-        return cartRepository.findByCartId(cartId);
-    }
 
     // 장바구니 아이템 삭제
     public void removeCartItem(Long id) {
@@ -52,5 +47,15 @@ public class CartService {
 		return cartRepository.findCartByMemberId(memberId);
 	}
 	
-    
+	public List<CartItem> findByCartIdPaging(Long id, int offset, int size) {
+		return cartRepository.findByCartIdPaging(id,offset,size);
+	}
+ 
+	public int countByCartId(Long id) {
+		return cartRepository.countByCartId(id);
+	}
+
+	public List<CartItem> getCartItems(Long id) {
+		return cartRepository.getCartItems(id);
+	}
 }

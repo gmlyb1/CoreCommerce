@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
+<head th:replace="layout/head :: head">
     <title>주문 상세</title>
 </head>
 <body>
 
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="layout/header :: header"></div>
 
 <div class="container mt-5">
     <h2>📦 주문 상세 정보</h2>
@@ -13,7 +13,7 @@
     <div class="card mt-4 p-4 shadow-sm">
         <p><strong>주문번호:</strong> <span th:text="${order.id}"></span></p>
         <p><strong>주문금액:</strong> 
-            <span th:text="${order.totalPrice} + '원'"></span>
+            <span th:text="${T(java.lang.String).format('%,d원', order.totalPrice)}"></span>
         </p>
         <p><strong>상태:</strong> 
             <span th:text="${order.status}"></span>
@@ -27,6 +27,8 @@
         <a href="/orders" class="btn btn-secondary">목록으로</a>
     </div>
 </div>
+
+<div th:replace="layout/footer :: footer"></div>
 
 </body>
 </html>

@@ -34,5 +34,16 @@ public interface CartRepository {
 	void clearByMember(Long memberId);
 
 	Cart findCartByMemberId(Long memberId);
+
+	List<CartItem> findByCartIdPaging(
+		    @Param("cartId") Long cartId,
+		    @Param("offset") int offset,
+		    @Param("size") int size
+		);
+
+	int countByCartId(Long id);
+
+	List<CartItem> getCartItems(Long id);
+
     
 }

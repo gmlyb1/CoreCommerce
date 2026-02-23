@@ -79,6 +79,51 @@
 	
 	</select>
 	
+	<select id="findByCartIdPaging"
+	        resultType="com.CoreCommerce.domain.CartItem">
+	
+	    SELECT
+	        ci.id AS id,
+	        ci.cart_id AS cartId,
+	        ci.product_id AS productId,
+	        ci.quantity AS quantity,
+	        p.name AS productName,
+	        p.price AS price,
+	        p.image_url AS imageUrl
+	    FROM cart_item ci
+	    JOIN product p ON ci.product_id = p.id
+	    WHERE ci.cart_id = #{cartId}
+	    ORDER BY ci.id DESC
+	    LIMIT #{size} OFFSET #{offset}
+	
+	</select>
+	
+	<select id="countByCartId" resultType="int">
+	    SELECT COUNT(*)
+		    FROM cart_item ci
+		    JOIN product p ON ci.product_id = p.id
+	    WHERE ci.cart_id = #{cartId}
+	</select>
+	
+	<select id="getCartItems"
+        parameterType="long"
+        resultType="com.CoreCommerce.domain.CartItem">
+
+	    SELECT
+	        ci.id AS id,
+	        ci.cart_id AS cartId,
+	        ci.product_id AS productId,
+	        ci.quantity AS quantity,
+	        p.name AS productName,
+	        p.price AS price,
+	        p.image_url AS imageUrl
+	    FROM cart_item ci
+	    JOIN product p ON ci.product_id = p.id
+	    WHERE ci.cart_id = #{cartId}
+	    ORDER BY ci.id DESC
+	
+	</select>
+	
 	<delete id="clearByMember" parameterType="long">
 
 	    DELETE FROM cart_item

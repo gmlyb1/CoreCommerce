@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.CoreCommerce.domain.Cart;
 import com.CoreCommerce.domain.CartItem;
 import com.CoreCommerce.domain.Member;
+import com.CoreCommerce.domain.Pagination;
 import com.CoreCommerce.domain.Product;
 import com.CoreCommerce.repository.CartRepository;
 import com.CoreCommerce.repository.ProductRepository;
@@ -37,30 +38,74 @@ public class CartController {
         this.cartRepo = cartRepo;
     }
 
+//    @GetMapping("/list")
+//    public String listCart(HttpSession session, Model model) {
+//
+//        Member loginUser = (Member) session.getAttribute("loginUser");
+//        
+//        Long userId = loginUser.getId();
+//
+//        Cart cart = cartRepository.findCartByUserId(userId);
+//
+//        if (cart == null) {
+//            model.addAttribute("items", new ArrayList<>());
+//            model.addAttribute("totalPrice", 0);
+//            return "cart/list";
+//        }
+//
+//        List<CartItem> cartItems = cartRepository.findByCartId(cart.getId());
+//
+//        int totalPrice = cartItems.stream()
+//                .mapToInt(item -> item.getPrice() * item.getQuantity())
+//                .sum();
+//
+//        model.addAttribute("items", cartItems);
+//        model.addAttribute("cartId", cart.getId());
+//        model.addAttribute("totalPrice", totalPrice);
+//
+//        return "cart/list";
+//    }
+    
     @GetMapping("/list")
-    public String listCart(HttpSession session, Model model) {
+    public String listCart(@RequestParam(defaultValue = "1") int page,
+                           HttpSession session,
+                           Model model) {
 
-        Member loginUser = (Member) session.getAttribute("loginUser");
-        
+        Member loginUser =
+                (Member) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return "redirect:/login";
+        }
+
         Long userId = loginUser.getId();
+
+        int size = 5; // 한 페이지에 보여줄 개수
+        int offset = (page - 1) * size;
 
         Cart cart = cartRepository.findCartByUserId(userId);
 
-        if (cart == null) {
-            model.addAttribute("items", new ArrayList<>());
-            model.addAttribute("totalPrice", 0);
-            return "cart/list";
+        List<CartItem> cartItems = new ArrayList<>();
+        int totalCount = 0;
+
+        if (cart != null) {
+
+            cartItems = cartRepository.findByCartIdPaging(  cart.getId(), offset, size);
+
+            totalCount = cartRepository.countByCartId(cart.getId());
         }
 
-        List<CartItem> cartItems = cartRepository.findByCartId(cart.getId());
-
-        int totalPrice = cartItems.stream()
-                .mapToInt(item -> item.getPrice() * item.getQuantity())
-                .sum();
+        int totalPages = (int) Math.ceil((double) totalCount / size);
 
         model.addAttribute("items", cartItems);
-        model.addAttribute("cartId", cart.getId());
-        model.addAttribute("totalPrice", totalPrice);
+        model.addAttribute("totalPrice",
+                cartItems.stream()
+                        .mapToInt(i -> i.getPrice() * i.getQuantity())
+                        .sum());
+
+        model.addAttribute("pagination", new Pagination(page, size, totalCount));
+
+        model.addAttribute("cartId", cart != null ? cart.getId() : null);
 
         return "cart/list";
     }

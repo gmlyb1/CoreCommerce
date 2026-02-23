@@ -26,6 +26,13 @@
             <div class="col-lg-4 text-center text-lg-end">
                 <div class="d-inline-flex align-items-center" style="height: 45px;">
 					
+					<img th:if="${loginUser != null and loginUser.profileImage != null}"
+				         th:src="@{${loginUser.profileImage}}"
+				         width="35"
+				         height="35"
+				         class="rounded-circle me-2"
+				         style="object-fit: cover;">
+					
 					<span th:if="${loginUser != null}" class="text-dark me-3">
 			            <b th:text="${loginUser.name}"></b> 고객님! 반갑습니다 😊
 			        </span>
@@ -79,7 +86,7 @@
 						            <a class="dropdown-item" href="/account/settings">환경 설정</a>
 						        </li>
 						        <li>
-						            <a class="dropdown-item" href="/account">프로필</a>
+						            <a class="dropdown-item" href="/member/profile">프로필</a>
 						        </li>
 						        <li>
 						            <a class="dropdown-item" href="/logout">로그아웃</a>

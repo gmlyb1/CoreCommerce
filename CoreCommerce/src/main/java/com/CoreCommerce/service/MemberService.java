@@ -25,4 +25,12 @@ public class MemberService {
     public Optional<Member> findByEmail(String email) {
         return memberRepository.findByEmail(email);
     }
+    
+    public void updatePassword(Long id, String encodedPassword) {
+    	memberRepository.updatePassword(id,encodedPassword);
+    }
+    
+    public void updateProfile(Member loginUser) {
+    	memberRepository.updateProfile(loginUser);
+    }
 }

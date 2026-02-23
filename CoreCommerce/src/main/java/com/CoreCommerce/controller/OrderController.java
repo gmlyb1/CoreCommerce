@@ -10,11 +10,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.CoreCommerce.domain.Member;
 import com.CoreCommerce.domain.Order;
+import com.CoreCommerce.domain.Pagination;
 import com.CoreCommerce.service.OrderService;
 
 @Controller
@@ -25,7 +28,7 @@ public class OrderController {
 	private OrderService orderService;
 	
 	@GetMapping("/orders")
-	public String orderList(Model model,HttpSession session) {
+	public String orderList(@RequestParam(defaultValue = "1") int page,Model model,HttpSession session) {
 
 	    Member loginUser = (Member) session.getAttribute("loginUser");
 	    
@@ -33,8 +36,21 @@ public class OrderController {
 	    	return "redirect:/login";
 	    }
 	    
-	    List<Order> orders = orderService.findByMemberId(loginUser.getId());
+	    int size = 10;
+	    int totalCount = orderService.countByMemberId(loginUser.getId());
+
+	    Pagination pagination = new Pagination(page, size, totalCount);
+
+	    List<Order> orders =
+        orderService.findByMemberIdPaging(
+                loginUser.getId(),
+                pagination.getOffset(),
+                pagination.getSize()
+        );
+	    
+	    //List<Order> orders = orderService.findByMemberId(loginUser.getId());
 	    model.addAttribute("orders", orders);
+	    model.addAttribute("pagination", pagination);
 
 	    return "order/list";
 	}

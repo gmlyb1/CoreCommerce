@@ -31,33 +31,35 @@ public class OrderService {
     @Transactional
     public Long createOrder(Long memberId) {
 
-        // 1️⃣ 회원의 장바구니 조회
+        // 1️⃣ 회원 장바구니 조회
         Cart cart = cartRepository.findCartByMemberId(memberId);
 
         if (cart == null) {
             throw new RuntimeException("장바구니 없음");
         }
 
-        List<CartItem> items = cartService.getCartItems(cart.getId());
+        // 2️⃣ 장바구니 아이템 전체 조회
+        List<CartItem> items =
+                cartService.getCartItems(cart.getId());
 
         if (items.isEmpty()) {
             throw new RuntimeException("장바구니가 비어있음");
         }
 
-        // 2️⃣ 총 금액 계산
+        // 3️⃣ 총 금액 계산
         int totalPrice = items.stream()
                 .mapToInt(i -> i.getPrice() * i.getQuantity())
                 .sum();
 
-        // 3️⃣ 주문 생성
+        // 4️⃣ 주문 생성
         Order order = new Order();
         order.setMemberId(memberId);
         order.setTotalPrice(totalPrice);
         order.setStatus("READY");
 
-        orderRepository.insert(order); // id 자동 세팅
+        orderRepository.insert(order); // 🔥 id 자동 세팅
 
-        // 4️⃣ 주문 상품 저장
+        // 5️⃣ 주문 상품 저장
         for (CartItem item : items) {
 
             OrderItem orderItem = new OrderItem();
@@ -69,7 +71,7 @@ public class OrderService {
             orderRepository.insertOrderItem(orderItem);
         }
 
-        // 5️⃣ 장바구니 비우기
+        // 6️⃣ 장바구니 전체 비우기
         cartService.clearByMember(memberId);
 
         return order.getId();
@@ -135,6 +137,14 @@ public class OrderService {
     public List<Order> findByMemberId(Long memberId) {
         return orderRepository.findByMemberId(memberId);
     }
+
+	public int countByMemberId(Long id) {
+		return orderRepository.countByMemberId(id);
+	}
+
+	public List<Order> findByMemberIdPaging(Long id, int offset, int size) {
+		return orderRepository.findByMemberIdPaging(id,offset,size);
+	}
 
     
     

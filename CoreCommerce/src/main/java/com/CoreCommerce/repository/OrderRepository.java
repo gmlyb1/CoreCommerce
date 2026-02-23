@@ -22,5 +22,13 @@ public interface OrderRepository {
 	int updateOrderToPaid(@Param("orderId") Long orderId);
 
 	List<Order> findByMemberId(Long memberId);
+
+	int countByMemberId(Long id);
+
+	List<Order> findByMemberIdPaging( @Param("memberId") Long memberId,
+								      @Param("offset") int offset,
+								      @Param("size") int size);
 	
+	void createOrder(Long memberId);
+
 }

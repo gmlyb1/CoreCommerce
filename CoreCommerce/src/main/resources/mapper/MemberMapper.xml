@@ -7,7 +7,18 @@
 
 	<select id="findByEmail" parameterType="com.CoreCommerce.domain.Member" resultType="com.CoreCommerce.domain.Member">
 		select 
-			*
+			 id
+			,email
+			,password
+			,name
+			,phone
+			,zipcode
+			,address1
+			,address2
+			,profile_image as profileImage
+			,role
+			,created_at
+			,updated_at
 		from member
 		where email = #{email}
 	</select>
@@ -36,5 +47,22 @@
 	        ,#{address2}
 	    )
 	</insert>
+	
+	<update id="updateProfile">
+	    UPDATE member
+	    SET
+	      name = #{name},
+          phone = #{phone},
+          address1 = #{address1},
+          address2 = #{address2},
+          profile_image = #{profileImage}
+	    WHERE id = #{id}
+	</update>
+	
+	<update id="updatePassword">
+	    UPDATE member
+	    SET password = #{password}
+	    WHERE id = #{id}
+	</update>
 
 </mapper>

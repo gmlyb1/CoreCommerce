@@ -47,7 +47,8 @@ public class Member {
 	    private String zipcode;
 	    private String address1;
 	    private String address2;
-
+	    private String profileImage;
+	    
 	    @CreatedDate
 	    @Column(name = "created_at", updatable = false)
 	    private LocalDateTime createdAt;

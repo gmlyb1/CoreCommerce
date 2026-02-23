@@ -24,6 +24,8 @@
                 </thead>
 
                 <tbody>
+
+                <!-- 주문 목록 -->
                 <tr th:each="order : ${orders}">
                     <td>
                         <b th:text="${order.id}"></b>
@@ -38,20 +40,25 @@
                     </td>
 
                     <td>
-                        <span th:if="${order.status == 'PAID'}" class="badge bg-success">결제완료</span>
-						<span th:if="${order.status == 'READY'}" class="badge bg-primary">결제대기</span>
-						<span th:if="${order.status == 'CANCEL'}" class="badge bg-danger">취소</span>
+                        <span th:if="${order.status == 'PAID'}"
+                              class="badge bg-success">결제완료</span>
+
+                        <span th:if="${order.status == 'READY'}"
+                              class="badge bg-primary">결제대기</span>
+
+                        <span th:if="${order.status == 'CANCEL'}"
+                              class="badge bg-danger">취소</span>
                     </td>
 
                     <td>
-                       <a th:href="@{/orders/{id}(id=${order.id})}"
-					      th:text="${order.id}"
-					      class="text-primary fw-bold">
+                        <a th:href="@{/order/orders/{id}(id=${order.id})}"
+                           class="text-primary fw-bold">
                             상세보기
                         </a>
                     </td>
                 </tr>
 
+                <!-- 주문 없을 때 -->
                 <tr th:if="${#lists.isEmpty(orders)}">
                     <td colspan="5" class="text-muted py-4">
                         주문 내역이 없습니다.
@@ -60,6 +67,46 @@
 
                 </tbody>
             </table>
+
+            <!-- 🔥 페이징 영역 -->
+			<div class="mt-4"
+			     th:if="${pagination != null and pagination.totalPages > 1}">
+			
+			    <nav>
+			        <ul class="pagination justify-content-center d-flex flex-row">
+			
+			            <li class="page-item"
+			                th:classappend="${pagination.first} ? 'disabled'">
+			
+			                <a class="page-link"
+			                   th:href="@{/order/orders(page=${pagination.page - 1})}">
+			                    ‹
+			                </a>
+			            </li>
+			
+			            <li class="page-item"
+			                th:each="i : ${#numbers.sequence(1, pagination.totalPages)}"
+			                th:classappend="${i == pagination.page} ? 'active'">
+			
+			                <a class="page-link"
+			                   th:href="@{/order/orders(page=${i})}"
+			                   th:text="${i}">
+			                </a>
+			            </li>
+			
+			            <li class="page-item"
+			                th:classappend="${pagination.last} ? 'disabled'">
+			
+			                <a class="page-link"
+			                   th:href="@{/order/orders(page=${pagination.page + 1})}">
+			                    ›
+			                </a>
+			            </li>
+			
+			        </ul>
+			    </nav>
+			
+			</div>
 
         </div>
     </div>

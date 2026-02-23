@@ -13,7 +13,7 @@
 	    <result property="createdAt" column="created_at"/>
 	</resultMap>
 	
-	<select id="findByMemberId"
+	<!-- <select id="findByMemberId"
 	        parameterType="long"
 	        resultMap="OrderMap">
 	
@@ -26,6 +26,19 @@
 	    WHERE member_id = #{memberId}
 	    ORDER BY created_at DESC
 	
+	</select> -->
+	<select id="findByMemberIdPaging" resultMap="OrderMap">
+	    SELECT *
+	    FROM orders
+	    WHERE member_id = #{memberId}
+	    ORDER BY created_at DESC
+	    LIMIT #{size} OFFSET #{offset}
+	</select>
+	
+	<select id="countByMemberId" resultType="int">
+	    SELECT COUNT(*)
+	    FROM orders
+	    WHERE member_id = #{memberId}
 	</select>
 	
 	<select id="findById"
