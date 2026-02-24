@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/head :: head"></head>
+
+<body class="bg-light">
+
+<div th:replace="layout/header :: header"></div>
+
+<div class="container py-5" style="max-width:1100px;">
+
+    <!-- 🔷 상단 제목 -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">📢 공지사항</h2>
+
+        <a href="/notice/admin/write"
+           class="btn btn-dark px-4 rounded-3">
+            + 공지 작성
+        </a>
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- 🔥 1️⃣ 중요 공지 전용 영역 (완전 분리) -->
+    <!-- ===================================================== -->
+    <div th:if="${notices != null}" class="mb-4">
+
+        <div th:each="notice : ${notices}"
+             th:if="${notice.isPinned == true}"
+             class="important-notice p-4 mb-3 rounded-4 shadow-sm"
+             style="cursor:pointer;"
+             th:onclick="|location.href='@{/notice/{id}(id=${notice.id})}'|">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+                    <span class="badge bg-danger me-3 px-3 py-2">
+                        📢 중요 공지
+                    </span>
+
+                    <span class="fs-4 fw-bold text-danger"
+                          th:text="${notice.title}">
+                    </span>
+                </div>
+
+                <small class="text-muted"
+                       th:text="${#temporals.format(notice.createdAt,'yyyy-MM-dd')}">
+                </small>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- 🔷 2️⃣ 일반 공지 영역 -->
+    <!-- ===================================================== -->
+    <div class="card shadow-sm rounded-4 border-0">
+        <div class="card-body p-0">
+
+            <table class="table align-middle mb-0">
+                <thead class="bg-dark text-white">
+                <tr>
+                    <th style="width:100px;" class="ps-4 text-center">번호</th>
+                    <th>제목</th>
+                    <th style="width:180px;" class="text-center">작성일</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <!-- 📭 데이터 없을 때 -->
+                <tr th:if="${notices == null or #lists.isEmpty(notices)}">
+                    <td colspan="3" class="text-center py-5 text-muted fs-5">
+                        📭 등록된 공지사항이 없습니다.
+                    </td>
+                </tr>
+
+                <!-- 🔹 일반 공지 (중요 제외) -->
+                <tr th:each="notice : ${notices}"
+                    th:if="${notice.isPinned != true}"
+                    class="normal-row"
+                    style="cursor:pointer;"
+                    th:onclick="|location.href='@{/notice/{id}(id=${notice.id})}'|">
+
+                    <td class="ps-4 fw-semibold text-center"
+                        th:text="${notice.id}">
+                    </td>
+
+                    <td class="fs-6">
+
+                        <!-- NEW -->
+                        <span th:if="${notice.createdAt != null 
+                                      and notice.createdAt.isAfter(T(java.time.LocalDateTime).now().minusDays(3))}"
+                              class="badge bg-warning text-dark me-2 px-2 py-1">
+                            NEW
+                        </span>
+
+                        <span th:text="${notice.title}"></span>
+
+                    </td>
+
+                    <td class="text-muted text-center"
+                        th:text="${#temporals.format(notice.createdAt,'yyyy-MM-dd')}">
+                    </td>
+
+                </tr>
+
+                </tbody>
+            </table>
+
+            <!-- ===================================================== -->
+            <!-- 🔥 3️⃣ 페이징 -->
+            <!-- ===================================================== -->
+            <div class="mt-4 pb-4"
+                 th:if="${pagination != null and pagination.totalPages > 1}">
+
+                <ul class="pagination justify-content-center">
+
+                    <!-- 이전 -->
+                    <li class="page-item"
+                        th:classappend="${pagination.first} ? 'disabled'">
+
+                        <a class="page-link"
+                           th:href="@{/notice(page=${pagination.page - 1})}">
+                            ‹
+                        </a>
+                    </li>
+
+                    <!-- 번호 -->
+                    <li class="page-item"
+                        th:each="i : ${#numbers.sequence(1, pagination.totalPages)}"
+                        th:classappend="${i == pagination.page} ? 'active'">
+
+                        <a class="page-link"
+                           th:href="@{/notice(page=${i})}"
+                           th:text="${i}">
+                        </a>
+                    </li>
+
+                    <!-- 다음 -->
+                    <li class="page-item"
+                        th:classappend="${pagination.last} ? 'disabled'">
+
+                        <a class="page-link"
+                           th:href="@{/notice(page=${pagination.page + 1})}">
+                            ›
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+<!-- ===================================================== -->
+<!-- 🎨 스타일 -->
+<!-- ===================================================== -->
+<style>
+
+/* 🔥 중요 공지 카드 */
+.important-notice {
+    background: linear-gradient(135deg, #fff3cd, #ffe0b2);
+    border-left: 10px solid #ff5722;
+    transition: all 0.2s ease-in-out;
+}
+
+.important-notice:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* 일반 공지 hover */
+.normal-row:hover {
+    background-color: #f8f9fa;
+    transition: 0.15s ease-in-out;
+}
+
+/* 페이징 */
+.pagination {
+    display: flex !important;
+    justify-content: center !important;
+    flex-direction: row !important;
+}
+
+.pagination .page-item {
+    display: inline-block !important;
+}
+
+.pagination .page-link {
+    display: inline-block !important;
+}
+
+</style>
+
+<div th:replace="layout/footer :: footer"></div>
+
+</body>
+</html>

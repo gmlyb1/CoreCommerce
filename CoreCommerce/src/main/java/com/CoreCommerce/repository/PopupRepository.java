@@ -1,0 +1,23 @@
+package com.CoreCommerce.repository;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.CoreCommerce.domain.Popup;
+
+@Mapper
+public interface PopupRepository {
+
+	 	void save(Popup popup);
+
+	    List<Popup> findAll();
+
+	    Popup findById(Long id);
+
+	    void update(Popup popup);
+
+	    void delete(Long id);
+
+	    Popup findActivePopup();
+}

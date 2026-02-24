@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/head :: head"></head>
+
+<body class="bg-light">
+
+<div th:replace="layout/header :: header"></div>
+
+<div class="container py-5" style="max-width:1000px;">
+
+    <div class="card shadow-lg border-0 rounded-4 p-5">
+
+        <div class="mb-4">
+
+            <h2 class="fw-bold mb-3"
+                th:text="${notice.title}">
+            </h2>
+
+            <div class="text-muted fs-6">
+                작성자: <span th:text="${notice.writer}"></span>
+                &nbsp; | &nbsp;
+                작성일:
+                <span th:text="${#temporals.format(notice.createdAt,'yyyy-MM-dd HH:mm')}"></span>
+            </div>
+
+        </div>
+
+        <hr class="mb-4">
+
+        <div class="fs-5 lh-lg"
+             style="white-space:pre-line;"
+             th:text="${notice.content}">
+        </div>
+
+    </div>
+
+     <div class="mt-4 d-flex justify-content-between">
+
+        <!-- 목록 -->
+        <a href="/notice"
+           class="btn btn-outline-secondary px-4">
+            목록으로
+        </a>
+
+        <!-- 관리자만 보이게 -->
+        <div th:if="${session.loginUser != null and session.loginUser.role == 'MANAGER'}"
+             class="d-flex gap-2">
+
+            <a th:href="@{/notice/admin/edit/{id}(id=${notice.id})}"
+               class="btn btn-outline-dark px-4">
+                수정
+            </a>
+
+            <form th:action="@{/notice/admin/delete/{id}(id=${notice.id})}"
+                  method="post"
+                  onsubmit="return confirm('정말 삭제하시겠습니까?');">
+
+                <button type="submit"
+                        class="btn btn-outline-danger px-4">
+                    삭제
+                </button>
+
+            </form>
+
+        </div>
+    </div>
+
+
+</div>
+
+<div th:replace="layout/footer :: footer"></div>
+
+</body>
+</html>

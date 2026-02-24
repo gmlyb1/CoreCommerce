@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.CoreCommerce.repository.PopupRepository">
+	
+    <insert id="save" parameterType="com.CoreCommerce.domain.Popup">
+
+        INSERT INTO popup
+        (title, image_url, link_url,
+         start_date, end_date, is_active, created_at)
+
+        VALUES
+        (#{title},
+         #{imageUrl},
+         #{linkUrl},
+         #{startDate},
+         #{endDate},
+         #{isActive},
+         NOW())
+
+    </insert>
+
+    <select id="findAll"
+            resultType="com.CoreCommerce.domain.Popup">
+
+        SELECT
+            id,
+            title,
+            image_url   AS imageUrl,
+            link_url    AS linkUrl,
+            start_date  AS startDate,
+            end_date    AS endDate,
+            is_active   AS isActive,
+            created_at  AS createdAt
+        FROM popup
+        ORDER BY id DESC
+
+    </select>
+
+    <select id="findById"
+            parameterType="long"
+            resultType="com.CoreCommerce.domain.Popup">
+
+        SELECT
+            id,
+            title,
+            image_url   AS imageUrl,
+            link_url    AS linkUrl,
+            start_date  AS startDate,
+            end_date    AS endDate,
+            is_active   AS isActive,
+            created_at  AS createdAt
+        FROM popup
+        WHERE id = #{id}
+
+    </select>
+
+    <update id="update"
+            parameterType="com.CoreCommerce.domain.Popup">
+
+        UPDATE popup
+        SET
+            title = #{title},
+            image_url = #{imageUrl},
+            link_url = #{linkUrl},
+            start_date = #{startDate},
+            end_date = #{endDate},
+            is_active = #{isActive}
+        WHERE id = #{id}
+
+    </update>
+
+    <delete id="delete"
+            parameterType="long">
+
+        DELETE FROM popup
+        WHERE id = #{id}
+
+    </delete>
+
+    <select id="findActivePopup"
+        resultType="com.CoreCommerce.domain.Popup">
+
+    <![CDATA[
+        SELECT
+            id,
+            title,
+            image_url   AS imageUrl,
+            link_url    AS linkUrl,
+            start_date  AS startDate,
+            end_date    AS endDate,
+            is_active   AS isActive,
+            created_at  AS createdAt
+        FROM popup
+        WHERE is_active = TRUE
+          AND start_date <= NOW()
+          AND end_date >= NOW()
+        ORDER BY id DESC
+        LIMIT 1
+    ]]>
+
+</select>
+
+</mapper>

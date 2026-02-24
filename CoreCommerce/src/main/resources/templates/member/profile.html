@@ -73,12 +73,23 @@
 
             <!-- 주소1 -->
             <div class="mb-3">
-                <label class="form-label">주소1</label>
-                <input type="text"
-                       name="address1"
-                       class="form-control"
-                       th:value="${session.loginUser?.address1}">
-            </div>
+			    <label class="form-label">주소1</label>
+			
+			    <div class="input-group">
+			        <input type="text"
+			               name="address1"
+			               id="address1"
+			               class="form-control"
+			               th:value="${session.loginUser?.address1}"
+			               readonly>
+			
+			        <button type="button"
+			                class="btn btn-outline-secondary"
+			                onclick="execDaumPostcode()">
+			            주소찾기
+			        </button>
+			    </div>
+			</div>
 
             <!-- 주소2 -->
             <div class="mb-3">
@@ -135,7 +146,7 @@
 <!-- Axios -->
 <!-- ========================= -->
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
 
 /* ===============================
@@ -196,6 +207,21 @@ document.getElementById("passwordForm")
     }
 
 });
+
+function execDaumPostcode() {
+    new daum.Postcode({
+        oncomplete: function(data) {
+
+            // 도로명 주소 or 지번 주소 선택
+            var addr = data.userSelectedType === 'R'
+                ? data.roadAddress
+                : data.jibunAddress;
+
+            // 주소 입력
+            document.getElementById("address1").value = addr;
+        }
+    }).open();
+}
 
 </script>
 

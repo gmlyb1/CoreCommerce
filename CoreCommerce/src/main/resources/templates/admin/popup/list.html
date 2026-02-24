@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout/head :: head"></head>
+
+<body class="bg-light">
+
+<div th:replace="layout/header :: header"></div>
+
+<div class="container py-5" style="max-width:1100px;">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold">📢 팝업 관리</h3>
+
+        <a href="/admin/popup/form"
+           class="btn btn-dark px-4">
+            + 팝업 등록
+        </a>
+    </div>
+
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body">
+
+            <table class="table table-hover align-middle text-center">
+                <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>이미지</th>
+                    <th>제목</th>
+                    <th>기간</th>
+                    <th>상태</th>
+                    <th>관리</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr th:if="${popupList == null or #lists.isEmpty(popupList)}">
+                    <td colspan="6" class="py-5 text-muted">
+                        📭 등록된 팝업이 없습니다.
+                    </td>
+                </tr>
+
+                <tr th:each="popup : ${popupList}">
+
+                    <td th:text="${popup.id}"></td>
+
+                    <td>
+                        <img th:if="${popup.imageUrl != null}"
+                             th:src="@{${popup.imageUrl}}"
+                             style="width:100px; border-radius:8px;">
+                    </td>
+
+                    <td th:text="${popup.title}"></td>
+
+                    <td class="small">
+                        <div th:text="${#temporals.format(popup.startDate,'yyyy-MM-dd HH:mm')}"></div>
+                        ~
+                        <div th:text="${#temporals.format(popup.endDate,'yyyy-MM-dd HH:mm')}"></div>
+                    </td>
+
+                    <td>
+                        <span th:if="${popup.isActive}"
+                              class="badge bg-success">
+                            ON
+                        </span>
+
+                        <span th:if="${!popup.isActive}"
+                              class="badge bg-secondary">
+                            OFF
+                        </span>
+                    </td>
+
+                    <td>
+
+                        <a th:href="@{/admin/popup/form/{id}(id=${popup.id})}"
+                           class="btn btn-sm btn-warning">
+                            수정
+                        </a>
+
+                        <a th:href="@{/admin/popup/delete/{id}(id=${popup.id})}"
+                           class="btn btn-sm btn-danger"
+                           onclick="return confirm('삭제하시겠습니까?')">
+                            삭제
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
+<div th:replace="layout/footer :: footer"></div>
+
+</body>
+</html>

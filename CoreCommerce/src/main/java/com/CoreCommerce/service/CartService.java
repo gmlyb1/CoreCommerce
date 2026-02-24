@@ -10,6 +10,9 @@ import com.CoreCommerce.domain.Cart;
 import com.CoreCommerce.domain.CartItem;
 import com.CoreCommerce.repository.CartRepository;
 
+import lombok.RequiredArgsConstructor;
+
+
 @Service
 public class CartService {
 
@@ -18,7 +21,7 @@ public class CartService {
     public CartService(CartRepository cartRepository) {
         this.cartRepository = cartRepository;
     }
-
+    
     // 장바구니에 상품 추가
     public void addToCart(CartItem item) {
         CartItem existing = cartRepository.findByCartIdAndProductId(item.getCartId(), item.getProductId());
