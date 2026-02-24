@@ -27,7 +27,7 @@
 	     FROM product
 	     WHERE offerYn =  1
          ORDER BY id DESC
-         LIMIT 3
+         LIMIT 4
     </select>
 
     <!-- ID로 단일 상품 조회 -->
@@ -51,7 +51,8 @@
             description = #{description},
             price = #{price},
             stock = #{stock},
-            image_url = #{imageUrl}
+            image_url = #{imageUrl},
+            offerYn = #{offerYn}
         WHERE id = #{id}
     </update>
 

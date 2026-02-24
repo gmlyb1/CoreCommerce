@@ -51,7 +51,8 @@ public class Product {
 
 	    private LocalDateTime createdAt;
 	    
-	    private boolean offerYn;
+	    @Column(name = "offer_yn")
+	    private boolean offerYn = false;
 	    
 	    private int discountPercent;
 

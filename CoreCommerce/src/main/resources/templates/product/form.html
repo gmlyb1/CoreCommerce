@@ -36,7 +36,18 @@
                 <label class="form-label">재고</label>
                 <input type="number" th:field="*{stock}" class="form-control" required>
             </div>
-
+			<div class="mb-3">
+			    <label class="form-label">광고 여부</label>
+			
+			    <select th:field="*{offerYn}" class="form-select">
+			
+			        <option value="true">✅ 여</option>
+			        <option value="false">❌ 부</option>
+			
+			    </select>
+			
+			</div>
+			
             <div class="mb-3">
                 <label class="form-label">이미지 업로드</label>
                 <input type="file" name="imageFile" class="form-control">
@@ -45,6 +56,8 @@
                     <br>
                     <img th:src="@{${product.imageUrl}}" style="width:150px; border:1px solid #ddd; padding:2px;">
                 </div>
+                
+                <input type="hidden" name="existingImageUrl" th:value="${product.imageUrl}">
             </div>
 
             <button type="submit" class="btn btn-primary w-100 mb-2" th:text="${product.id} != null ? '수정 저장' : '등록'"></button>
