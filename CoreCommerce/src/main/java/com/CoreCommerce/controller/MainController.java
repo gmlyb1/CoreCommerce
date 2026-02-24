@@ -44,6 +44,8 @@ public class MainController {
 	    }
 	    
 	    model.addAttribute("MainPageList", productRepository.findMainPage());
+	    model.addAttribute("AllProductList", productRepository.findAll());
+	    model.addAttribute("offerProductList", productRepository.findOfferProductList());
 	    model.addAttribute("popup", popupRepository.findActivePopup());
 	    model.addAttribute("bannerList", bannerRepository.getAllBanners());
 	    

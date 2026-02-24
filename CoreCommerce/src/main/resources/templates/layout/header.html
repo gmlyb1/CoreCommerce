@@ -179,9 +179,21 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarCollapse">
                         <div class="navbar-nav ms-auto py-0">
-                            <a href="/" class="nav-item nav-link active">홈</a>
-                            <a href="/product/list" class="nav-item nav-link">상품</a>
-                            <a href="/notice" class="nav-item nav-link">공지사항</a>
+                            <a href="/"
+							   th:classappend="${#httpServletRequest.requestURI == '/'} ? 'active'"
+							   class="nav-item nav-link">
+							홈
+							</a>
+                           <a href="/product/list"
+							   th:classappend="${#httpServletRequest.requestURI.startsWith('/product')} ? 'active'"
+							   class="nav-item nav-link">
+							상품
+							</a>
+                           <a href="/notice"
+							   th:classappend="${#httpServletRequest.requestURI.startsWith('/notice')} ? 'active'"
+							   class="nav-item nav-link">
+							공지사항
+							</a>
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">페이지</a>
                                 <div class="dropdown-menu m-0">

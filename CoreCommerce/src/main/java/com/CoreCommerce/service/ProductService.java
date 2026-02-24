@@ -39,4 +39,8 @@ public class ProductService {
     public List<Product> findMainPage() {
     	return productRepository.findMainPage();
     }
+    
+    public List<Product> findOfferProductList() {
+    	return productRepository.findOfferProductList();
+    }
 }

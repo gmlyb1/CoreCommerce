@@ -21,6 +21,14 @@
         FROM product
         ORDER BY id DESC
     </select>
+    
+    <select id="findOfferProductList" resultMap="ProductMap">
+    	 SELECT *
+	     FROM product
+	     WHERE offerYn =  1
+         ORDER BY id DESC
+         LIMIT 3
+    </select>
 
     <!-- ID로 단일 상품 조회 -->
     <select id="findById" parameterType="long" resultMap="ProductMap">
@@ -53,7 +61,7 @@
         WHERE id = #{id}
     </delete>
     
-    <select id="findMainPage" resultType="com.CoreCommerce.domain.Product">
+    <select id="findMainPage" resultMap="ProductMap">
     	select * from product order by created_at desc limit 8
     </select>
 

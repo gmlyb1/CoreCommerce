@@ -10,6 +10,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.CoreCommerce.domain.Member;
 import com.CoreCommerce.domain.Pagination;
 import com.CoreCommerce.domain.Popup;
 import com.CoreCommerce.service.PopupService;
@@ -41,7 +44,14 @@ public class PopupController {
 	       🔹 관리자 - 목록
 	    ========================== */
 	    @GetMapping("/admin/popup/list")
-	    public String list(@RequestParam(defaultValue = "1") int page,Model model) {
+	    public String list(@RequestParam(defaultValue = "1") int page,Model model,HttpSession session) {
+	    	
+	    	 Member loginUser = (Member) session.getAttribute("loginUser");
+			 
+			 if(!loginUser.getRole().equals("MANAGER")) {
+				 return "redirect:/";
+			 }
+	    	
 	    	int size = 10;
 
     	    // 🔥 전체 개수
@@ -67,7 +77,14 @@ public class PopupController {
 	       🔹 관리자 - 등록폼
 	    ========================== */
 	    @GetMapping("/admin/popup/write")
-	    public String writeForm(Model model) {
+	    public String writeForm(Model model,HttpSession session) {
+	    	
+	    	 Member loginUser = (Member) session.getAttribute("loginUser");
+			 
+			 if(!loginUser.getRole().equals("MANAGER")) {
+				 return "redirect:/";
+			 }
+	    	
 	        model.addAttribute("popup", new Popup());
 	        return "admin/popup/write";
 	    }
@@ -132,7 +149,14 @@ public class PopupController {
 	       🔹 관리자 - 수정폼
 	    ========================== */
 	    @GetMapping("/admin/popup/edit/{id}")
-	    public String editForm(@PathVariable Long id, Model model) {
+	    public String editForm(@PathVariable Long id, Model model,HttpSession session) {
+	    	
+	    	 Member loginUser = (Member) session.getAttribute("loginUser");
+			 
+			 if(!loginUser.getRole().equals("MANAGER")) {
+				 return "redirect:/";
+			 }
+	    	
 	        model.addAttribute("popup", popupService.findById(id));
 	        return "admin/popup/write";
 	    }

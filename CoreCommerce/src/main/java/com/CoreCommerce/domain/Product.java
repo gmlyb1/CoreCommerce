@@ -2,7 +2,11 @@ package com.CoreCommerce.domain;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -21,11 +25,34 @@ import lombok.Setter;
 @Builder
 public class Product {
 
-	private Long id;
-	private String name;
-	private int price;
-	private int stock;
-	private String description;
-	private String imageUrl;
+	 	@Id
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	    private Long id;
+
+	    @Column(nullable = false)
+	    private String name;
+
+	    private int price;
+
+	    private int stock;
+
+	    @Column(length = 2000)
+	    private String description;
+
+	    private String imageUrl;
+
+	    private String category;
+
+	    private boolean sale;
+
+	    private boolean newProduct;
+
+	    private int originalPrice;
+
+	    private LocalDateTime createdAt;
+	    
+	    private boolean offerYn;
+	    
+	    private int discountPercent;
 
 }

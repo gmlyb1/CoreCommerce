@@ -45,7 +45,7 @@ public class ProductController {
 
     // 상품 목록 페이지
     @GetMapping("/list")
-    public String listProducts(Model model) {
+    public String listProducts(HttpSession session, Model model) {
         List<Product> products = productRepository.findAll();
         model.addAttribute("products", products);
         return "product/list";

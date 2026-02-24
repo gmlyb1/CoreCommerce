@@ -17,9 +17,11 @@
             <a th:href="@{/cart/list}" class="btn btn-outline-dark me-2">
                 🛒 장바구니
             </a>
-            <a th:if="${loginUser.role == 'MANAGER'}" th:href="@{/product/form}" class="btn btn-primary">
-                상품 등록
-            </a>
+            <a th:if="${loginUser != null and loginUser.role == 'MANAGER'}"
+			   th:href="@{/product/form}"
+			   class="btn btn-primary">
+			    상품 등록
+			</a>
         </div>
     </div>
 

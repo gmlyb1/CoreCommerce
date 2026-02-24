@@ -7,6 +7,8 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.CoreCommerce.domain.Banner;
+import com.CoreCommerce.domain.Member;
 import com.CoreCommerce.domain.Pagination;
 import com.CoreCommerce.service.BannerService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -40,7 +43,13 @@ public class BannerController {
 	    🔥 목록
 	 ========================== */
 	 @GetMapping("/list")
-	 public String list(@RequestParam(defaultValue = "1") int page,Model model) {
+	 public String list(HttpSession session,@RequestParam(defaultValue = "1") int page,Model model) {
+		
+		 Member loginUser = (Member) session.getAttribute("loginUser");
+		 
+		 if(!loginUser.getRole().equals("MANAGER")) {
+			 return "redirect:/";
+		 }
 		 
 	 	int size = 10;
 
@@ -66,8 +75,14 @@ public class BannerController {
 	    🔥 등록 폼
 	 ========================== */
 	 @GetMapping("/create")
-	 public String createForm(Model model) {
+	 public String createForm(HttpSession session,Model model) {
 	
+		 Member loginUser = (Member) session.getAttribute("loginUser");
+		 
+		 if(!loginUser.getRole().equals("MANAGER")) {
+			 return "redirect:/";
+		 }
+		 
 	     model.addAttribute("banner", new Banner());
 	
 	     return "admin/banner/create";
@@ -122,8 +137,14 @@ public class BannerController {
 	    🔥 수정 폼
 	 ========================== */
 	 @GetMapping("/edit/{id}")
-	 public String editForm(@PathVariable Long id, Model model) {
+	 public String editForm(HttpSession session,@PathVariable Long id, Model model) {
 	
+		 Member loginUser = (Member) session.getAttribute("loginUser");
+		 
+		 if(!loginUser.getRole().equals("MANAGER")) {
+			 return "redirect:/";
+		 }
+		 
 	     Banner banner = bannerService.getBannerById(id);
 	
 	     model.addAttribute("banner", banner);
