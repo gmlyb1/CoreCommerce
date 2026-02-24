@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout/head :: head"></head>
+<body class="bg-light">
+
+<div th:replace="layout/header :: header"></div>
+
+<div class="container py-5" style="max-width:1200px;">
+
+    <h3 class="fw-bold mb-4">👥 회원 관리</h3>
+
+    <!-- ===================================================== -->
+    <!-- 🔎 검색 -->
+    <!-- ===================================================== -->
+    <form method="get"
+          class="mb-3 d-flex gap-2 align-items-center">
+
+        <input type="text"
+               name="email"
+               class="form-control w-25"
+               placeholder="이메일"
+               th:value="${search?.email}">
+
+        <input type="text"
+               name="name"
+               class="form-control w-25"
+               placeholder="이름"
+               th:value="${search?.name}">
+
+        <select name="role"
+                class="form-select w-auto">
+
+            <option value="" selected>전체권한</option>
+
+            <option value="USER"
+                    th:selected="${search?.role == 'USER'}">
+                USER
+            </option>
+
+            <option value="MANAGER"
+                    th:selected="${search?.role == 'MANAGER'}">
+                MANAGER
+            </option>
+
+            <option value="PRODUCTER"
+                    th:selected="${search?.role == 'PRODUCTER'}">
+                PRODUCTER
+            </option>
+
+        </select>
+
+        <button class="btn btn-dark">
+            검색
+        </button>
+
+    </form>
+
+    <!-- ===================================================== -->
+    <!-- 🔵 테이블 -->
+    <!-- ===================================================== -->
+    <div class="card shadow border-0 rounded-4">
+        <div class="card-body">
+
+            <table class="table table-hover text-center align-middle">
+
+                <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Email</th>
+                    <th>이름</th>
+                    <th>현재 권한</th>
+                    <th>변경</th>
+                    <th>삭제</th>
+                    <th>잠금 만료일</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr th:if="${#lists.isEmpty(members)}">
+                    <td colspan="6" class="py-4">
+                        회원 없음
+                    </td>
+                </tr>
+
+                <tr th:each="member : ${members}">
+
+                    <td th:text="${member.id}"></td>
+                    <td th:text="${member.email}"></td>
+                    <td th:text="${member.name}"></td>
+
+                    <td>
+                        <span class="badge bg-primary"
+                              th:text="${member.role}">
+                        </span>
+                    </td>
+
+                    <!-- 🔥 권한 변경 -->
+                    <td>
+
+                        <form th:action="@{/admin/member/role}"
+                              method="post"
+                              class="d-flex gap-2 justify-content-center">
+
+                            <input type="hidden"
+                                   name="memberId"
+                                   th:value="${member.id}">
+
+                            <input type="hidden"
+                                   name="email"
+                                   th:value="${search?.email}">
+
+                            <input type="hidden"
+                                   name="name"
+                                   th:value="${search?.name}">
+
+                            <input type="hidden"
+                                   name="role"
+                                   th:value="${search?.role}">
+
+                            <select name="role"
+                                    class="form-select w-auto">
+
+                                <option value="USER"
+                                        th:selected="${member.role == 'USER'}">
+                                    USER
+                                </option>
+
+                                <option value="MANAGER"
+                                        th:selected="${member.role == 'MANAGER'}">
+                                    MANAGER
+                                </option>
+
+                                <option value="PRODUCTER"
+                                        th:selected="${member.role == 'PRODUCTER'}">
+                                    PRODUCTER
+                                </option>
+
+                            </select>
+
+                            <button class="btn btn-success btn-sm">
+                                저장
+                            </button>
+
+                        </form>
+
+                    </td>
+
+                    <!-- 🔥 삭제 -->
+                    <td>
+                        <form th:action="@{/admin/member/lock}" method="post" class="d-flex gap-2">
+					
+					    <input type="hidden"
+					           name="memberId"
+					           th:value="${member.id}">
+					
+					    <select name="days"
+					            class="form-select form-select-sm">
+					
+					        <option value="1">1일 잠금</option>
+					        <option value="7">7일 잠금</option>
+					        <option value="30">30일 잠금</option>
+					        <option value="0">영구 잠금</option>
+					
+					    </select>
+					
+					    <button class="btn btn-warning btn-sm">
+					        계정 잠금
+					    </button>
+					
+					</form>
+                    </td>
+                    
+                    <td>
+					    <span th:text="${member.lockedUntil != null ? 
+					                    #temporals.format(member.lockedUntil,'yyyy-MM-dd HH:mm') 
+					                    : '-'}">
+					    </span>
+					</td>
+
+                </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
+<div th:replace="layout/footer :: footer"></div>
+
+</body>
+</html>

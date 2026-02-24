@@ -81,7 +81,7 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     const email = document.querySelector("input[name='username']").value;
     const password = document.querySelector("input[name='password']").value;
 
-    try {
+    /* try {
         const res = await axios.post("/api/auth/login", {
             email: email,
             password: password
@@ -94,11 +94,49 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
         window.location.href = "/";
     } catch (err) {
         alert("아이디 혹은 비밀번호가 일치하지 않습니다.");
+    } */
+    
+    try {
+
+        const res = await axios.post("/api/auth/login", {
+            email: email,
+            password: password
+        });
+
+        const result = res.data;
+
+        // 🔥 계정 잠김 처리
+        if (typeof result === "string" && result.startsWith("LOCKED:")) {
+
+            const days = result.split(":")[1];
+
+            alert(`해당 계정은 ${days}일 동안 잠긴 계정입니다`);
+
+            return;
+        }
+
+        // 🔥 일반 실패 메시지
+        if (typeof result === "string" && result !== "redirect:/") {
+
+            alert(result);
+            return;
+        }
+
+        // 🔥 로그인 성공
+        if (result === "redirect:/") {
+
+            alert("로그인에 성공 하였습니다.");
+            location.href = "/";
+        }
+
+    } catch (err) {
+
+        alert("로그인 요청에 실패하였습니다. 관리자에게 문의하세요");
     }
 });
 </script>
 
-<!-- 푸터 -->
+<!-- 푸터 -->sms 
 <div th:replace="layout/footer :: footer"></div>
 
 </body>

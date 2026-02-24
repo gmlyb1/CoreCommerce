@@ -1,6 +1,10 @@
 package com.CoreCommerce.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+
+import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
@@ -34,5 +38,17 @@ public class MemberService {
     
     public void updateProfile(Member loginUser) {
     	memberRepository.updateProfile(loginUser);
+    }
+    
+    public List<Member> findAll(Member member) {
+    	return memberRepository.findAll(member);
+    }
+    
+    public void changeRole(Long memberId, String role) {
+    	memberRepository.changeRole(memberId, role);
+    }
+    
+    public void lockAccount(Long id, boolean b, Object object) {
+    	memberRepository.lockAccount(id, b, object);
     }
 }

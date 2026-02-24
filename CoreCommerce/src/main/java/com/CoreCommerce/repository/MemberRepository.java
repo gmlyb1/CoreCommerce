@@ -1,5 +1,7 @@
 package com.CoreCommerce.repository;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.ibatis.annotations.Param;
@@ -18,4 +20,11 @@ public interface MemberRepository{
             @Param("password") String password);
 
 	void updateProfile(Member loginUser);
+
+	List<Member> findAll(Member member);
+
+	void changeRole(@Param("id") Long id,  @Param("role") String rolee);
+
+	void lockAccount(Long id, boolean b, Object object);
+
 }

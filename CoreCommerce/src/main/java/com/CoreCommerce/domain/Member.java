@@ -41,7 +41,7 @@ public class Member {
 	    private String name;       // 회원 이름
 
 	    @Column(nullable = false)
-	    private String role = "USER";  // USER / ADMIN 등 권한
+	    private String role;  // USER / ADMIN 등 권한
 
 	    private String phone;
 	    private String zipcode;
@@ -56,4 +56,10 @@ public class Member {
 	    @LastModifiedDate
 	    @Column(name = "updated_at")
 	    private LocalDateTime updatedAt;
+	    
+	    @Column(name = "account_locked")
+	    private Boolean accountLocked = false;
+
+	    @Column(name = "locked_until")
+	    private LocalDateTime lockedUntil;
 }

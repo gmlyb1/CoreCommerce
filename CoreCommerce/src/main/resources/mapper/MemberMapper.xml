@@ -19,8 +19,42 @@
 			,role
 			,created_at
 			,updated_at
+			,account_locked as accountLocked
+			,locked_until as lockedUntil
 		from member
 		where email = #{email}
+	</select>
+	
+	<select id="findAll" parameterType="com.CoreCommerce.domain.Member" resultType="com.CoreCommerce.domain.Member">
+		select 
+			 id
+			,email
+			,password
+			,name
+			,phone
+			,zipcode
+			,address1
+			,address2
+			,profile_image as profileImage
+			,role
+			,created_at
+			,updated_at
+			,account_locked as accountLocked
+			,locked_until as lockedUntil
+		from member
+		<where>
+	        <if test="email != null and email != ''">
+	            and email like concat('%', #{email}, '%')
+	        </if>
+	        <if test="name != null and name != ''">
+	            and name like concat('%', #{name}, '%')
+	        </if>
+	        <if test="role != null and role != ''">
+	            and role = #{role}
+	        </if>
+	    </where>
+			
+		order by id desc
 	</select>
 
    <insert id="save" parameterType="com.CoreCommerce.domain.Member">
@@ -63,6 +97,19 @@
 	    UPDATE member
 	    SET password = #{password}
 	    WHERE id = #{id}
+	</update>
+	
+	<update id="changeRole">
+		UPDATE member
+		set role = #{role} 
+		where id = #{id}
+	</update>
+	
+	<update id="lockAccount">
+	    update member
+	    set account_locked = #{locked},
+	        locked_until = #{lockedUntil}
+	    where id = #{id}
 	</update>
 
 </mapper>

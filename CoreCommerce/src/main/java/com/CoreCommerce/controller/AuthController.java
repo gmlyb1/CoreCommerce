@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -61,24 +63,51 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody Member member,HttpSession session){
+    public String login(@RequestBody Member member,
+                        HttpSession session){
+
+        // 1️⃣ 회원 조회
         Member dbMember = memberRepository.findByEmail(member.getEmail())
                 .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다"));
 
-        if(!passwordEncoder.matches(member.getPassword(), dbMember.getPassword())) {
-            throw new RuntimeException("비밀번호가 틀립니다");
+        // =====================================================
+        // 🔥 2️⃣ 계정 잠금 체크
+        // =====================================================
+        System.out.println("locked:"+Boolean.TRUE.equals(dbMember.getAccountLocked()));
+        
+        if (Boolean.TRUE.equals(dbMember.getAccountLocked())) {
+
+            LocalDateTime lockedUntil = dbMember.getLockedUntil();
+
+            if (lockedUntil != null && lockedUntil.isAfter(LocalDateTime.now())) {
+
+                long days = ChronoUnit.DAYS.between(
+                        LocalDateTime.now(),
+                        lockedUntil
+                );
+
+                return "LOCKED:" + days;
+            }
+
+            return "계정이 잠겨 있습니다";
         }
 
-        // JWT 토큰 생성
-//        String token = Jwts.builder()
-//                .setSubject(dbMember.getEmail())
-//                .setIssuedAt(new Date())
-//                .setExpiration(new Date(System.currentTimeMillis() + 1000*60*60)) // 1시간
-//                .signWith(SignatureAlgorithm.HS256, JWT_SECRET)
-//                .compact();
+        // =====================================================
+        // 🔥 3️⃣ 비밀번호 체크
+        // =====================================================
+        if (!passwordEncoder.matches(member.getPassword(),
+                dbMember.getPassword())) {
+
+            return "비밀번호가 틀립니다";
+        }
+
+        // =====================================================
+        // 🔥 4️⃣ 로그인 성공
+        // =====================================================
         String token = jwtUtil.generateToken(dbMember.getEmail());
 
         session.setAttribute("loginUser", dbMember);
+
         return "redirect:/";
     }
     

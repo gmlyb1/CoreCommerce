@@ -39,4 +39,6 @@ public class MemberController {
     public String findPwPage() {
     	return "/member/find-password";
     }
+    
+   
 }
