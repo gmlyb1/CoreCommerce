@@ -103,4 +103,27 @@
 
 </select>
 
+<select id="countAll" resultType="int">
+    SELECT COUNT(*)
+    FROM popup
+</select>
+
+<select id="findPaging"
+        parameterType="map"
+        resultType="com.CoreCommerce.domain.Popup">
+
+    SELECT  id,
+            title,
+            image_url   AS imageUrl,
+            link_url    AS linkUrl,
+            start_date  AS startDate,
+            end_date    AS endDate,
+            is_active   AS isActive,
+            created_at  AS createdAt
+    FROM popup
+    ORDER BY id DESC
+    LIMIT #{size} OFFSET #{offset}
+
+</select>
+
 </mapper>

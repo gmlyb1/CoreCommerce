@@ -12,7 +12,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3 class="fw-bold">📢 팝업 관리</h3>
 
-        <a href="/admin/popup/form"
+        <a href="/admin/popup/write"
            class="btn btn-dark px-4">
             + 팝업 등록
         </a>
@@ -73,10 +73,10 @@
 
                     <td>
 
-                        <a th:href="@{/admin/popup/form/{id}(id=${popup.id})}"
-                           class="btn btn-sm btn-warning">
-                            수정
-                        </a>
+                        <a th:href="@{/admin/popup/edit/{id}(id=${popup.id})}"
+						   class="btn btn-sm btn-warning">
+						    수정
+						</a>
 
                         <a th:href="@{/admin/popup/delete/{id}(id=${popup.id})}"
                            class="btn btn-sm btn-danger"
@@ -91,9 +91,40 @@
                 </tbody>
             </table>
 
+			<div class="d-flex justify-content-center mt-4"
+			     th:if="${pagination != null and pagination.totalPages > 1}">
+			    <ul class="pagination d-flex flex-row gap-1">
+			        <!-- 🔥 이전 -->
+			        <li class="page-item"
+			            th:classappend="${pagination.page <= 1} ? 'disabled'">
+			
+			            <a class="page-link"
+			               th:href="@{/admin/banner/list(page=${pagination.page > 1 ? pagination.page - 1 : 1})}">
+			                Previous
+			            </a>
+			        </li>
+			        <!-- 🔥 페이지 번호 -->
+			        <li class="page-item"
+			            th:each="i : ${#numbers.sequence(1, pagination.totalPages)}"
+			            th:classappend="${pagination.page == i} ? 'active'">
+			            <a class="page-link"
+			               th:href="@{/admin/banner/list(page=${i})}"
+			               th:text="${i}">
+			            </a>
+			        </li>
+			        <!-- 🔥 다음 -->
+			        <li class="page-item"
+			            th:classappend="${pagination.page >= pagination.totalPages} ? 'disabled'">
+			
+			            <a class="page-link"
+			               th:href="@{/admin/banner/list(page=${pagination.page < pagination.totalPages ? pagination.page + 1 : pagination.totalPages})}">
+			                Next
+			            </a>
+			        </li>
+			    </ul>
+			</div>
         </div>
     </div>
-
 </div>
 
 <div th:replace="layout/footer :: footer"></div>

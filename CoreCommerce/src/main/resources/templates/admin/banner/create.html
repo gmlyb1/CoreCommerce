@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout/head :: head"></head>
+
+<body class="bg-light">
+
+<!-- HEADER -->
+<div th:replace="layout/header :: header"></div>
+
+<div class="container py-5" style="max-width:800px;">
+
+    <div class="card shadow-lg rounded-4 p-4">
+
+        <h4 class="fw-bold mb-4">🖼 배너 등록</h4>
+
+        <!-- 🔥 파일 업로드 필수 -->
+        <form th:action="@{/admin/banner/create}"
+              method="post"
+              enctype="multipart/form-data">
+
+            <!-- 제목 -->
+            <div class="mb-3">
+                <label class="form-label">제목</label>
+                <input type="text"
+                       name="title"
+                       class="form-control"
+                       required>
+            </div>
+
+            <!-- 부제 -->
+            <div class="mb-3">
+                <label class="form-label">부제목</label>
+                <input type="text"
+                       name="subtitle"
+                       class="form-control">
+            </div>
+
+            <!-- 설명 -->
+            <div class="mb-3">
+                <label class="form-label">설명</label>
+                <textarea name="description"
+                          class="form-control"
+                          rows="3"></textarea>
+            </div>
+
+            <!-- 이미지 파일 -->
+            <div class="mb-3">
+                <label class="form-label">이미지 업로드</label>
+                <input type="file"
+                       name="file"
+                       class="form-control"
+                       required>
+            </div>
+
+            <!-- 링크 -->
+            <div class="mb-3">
+                <label class="form-label">링크 URL</label>
+                <input type="text"
+                       name="linkUrl"
+                       class="form-control">
+            </div>
+
+            <!-- 순서 -->
+            <div class="mb-3">
+                <label class="form-label">순서</label>
+                <input type="number"
+                       name="sortOrder"
+                       value="0"
+                       class="form-control">
+            </div>
+
+            <!-- 사용 여부 -->
+            <div class="mb-3">
+                <label class="form-label">사용 여부</label>
+
+                <select name="useYn" class="form-select">
+                    <option value="Y">사용</option>
+                    <option value="N">미사용</option>
+                </select>
+
+            </div>
+
+            <button class="btn btn-primary w-100">
+                저장
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- FOOTER -->
+<div th:replace="layout/footer :: footer"></div>
+
+</body>
+</html>

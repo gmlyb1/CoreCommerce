@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout/head :: head"></head>
+
+<body class="bg-light">
+
+<!-- HEADER -->
+<div th:replace="layout/header :: header"></div>
+
+<div class="container py-5" style="max-width:800px;">
+
+    <div class="card shadow-lg rounded-4 p-4">
+
+        <h4 class="fw-bold mb-4">✏ 배너 수정</h4>
+
+        <!-- 🔥 파일 업로드 포함 -->
+        <form th:action="@{/admin/banner/edit}"
+              method="post"
+              enctype="multipart/form-data">
+
+            <!-- ID -->
+            <input type="hidden"
+                   name="id"
+                   th:value="${banner.id}">
+
+            <!-- 기존 이미지 미리보기 -->
+            <div class="mb-3 text-center">
+                <img th:if="${banner.imageUrl != null}"
+                     th:src="@{${banner.imageUrl}}"
+                     style="width:220px; border-radius:10px;">
+            </div>
+
+            <!-- 제목 -->
+            <div class="mb-3">
+                <label class="form-label">제목</label>
+                <input type="text"
+                       name="title"
+                       th:value="${banner.title}"
+                       class="form-control">
+            </div>
+
+            <!-- 부제 -->
+            <div class="mb-3">
+                <label class="form-label">부제목</label>
+                <input type="text"
+                       name="subtitle"
+                       th:value="${banner.subtitle}"
+                       class="form-control">
+            </div>
+
+            <!-- 설명 -->
+            <div class="mb-3">
+                <label class="form-label">설명</label>
+                <textarea name="description"
+                          class="form-control"
+                          rows="3"
+                          th:text="${banner.description}">
+                </textarea>
+            </div>
+
+            <!-- 새 이미지 업로드 -->
+            <div class="mb-3">
+
+			    <label class="form-label fw-bold">
+			        📷 이미지 변경
+			    </label>
+			
+			    <!-- 🔥 기존 이미지 -->
+			    <div th:if="${banner.imageUrl != null and banner.imageUrl != ''}"
+			         class="mb-3">
+			
+			        <p class="small text-muted">현재 이미지</p>
+			
+			        <img th:src="${banner.imageUrl}"
+			             class="rounded-3 shadow-sm"
+			             style="width:200px;">
+			
+			    </div>
+			
+			    <!-- 🔥 파일 선택 -->
+			    <input type="file"
+			           name="file"
+			           class="form-control"
+			           accept="image/*">
+			
+			    <!-- 🔥 반드시 추가 -->
+			    <input type="hidden"
+			           name="imageUrl"
+			           th:value="${banner.imageUrl}">
+			
+			</div>
+
+            <!-- 링크 -->
+            <div class="mb-3">
+                <label class="form-label">링크 URL</label>
+                <input type="text"
+                       name="linkUrl"
+                       th:value="${banner.linkUrl}"
+                       class="form-control">
+            </div>
+
+            <!-- 순서 -->
+            <div class="mb-3">
+                <label class="form-label">순서</label>
+                <input type="number"
+                       name="sortOrder"
+                       th:value="${banner.sortOrder}"
+                       class="form-control">
+            </div>
+
+            <!-- 사용 여부 -->
+            <div class="mb-3">
+                <label class="form-label">사용 여부</label>
+
+                <select name="useYn" class="form-select">
+
+                    <option value="Y"
+                            th:selected="${banner.useYn == 'Y'}">
+                        사용
+                    </option>
+
+                    <option value="N"
+                            th:selected="${banner.useYn == 'N'}">
+                        미사용
+                    </option>
+
+                </select>
+
+            </div>
+
+            <button class="btn btn-success w-100">
+                수정 저장
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- FOOTER -->
+<div th:replace="layout/footer :: footer"></div>
+
+</body>
+</html>

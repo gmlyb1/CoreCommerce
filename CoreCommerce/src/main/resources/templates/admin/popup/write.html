@@ -55,19 +55,25 @@
                     <div class="col-md-6">
                         <label class="form-label">시작일</label>
 
-                        <input type="datetime-local"
-                               name="startDate"
-                               class="form-control"
-                               th:value="${popup.startDate != null} ? ${#temporals.format(popup.startDate,'yyyy-MM-dd''T''HH:mm')} : ''">
+                       <input type="datetime-local"
+						       name="startDate"
+						       class="form-control"
+						       step="1"
+						       th:value="${popup.startDate != null
+						                  ? #temporals.format(popup.startDate,'yyyy-MM-dd''T''HH:mm')
+						                  : ''}">
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">종료일</label>
 
                         <input type="datetime-local"
-                               name="endDate"
-                               class="form-control"
-                               th:value="${popup.endDate != null} ? ${#temporals.format(popup.endDate,'yyyy-MM-dd''T''HH:mm')} : ''">
+						       name="endDate"
+						       class="form-control"
+						       step="1"
+						       th:value="${popup.endDate != null
+						                  ? #temporals.format(popup.endDate,'yyyy-MM-dd''T''HH:mm')
+						                  : ''}">
                     </div>
 
                 </div>
@@ -97,15 +103,22 @@
                 <!-- ========================= -->
                 <!-- 이미지 업로드 -->
                 <!-- ========================= -->
-                <div class="mt-3">
-                    <label class="form-label">이미지 업로드</label>
-
-                    <input type="file"
-                           name="file"
-                           class="form-control"
-                           accept="image/*"
-                           onchange="preview(event)">
-                </div>
+               <div class="mt-3">
+				    <label class="form-label">이미지 업로드</label>
+				
+				    <!-- 🔥 파일 선택 -->
+				    <input type="file"
+				           name="file"
+				           class="form-control"
+				           accept="image/*"
+				           onchange="preview(event)">
+				
+				    <!-- 🔥 기존 이미지 유지용 (중요) -->
+				    <input type="hidden"
+				           name="imageUrl"
+				           th:value="${popup.imageUrl}">
+				
+				</div>
 
                 <!-- ========================= -->
                 <!-- 기존 이미지 -->

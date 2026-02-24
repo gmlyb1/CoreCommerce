@@ -11,8 +11,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.CoreCommerce.domain.Member;
+import com.CoreCommerce.domain.Popup;
 import com.CoreCommerce.domain.Product;
+import com.CoreCommerce.repository.BannerRepository;
 import com.CoreCommerce.repository.MemberRepository;
+import com.CoreCommerce.repository.PopupRepository;
 import com.CoreCommerce.repository.ProductRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,6 +29,12 @@ public class MainController {
 	@Autowired
 	private ProductRepository productRepository;
 	
+	@Autowired
+	private PopupRepository popupRepository;
+	
+	@Autowired
+	private BannerRepository bannerRepository;
+	
 	@GetMapping("/")
 	public String main(Model model, HttpSession session) throws Exception{
 	    Member loginMember = (Member) session.getAttribute("loginUser");
@@ -34,8 +43,9 @@ public class MainController {
 	        model.addAttribute("loginUser", loginMember);
 	    }
 	    
-	    List<Product> MainPageList = productRepository.findMainPage();
-	    model.addAttribute("MainPageList", MainPageList);
+	    model.addAttribute("MainPageList", productRepository.findMainPage());
+	    model.addAttribute("popup", popupRepository.findActivePopup());
+	    model.addAttribute("bannerList", bannerRepository.getAllBanners());
 	    
 	    return "index";
 	}

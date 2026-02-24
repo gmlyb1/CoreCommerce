@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout/head :: head"></head>
+
+<body class="bg-light">
+
+<!-- HEADER -->
+<div th:replace="layout/header :: header"></div>
+
+<div class="container py-5" style="max-width:1200px;">
+
+    <!-- 상단 타이틀 + 버튼 -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold">🖼 배너 관리</h3>
+
+        <a th:href="@{/admin/banner/create}"
+           class="btn btn-dark px-4 rounded-3">
+            + 배너 등록
+        </a>
+    </div>
+
+    <!-- 카드 박스 -->
+    <div class="card shadow-sm rounded-4 border-0">
+        <div class="card-body p-4">
+
+            <!-- 테이블 -->
+            <div class="table-responsive">
+                <table class="table table-hover align-middle text-center">
+
+                    <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th style="width:150px;">이미지</th>
+                        <th>제목</th>
+                        <th>순서</th>
+                        <th>사용 여부</th>
+                        <th>관리</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <!-- 데이터 없음 -->
+                    <tr th:if="${bannerList == null or #lists.isEmpty(bannerList)}">
+                        <td colspan="6" class="py-5 text-muted">
+                            📭 등록된 배너가 없습니다.
+                        </td>
+                    </tr>
+
+                    <!-- 반복 -->
+                    <tr th:each="banner : ${bannerList}">
+                        <td class="fw-bold" th:text="${banner.id}"></td>
+                        <td>
+                            <img th:if="${banner.imageUrl != null}"
+                                 th:src="@{${banner.imageUrl}}"
+                                 class="rounded-3 shadow-sm"
+                                 style="width:120px; height:60px; object-fit:cover;">
+                        </td>
+                        <td class="fw-semibold"
+                            th:text="${banner.title}"></td>
+                        <td>
+                            <span class="badge bg-secondary"
+                                  th:text="${banner.sortOrder}">
+                            </span>
+                        </td>
+                        <td>
+                            <span th:if="${banner.useYn == 'Y'}"
+                                  class="badge bg-success">
+                                사용
+                            </span>
+
+                            <span th:if="${banner.useYn == 'N'}"
+                                  class="badge bg-danger">
+                                미사용
+                            </span>
+                        </td>
+                        <td>
+                            <!-- 수정 -->
+                            <a th:href="@{/admin/banner/edit/{id}(id=${banner.id})}"
+                               class="btn btn-sm btn-warning rounded-3 me-2">
+                                ✏ 수정
+                            </a>
+
+                            <!-- 삭제 -->
+                            <a th:href="@{/admin/banner/delete/{id}(id=${banner.id})}"
+                               class="btn btn-sm btn-danger rounded-3"
+                               onclick="return confirm('삭제하시겠습니까?')">
+                                🗑 삭제
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="d-flex justify-content-center mt-4"
+				     th:if="${pagination != null and pagination.totalPages > 1}">
+				
+				    <ul class="pagination d-flex flex-row gap-1">
+				        <!-- 🔥 이전 -->
+				        <li class="page-item"
+				            th:classappend="${pagination.page <= 1} ? 'disabled'">
+				            <a class="page-link"
+				               th:href="@{/admin/banner/list(page=${pagination.page > 1 ? pagination.page - 1 : 1})}">
+				                Previous
+				            </a>
+				        </li>
+				
+				        <!-- 🔥 페이지 번호 -->
+				        <li class="page-item"
+				            th:each="i : ${#numbers.sequence(1, pagination.totalPages)}"
+				            th:classappend="${pagination.page == i} ? 'active'">
+				            <a class="page-link"
+				               th:href="@{/admin/banner/list(page=${i})}"
+				               th:text="${i}">
+				            </a>
+				        </li>
+				
+				        <!-- 🔥 다음 -->
+				        <li class="page-item"
+				            th:classappend="${pagination.page >= pagination.totalPages} ? 'disabled'">
+				
+				            <a class="page-link"
+				               th:href="@{/admin/banner/list(page=${pagination.page < pagination.totalPages ? pagination.page + 1 : pagination.totalPages})}">
+				                Next
+				            </a>
+				        </li>
+				    </ul>
+				</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<div th:replace="layout/footer :: footer"></div>
+
+</body>
+</html>

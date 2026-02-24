@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Popup</title>
+</head>
+
+<body style="margin:0; text-align:center;">
+
+<img th:if="${popup.imageUrl != null}"
+     th:src="@{${popup.imageUrl}}"
+     style="max-width:100%;">
+
+<br><br>
+
+<a th:href="${popup.linkUrl}" target="_blank">
+    🔗 상세보기
+</a>
+
+<br><br>
+
+<!-- 오늘 하루 안보기 -->
+<input type="checkbox" id="hideToday">
+<label for="hideToday">오늘 하루 안보기</label>
+
+<br><br>
+
+<button onclick="closePopup()">
+    닫기
+</button>
+
+<script>
+
+function closePopup() {
+
+    if (document.getElementById("hideToday").checked) {
+
+        // 쿠키 1일 설정
+        document.cookie =
+            "popup_" + [[${popup.id}]] + "=hide; path=/; max-age=86400";
+    }
+
+    window.close();
+}
+
+</script>
+
+</body>
+</html>

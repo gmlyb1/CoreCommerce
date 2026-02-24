@@ -40,4 +40,12 @@ public class PopupService {
 		return popupRepository.findActivePopup();
 	}
 	
+	public int countAll() {
+	    return popupRepository.countAll();
+	}
+
+	public List<Popup> findPaging(int offset, int size) {
+	    return popupRepository.findPaging(offset, size);
+	}
+	
 }

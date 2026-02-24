@@ -1,20 +1,27 @@
 package com.CoreCommerce.controller;
 
+import java.beans.PropertyEditorSupport;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.CoreCommerce.domain.Pagination;
 import com.CoreCommerce.domain.Popup;
 import com.CoreCommerce.service.PopupService;
 
@@ -29,12 +36,30 @@ public class PopupController {
 	 @Value("${upload.popup.path}")
 	 private String popupUploadPath;
 	 
+	 
 	    /* ==========================
 	       🔹 관리자 - 목록
 	    ========================== */
 	    @GetMapping("/admin/popup/list")
-	    public String list(Model model) {
-	        model.addAttribute("popups", popupService.findAll());
+	    public String list(@RequestParam(defaultValue = "1") int page,Model model) {
+	    	int size = 10;
+
+    	    // 🔥 전체 개수
+    	    int totalCount = popupService.countAll();
+
+    	    // 🔥 pagination 객체 생성
+    	    Pagination pagination = new Pagination(page, size, totalCount);
+
+    	    // 🔥 페이징 데이터 조회
+    	    List<Popup> popupList =
+    	            popupService.findPaging(
+    	                    pagination.getOffset(),
+    	                    pagination.getSize()
+    	            );
+
+    	    model.addAttribute("popupList", popupList);
+    	    model.addAttribute("pagination", pagination);
+    	    
 	        return "admin/popup/list";
 	    }
 
@@ -119,5 +144,15 @@ public class PopupController {
 	    public String delete(@PathVariable Long id) {
 	        popupService.delete(id);
 	        return "redirect:/admin/popup/list";
+	    }
+	    
+	    @GetMapping("/popup/view/{id}")
+	    public String popupView(@PathVariable Long id, Model model) {
+
+	        Popup popup = popupService.findById(id);
+
+	        model.addAttribute("popup", popup);
+
+	        return "popup/view";
 	    }
 }
