@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.CoreCommerce.domain.Inquiry;
 import com.CoreCommerce.domain.InquiryAnswer;
 import com.CoreCommerce.domain.Member;
+import com.CoreCommerce.domain.Pagination;
 import com.CoreCommerce.repository.InquiryRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,31 +32,41 @@ public class InquiryController {
 	private InquiryRepository inquiryRepository;
 
 	// 내 문의 목록
-	 @GetMapping("/list")
-	 public String inquiryList(HttpSession session, Model model, Inquiry inquiry) {
-	
-		 Member loginUser = (Member) session.getAttribute("loginUser");
+	@GetMapping("/list")
+	public String inquiryList(@RequestParam(defaultValue = "1") int page,
+	                          HttpSession session,
+	                          Model model) {
 
-		    if (loginUser == null) {
-		        return "redirect:/login";
-		    }
+	    Member loginUser = (Member) session.getAttribute("loginUser");
 
-		    List<Inquiry> list;
+	    if (loginUser == null) {
+	        return "redirect:/login";
+	    }
 
-		    // ✅ 관리자면 전체 조회
-		    if ("MANAGER".equals(loginUser.getRole())) {
-		        list = inquiryRepository.findAll();
-		    } 
-		    // ✅ 일반 사용자면 본인 글만 조회
-		    else {
-		    	inquiry.setMemberId(loginUser.getEmail());
-		        list = inquiryRepository.findByMemberId(inquiry);
-		    }
+	    int size = 10;                 // 한 페이지에 보여줄 개수
+	    int offset = (page - 1) * size; // 🔥 중요
 
-		    model.addAttribute("list", list);
-	
-	     return "inquiry/list";
-	 }
+	    List<Inquiry> list;
+	    int totalCount;
+
+	    // ✅ 관리자면 전체 조회 (페이징 적용)
+	    if ("MANAGER".equals(loginUser.getRole())) {
+
+	        list = inquiryRepository.findAllPaged(offset, size);
+	        totalCount = inquiryRepository.countAll();
+
+	    } else {
+
+	        // ✅ 일반 사용자 → 자기 글만
+	        list = inquiryRepository.findByMemberIdPaged(loginUser.getEmail(), offset, size);
+	        totalCount = inquiryRepository.countByMemberId(loginUser.getEmail());
+	    }
+
+	    model.addAttribute("list", list);
+	    model.addAttribute("pagination", new Pagination(page, size, totalCount));
+
+	    return "inquiry/list";
+	}
 	
 	 // 문의 작성 폼
 	 @GetMapping("/write")

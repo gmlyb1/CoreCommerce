@@ -81,4 +81,18 @@
 	    WHERE id = #{orderId}
 	      AND status = 'READY'   <!-- 이미 결제된 주문은 변경 안함 -->
 	</update>
+	
+	<select id="findByOrderId"
+        resultType="com.CoreCommerce.domain.OrderItem">
+
+	    SELECT oi.*,
+	           p.name AS productName,
+	           p.price AS productPrice,
+	           p.image_url AS productImage
+	
+	    FROM order_item oi
+	    JOIN product p ON oi.product_id = p.id
+	    WHERE oi.order_id = #{orderId}
+	
+	</select>
 </mapper>

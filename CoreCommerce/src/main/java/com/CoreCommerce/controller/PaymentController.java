@@ -43,54 +43,6 @@ public class PaymentController {
         return "payment/payment";
     }
 
-    // 결제 파라미터 서버에서 생성 (PG 윈도우용)
-//    @PostMapping("/params")
-//    @ResponseBody
-//    public Map<String, Object> createPaymentParams(@RequestParam Long orderId) {
-//        Order order = orderService.getOrder(orderId);
-//
-//        String secretKey = "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6"; // 서버용 키
-//        String authHeader = "Basic " + Base64.getEncoder()
-//                .encodeToString((secretKey + ":").getBytes(StandardCharsets.UTF_8));
-//
-//        RestTemplate restTemplate = new RestTemplate();
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_JSON);
-//        headers.set("Authorization", authHeader);
-//
-//        Map<String, Object> body = new HashMap<>();
-//        body.put("orderId", order.getId().toString());
-//        body.put("orderName", "CoreCommerce 주문");
-//        body.put("amount", order.getTotalPrice());
-//        body.put("successUrl", "http://localhost:8080/payment/success");
-//        body.put("failUrl", "http://localhost:8080/payment/fail");
-//
-//        HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
-//
-//        ResponseEntity<Map> response = restTemplate.postForEntity(
-//                "https://apigw-sandbox.tosspayments.com/payment-gateway-window/open/pg-window/v1/px-payment-parameters",
-//                request,
-//                Map.class
-//        );
-//
-//        return response.getBody();
-//    }
-
-    // 결제 성공
-//    @GetMapping("/success")
-//    public String success(@RequestParam String paymentKey,
-//                          @RequestParam Long orderId,
-//                          @RequestParam int amount) {
-//
-//        // 서버에서 토스 결제 승인
-//        paymentRepository.confirmPayment(paymentKey, orderId, amount);
-//
-//        // 주문 상태 변경
-//        orderService.completeOrder(orderId);
-//
-//        return "payment/success";
-//    }
 	@GetMapping("/success")
 	public String success(@RequestParam String paymentKey,
 	                      @RequestParam String orderId,
@@ -127,8 +79,6 @@ public class PaymentController {
 	    // ✅ 주문 조회 후 모델에 추가
 	    Order order = orderService.getOrder(realOrderId);
 	    model.addAttribute("order", order);
-	    
-//	    orderService.completeOrder(Long.parseLong(orderId.replace("ORDER_", "")));
 
 	    return "payment/success";
 	}

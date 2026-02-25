@@ -25,10 +25,13 @@ public interface OrderRepository {
 
 	int countByMemberId(Long id);
 
-	List<Order> findByMemberIdPaging( @Param("memberId") Long memberId,
-								      @Param("offset") int offset,
-								      @Param("size") int size);
+	List<Order> findByMemberIdPaging( @Param("memberId") Long memberId,@Param("offset") int offset, @Param("size") int size);
 	
 	void createOrder(Long memberId);
+
+	List<OrderItem> findByOrderId(Long orderId);
+
+	List<OrderItem> getOrderItems(Long id);
+
 
 }

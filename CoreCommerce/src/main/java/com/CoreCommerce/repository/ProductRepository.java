@@ -25,4 +25,8 @@ public interface ProductRepository{
     List<Product> findMainPage();
 
 	List<Product> findOfferProductList();
+
+	int decreaseStock(Long productId, int quantity);
+
+	void increaseStock(Long productId, int quantity);
 }

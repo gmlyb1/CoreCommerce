@@ -49,6 +49,45 @@
         ORDER BY created_at DESC
     </select>
 
+	<select id="findAllPaged" resultType="Inquiry">
+	    SELECT 
+	        id as id
+           ,member_id as memberId
+           ,title as title
+           ,content as content
+           ,status as status
+           ,created_at as createdAt
+           ,updated_at as updatedAt
+	    FROM inquiry
+	    ORDER BY id DESC
+	    LIMIT #{size} OFFSET #{offset}
+	</select>
+	
+	<select id="countAll" resultType="int">
+	    SELECT COUNT(*) FROM inquiry
+	</select>
+	
+	<select id="findByMemberIdPaged" resultType="Inquiry">
+	    SELECT 
+	        id as id
+           ,member_id as memberId
+           ,title as title
+           ,content as content
+           ,status as status
+           ,created_at as createdAt
+           ,updated_at as updatedAt
+	    FROM inquiry
+	    WHERE member_id = #{email}
+	    ORDER BY id DESC
+	    LIMIT #{size} OFFSET #{offset}
+	</select>
+	
+	<select id="countByMemberId" resultType="int">
+	    SELECT COUNT(*)
+	    FROM inquiry
+	    WHERE member_id = #{email}
+	</select>
+
     <!-- 문의 등록 -->
     <insert id="saveInquiry" parameterType="Inquiry">
         INSERT INTO inquiry (member_id, title, content)

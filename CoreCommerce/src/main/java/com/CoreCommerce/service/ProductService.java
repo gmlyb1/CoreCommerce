@@ -2,6 +2,8 @@ package com.CoreCommerce.service;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import com.CoreCommerce.domain.Product;
@@ -42,5 +44,21 @@ public class ProductService {
     
     public List<Product> findOfferProductList() {
     	return productRepository.findOfferProductList();
+    }
+    
+    @Transactional
+    public void decreaseStock(Long productId, int quantity) {
+
+        int result = productRepository.decreaseStock(productId, quantity);
+
+        if (result == 0) {
+            throw new IllegalStateException("재고 부족");
+        }
+    }
+    
+    @Transactional
+    public void increaseStock(Long productId, int quantity) {
+
+        productRepository.increaseStock(productId, quantity);
     }
 }

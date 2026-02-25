@@ -10,8 +10,10 @@ import com.CoreCommerce.domain.Cart;
 import com.CoreCommerce.domain.CartItem;
 import com.CoreCommerce.domain.Order;
 import com.CoreCommerce.domain.OrderItem;
+import com.CoreCommerce.domain.Product;
 import com.CoreCommerce.repository.CartRepository;
 import com.CoreCommerce.repository.OrderRepository;
+import com.CoreCommerce.repository.ProductRepository;
 
 @Service
 public class OrderService {
@@ -19,13 +21,16 @@ public class OrderService {
 	private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
     private final CartService cartService;
+    private final ProductRepository productRepository;
 
     public OrderService(OrderRepository orderRepository,
                         CartRepository cartRepository,
-                        CartService cartService) {
+                        CartService cartService,
+                        ProductRepository productRepository) {
         this.orderRepository = orderRepository;
         this.cartRepository = cartRepository;
         this.cartService = cartService;
+        this.productRepository = productRepository;
     }
     
     @Transactional
@@ -86,25 +91,6 @@ public class OrderService {
         orderRepository.updateStatus(orderId, status);
     }
 
-//    @Transactional
-//    public void completeOrder(Long orderId) {
-//    	
-//    	Order order = orderRepository.findById(orderId);
-//
-//        if (order == null) {
-//            throw new IllegalArgumentException("주문이 존재하지 않습니다.");
-//        }
-//
-//        // 🔥 이미 결제 완료면 그냥 리턴 (에러 아님)
-//        if ("PAID".equals(order.getStatus())) {
-//            return;
-//        }
-//    	
-//        int updated = orderRepository.updateOrderToPaid(orderId);
-//        if (updated == 0) {
-//            throw new IllegalStateException("주문 상태를 PAID로 변경할 수 없습니다.");
-//        }
-//    }
     @Transactional
     public void completeOrder(Long orderId) {
 
@@ -134,6 +120,53 @@ public class OrderService {
         }
     }
     
+//    @Transactional
+//    public void completeOrder(Long orderId) {
+//
+//        Order order = orderRepository.findById(orderId);
+//
+//        if (order == null) {
+//            throw new IllegalArgumentException("주문이 존재하지 않습니다.");
+//        }
+//
+//        // ✅ 이미 결제 완료면 멱등 처리
+//        if ("PAID".equals(order.getStatus())) {
+//            return;
+//        }
+//
+//        // ✅ 1. 주문 상태 PAID로 변경
+//        int updated = orderRepository.updateOrderToPaid(orderId);
+//
+//        if (updated == 0) {
+//
+//            Order retry = orderRepository.findById(orderId);
+//
+//            if ("PAID".equals(retry.getStatus())) {
+//                return;
+//            }
+//
+//            throw new IllegalStateException("주문 상태 변경 실패");
+//        }
+//
+//        // ✅ 2. 주문 아이템 조회
+//        List<OrderItem> items = orderRepository.findByOrderId(orderId);
+//
+//        // ✅ 3. 재고 차감 (ProductService 통해서)
+//        for (OrderItem item : items) {
+//
+//            int result = productRepository.decreaseStock(
+//                    item.getProductId(),
+//                    item.getQuantity()
+//            );
+//
+//            if (result == 0) {
+//                throw new IllegalStateException("재고 부족");
+//            }
+//        }
+//    }
+    
+    
+    
     public List<Order> findByMemberId(Long memberId) {
         return orderRepository.findByMemberId(memberId);
     }
@@ -144,6 +177,10 @@ public class OrderService {
 
 	public List<Order> findByMemberIdPaging(Long id, int offset, int size) {
 		return orderRepository.findByMemberIdPaging(id,offset,size);
+	}
+
+	public List<OrderItem> getOrderItems(Long id) {
+		return orderRepository.getOrderItems(id);
 	}
 
     

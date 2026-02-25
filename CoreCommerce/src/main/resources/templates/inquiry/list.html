@@ -63,9 +63,57 @@
                 </tr>
                 </tbody>
             </table>
+            <div th:if="${pagination != null and pagination.totalPages > 1}">
+			    <ul class="pagination justify-content-center">
+			
+			        <!-- 이전 -->
+			        <li class="page-item"
+			            th:classappend="${pagination.first} ? 'disabled'">
+			            <a class="page-link"
+			               th:href="@{/inquiry/list(page=${pagination.page - 1})}">
+			                ‹
+			            </a>
+			        </li>
+			
+			        <!-- 번호 -->
+			        <li class="page-item"
+			            th:each="i : ${#numbers.sequence(1, pagination.totalPages)}"
+			            th:classappend="${i == pagination.page} ? 'active'">
+			
+			            <a class="page-link"
+			               th:href="@{/inquiry/list(page=${i})}"
+			               th:text="${i}">
+			            </a>
+			        </li>
+			
+			        <!-- 다음 -->
+			        <li class="page-item"
+			            th:classappend="${pagination.last} ? 'disabled'">
+			
+			            <a class="page-link"
+			               th:href="@{/inquiry/list(page=${pagination.page + 1})}">
+			                ›
+			            </a>
+			        </li>
+			
+			    </ul>
+			</div>
         </div>
     </div>
 </div>
+
+<style>
+.pagination {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 5px;
+}
+
+.pagination .page-item {
+    display: inline-block;
+}
+</style>
 
 <div th:replace="layout/footer :: footer"></div>
 

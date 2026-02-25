@@ -187,29 +187,29 @@
 
         <div class="collapse navbar-collapse" id="navbarCollapse">
 
-            <div class="navbar-nav">
+            <div class="navbar-nav w-100 text-center">
 
                 <a href="/"
                    th:classappend="${#httpServletRequest.requestURI == '/'} ? 'active'"
-                   class="nav-link">
+                   class="nav-link flex-fill">
                     홈
                 </a>
 
                 <a href="/product/list"
                    th:classappend="${#httpServletRequest.requestURI.startsWith('/product')} ? 'active'"
-                   class="nav-link">
+                   class="nav-link flex-fill">
                     상품
                 </a>
 
                 <a href="/notice"
                    th:classappend="${#httpServletRequest.requestURI.startsWith('/notice')} ? 'active'"
-                   class="nav-link">
+                   class="nav-link flex-fill">
                     공지사항
                 </a>
 
                 <a href="/inquiry/list"
                    th:classappend="${#httpServletRequest.requestURI.startsWith('/inquiry')} ? 'active'"
-                   class="nav-link">
+                   class="nav-link flex-fill">
                     1:1문의
                 </a>
 

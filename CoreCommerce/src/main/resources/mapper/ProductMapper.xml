@@ -65,5 +65,20 @@
     <select id="findMainPage" resultMap="ProductMap">
     	select * from product order by created_at desc limit 8
     </select>
+    
+    <!-- 🔥 재고 차감 -->
+	<update id="decreaseStock">
+	    UPDATE product
+	    SET stock = stock - #{quantity}
+	    WHERE id = #{productId}
+	      AND stock >= #{quantity}
+	</update>
+	
+	<!-- 🔥 재고 복구 -->
+	<update id="increaseStock">
+	    UPDATE product
+	    SET stock = stock + #{quantity}
+	    WHERE id = #{productId}
+	</update>
 
 </mapper>

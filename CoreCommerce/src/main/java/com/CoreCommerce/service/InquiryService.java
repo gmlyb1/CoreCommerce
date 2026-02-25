@@ -63,4 +63,20 @@ public class InquiryService {
 	public void deleteAnswer(Long inquiryId) {
 		inquiryRepository.deleteAnswer(inquiryId);
 	}
+	
+	public List<Inquiry> findAllPaged(int offset, int size){
+		return inquiryRepository.findAllPaged(offset, size);
+	}
+	
+	public int countAll(){
+		return inquiryRepository.countAll();
+	}
+	
+	public int countByMemberId(String email){
+		return inquiryRepository.countByMemberId(email);
+	}
+	
+	public List<Inquiry> findByMemberIdPaged(String email, int offset, int size){
+		return inquiryRepository.findByMemberIdPaged(email, offset, size);
+	}
 }

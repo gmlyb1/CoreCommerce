@@ -3,6 +3,7 @@ package com.CoreCommerce.repository;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.CoreCommerce.domain.Inquiry;
 import com.CoreCommerce.domain.InquiryAnswer;
@@ -32,5 +33,13 @@ public interface InquiryRepository {
 	void updateAnswer(InquiryAnswer answer);
 
 	void deleteAnswer(Long inquiryId);
+
+	List<Inquiry> findAllPaged(@Param("offset") int offset, @Param("size") int size);
+
+	int countAll();
+
+	int countByMemberId(String email);
+
+	List<Inquiry> findByMemberIdPaged(String email,@Param("offset") int offset, @Param("size") int size);
 
 }

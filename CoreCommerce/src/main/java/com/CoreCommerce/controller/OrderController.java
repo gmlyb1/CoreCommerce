@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.CoreCommerce.domain.Member;
 import com.CoreCommerce.domain.Order;
+import com.CoreCommerce.domain.OrderItem;
 import com.CoreCommerce.domain.Pagination;
 import com.CoreCommerce.service.OrderService;
 
@@ -72,7 +73,8 @@ public class OrderController {
 	    if (order == null || !order.getMemberId().equals(loginUser.getId())) {
 	        return "redirect:/orders";
 	    }
-
+	    
+	    List<OrderItem> items = orderService.getOrderItems(id);
 	    model.addAttribute("order", order);
 
 	    return "order/detail";
