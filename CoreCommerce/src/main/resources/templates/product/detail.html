@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout/head :: head"></head>
+
+<body class="bg-light">
+
+<div th:replace="layout/header :: header"></div>
+
+<div class="container py-5">
+
+    <div class="card shadow-lg border-0 rounded-4 p-4">
+        <div class="row g-5">
+
+            <!-- 왼쪽 : 상품 이미지 -->
+            <div class="col-md-6 text-center">
+                <img th:src="${product.imageUrl}"
+                     class="img-fluid rounded shadow-sm"
+                     style="max-height:450px; object-fit:cover;"
+                     alt="상품 이미지">
+            </div>
+
+            <!-- 오른쪽 : 상품 정보 -->
+            <div class="col-md-6">
+
+                <h2 class="fw-bold mb-3" th:text="${product.name}"></h2>
+
+				<button id="wishBtn"
+				        th:class="${isLiked} ? 'btn btn-danger' : 'btn btn-outline-danger'"
+				        th:text="${isLiked} ? '❤️ 찜 취소' : '🤍 찜하기'"
+				        th:onclick="'toggleWishlist(' + ${product.id} + ')'">
+				</button>
+
+                <!-- 가격 -->
+                <h3 class="text-danger fw-bold mb-3"
+                    th:text="|₩ ${#numbers.formatInteger(product.price, 3, 'COMMA')}|">
+                </h3>
+
+                <!-- 재고 상태 -->
+                <div class="mb-3">
+                    <span class="badge bg-success"
+                          th:if="${product.stock > 0}">
+                        재고 있음
+                    </span>
+                    <span class="badge bg-danger"
+                          th:if="${product.stock == 0}">
+                        품절
+                    </span>
+                </div>
+
+                <!-- 상품 설명 -->
+                <p class="text-muted mb-4"
+                   style="white-space:pre-line;"
+                   th:text="${product.description}">
+                </p>
+
+                <!-- 수량 선택 -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">수량</label>
+                    <input type="number"
+                           id="quantity"
+                           class="form-control"
+                           value="1"
+                           min="1"
+                           th:max="${product.stock}">
+                </div>
+
+                <!-- 장바구니 버튼 -->
+                <button class="btn btn-dark w-100 py-3 fw-bold"
+                        th:onclick="'addToCart(' + ${product.id} + ')'">
+                    🛒 장바구니 담기
+                </button>
+
+                <!-- 목록 버튼 -->
+                <a href="/product/list"
+                   class="btn btn-outline-secondary w-100 mt-3">
+                    ← 목록으로
+                </a>
+
+                <!-- 관리자 버튼 -->
+                <div class="mt-4 text-end"
+                     th:if="${loginUser != null and loginUser.role == 'MANAGER'}">
+
+                    <a th:href="@{/product/form(id=${product.id})}"
+                       class="btn btn-sm btn-outline-primary">
+                        수정
+                    </a>
+
+                    <button class="btn btn-sm btn-outline-danger"
+                            th:onclick="'deleteProduct(' + ${product.id} + ')'">
+                        삭제
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function deleteProduct(id) {
+        if (!confirm("정말 삭제하시겠습니까?")) return;
+
+        fetch("/product/" + id, { method: "DELETE" })
+            .then(() => {
+                alert("삭제되었습니다.");
+                location.href = "/product/list";
+            });
+    }
+
+    function addToCart(productId) {
+        const quantity = document.getElementById("quantity").value;
+
+        fetch("/cart/add?productId=" + productId + "&quantity=" + quantity, {
+            method: "POST"
+        }).then(() => {
+            if (confirm("장바구니에 추가되었습니다.\n장바구니로 이동하시겠습니까?")) {
+                location.href = "/cart/list";
+            }
+        });
+    }
+    
+    function toggleWishlist(productId) {
+
+        fetch("/wishlist/toggle", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "productId=" + productId
+        })
+        .then(res => {
+            if (res.status === 401) {
+                alert("로그인이 필요합니다.");
+                location.href = "/member/login";
+                return;
+            }
+            return res.json();
+        })
+        .then(liked => {
+
+            const btn = document.getElementById("wishBtn");
+
+            if (liked) {
+                btn.innerHTML = "❤️ 찜 취소";
+                btn.classList.remove("btn-outline-danger");
+                btn.classList.add("btn-danger");
+            } else {
+                btn.innerHTML = "🤍 찜하기";
+                btn.classList.remove("btn-danger");
+                btn.classList.add("btn-outline-danger");
+            }
+
+        })
+        .catch(err => {
+            console.error(err);
+            alert("오류 발생");
+        });
+    }
+</script>
+
+<div th:replace="layout/footer :: footer"></div>
+
+</body>
+</html>

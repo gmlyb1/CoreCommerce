@@ -51,6 +51,19 @@ public class ProductController {
         return "product/list";
     }
 
+    @GetMapping("/{id}")
+    public String productDetail(@PathVariable Long id, Model model) {
+
+        Product product = productRepository.findById(id);
+
+        if (product == null) {
+            return "redirect:/product/list";
+        }
+
+        model.addAttribute("product", product);
+        return "product/detail";
+    }
+    
     // 상품 등록 페이지
     @GetMapping("/form")
     public String productForm(@RequestParam(required = false) Long id, Model model) {

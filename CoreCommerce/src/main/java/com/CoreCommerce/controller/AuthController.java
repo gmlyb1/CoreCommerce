@@ -73,7 +73,6 @@ public class AuthController {
         // =====================================================
         // 🔥 2️⃣ 계정 잠금 체크
         // =====================================================
-        System.out.println("locked:"+Boolean.TRUE.equals(dbMember.getAccountLocked()));
         
         if (Boolean.TRUE.equals(dbMember.getAccountLocked())) {
 

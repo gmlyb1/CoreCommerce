@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout/head :: head"></head>
+
+<body class="bg-light">
+
+<div th:replace="layout/header :: header"></div>
+
+<div class="container py-5">
+
+    <h3 class="fw-bold mb-4">❤️ 나의 찜 목록</h3>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+
+        <div class="col" th:each="p : ${products}">
+            <div class="card h-100 shadow-sm">
+
+                <img th:src="${p.imageUrl}"
+                     class="card-img-top"
+                     style="height:200px; object-fit:cover;">
+
+                <div class="card-body">
+
+                    <h5 class="card-title" th:text="${p.name}"></h5>
+
+                    <p class="text-danger fw-bold"
+                       th:text="|₩ ${#numbers.formatInteger(p.price,3,'COMMA')}|">
+                    </p>
+
+                </div>
+
+                <div class="card-footer bg-white border-0 text-center">
+
+                    <!-- 장바구니 -->
+                    <button class="btn btn-dark btn-sm w-100 mb-2"
+                            th:onclick="'addToCart(' + ${p.id} + ')'">
+                        🛒 장바구니
+                    </button>
+
+                    <!-- 찜 취소 -->
+                    <button class="btn btn-outline-danger btn-sm w-100"
+                            th:onclick="'toggleWishlist(' + ${p.id} + ')'">
+                        ❤️ 찜 취소
+                    </button>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 찜 없음 -->
+    <div class="text-center mt-5"
+         th:if="${#lists.isEmpty(products)}">
+        <p class="text-muted">찜한 상품이 없습니다.</p>
+        <a href="/product/list" class="btn btn-primary">
+            상품 보러가기
+        </a>
+    </div>
+
+</div>
+
+<script>
+function toggleWishlist(productId) {
+
+    fetch("/wishlist/toggle", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "productId=" + productId
+    })
+    .then(() => location.reload());
+}
+
+function addToCart(productId) {
+
+    fetch("/cart/add", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "productId=" + productId + "&quantity=1"
+    })
+    .then(() => {
+        if (confirm("장바구니에 추가되었습니다.\n장바구니로 이동하시겠습니까?")) {
+            location.href = "/cart/list";
+        }
+    });
+}
+</script>
+
+<div th:replace="layout/footer :: footer"></div>
+
+</body>
+</html>

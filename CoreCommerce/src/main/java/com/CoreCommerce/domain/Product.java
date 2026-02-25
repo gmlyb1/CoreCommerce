@@ -56,4 +56,5 @@ public class Product {
 	    
 	    private int discountPercent;
 
+	    private boolean liked;
 }
