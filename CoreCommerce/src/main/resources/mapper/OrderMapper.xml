@@ -100,14 +100,24 @@
 	        parameterType="long"
 	        resultType="com.CoreCommerce.domain.OrderItem">
 	
-	    SELECT *
+	    SELECT 
+	    	 id as id
+	    	,order_id as orderId
+	    	,product_id as productId
+	    	,price as price
+	    	,quantity as quantity
 	    FROM order_item
 	    WHERE order_id = #{orderId}
 	
 	</select>
 	
 	<select id="getOrderItems" resultType="OrderItem">
-	    SELECT *
+	    SELECT 
+	    	 id as id
+	    	,order_id as orderId
+	    	,product_id as productId
+	    	,price as price
+	    	,quantity as quantity
 	    FROM order_item
 	    WHERE order_id = #{orderId}
 	</select>

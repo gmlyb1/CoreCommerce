@@ -125,22 +125,22 @@ public class OrderService {
             throw new IllegalStateException("주문 상태 변경 실패");
         }
         
-//        List<OrderItem> items = orderRepository.findOrderItems(orderId);
-//
-//        
-//        for (OrderItem item : items) {
-//
-//            // 2️⃣ 재고 감소 (DB에서 stock = stock - ?)
-//            int result = productRepository.decreaseStock(
-//                    item.getProductId(),
-//                    item.getQuantity()
-//            );
-//
-//            // 3️⃣ 재고 부족이면 rollback
-//            if (result == 0) {
-//                throw new IllegalStateException("재고 부족");
-//            }
-//        }
+        List<OrderItem> items = orderRepository.findOrderItems(orderId);
+
+        
+        for (OrderItem item : items) {
+        	
+            // 2️⃣ 재고 감소 (DB에서 stock = stock - ?)
+            int result = productRepository.decreaseStock(
+                    item.getProductId(),
+                    item.getQuantity()
+            );
+            
+            // 3️⃣ 재고 부족이면 rollback
+            if (result == 0) {
+                throw new IllegalStateException("재고 부족");
+            }
+        }
         
         Member loginUser = (Member) session.getAttribute("loginUser");
         cartService.clearByMember(loginUser.getId());
