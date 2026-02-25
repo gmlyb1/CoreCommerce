@@ -33,5 +33,7 @@ public interface OrderRepository {
 
 	List<OrderItem> getOrderItems(Long id);
 
+	List<OrderItem> findOrderItems(Long orderId);
+
 
 }

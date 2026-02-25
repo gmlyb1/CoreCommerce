@@ -84,7 +84,16 @@ public class ProductController {
     @PostMapping("/save")
     public String saveProduct(@ModelAttribute Product product,
                               @RequestParam("imageFile") MultipartFile imageFile) throws IOException {
-        if (!imageFile.isEmpty()) {
+       
+    	if(product.getId() != null) {
+    		Product dbProduct = productRepository.findById(product.getId());
+    		
+    		if(imageFile == null || imageFile.isEmpty()) {
+    			product.setImageUrl(dbProduct.getImageUrl());
+    		}
+    	}
+    	
+    	if (!imageFile.isEmpty()) {
             String uploadDir = new File("src/main/resources/static/images/products").getAbsolutePath();
             
             // 디렉토리가 없으면 생성

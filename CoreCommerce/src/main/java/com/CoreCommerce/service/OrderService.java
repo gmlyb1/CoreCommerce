@@ -2,12 +2,15 @@ package com.CoreCommerce.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.CoreCommerce.domain.Cart;
 import com.CoreCommerce.domain.CartItem;
+import com.CoreCommerce.domain.Member;
 import com.CoreCommerce.domain.Order;
 import com.CoreCommerce.domain.OrderItem;
 import com.CoreCommerce.domain.Product;
@@ -23,6 +26,9 @@ public class OrderService {
     private final CartService cartService;
     private final ProductRepository productRepository;
 
+    @Autowired
+    private HttpSession session;
+    
     public OrderService(OrderRepository orderRepository,
                         CartRepository cartRepository,
                         CartService cartService,
@@ -77,7 +83,7 @@ public class OrderService {
         }
 
         // 6️⃣ 장바구니 전체 비우기
-        cartService.clearByMember(memberId);
+//        cartService.clearByMember(memberId);
 
         return order.getId();
     }
@@ -118,6 +124,26 @@ public class OrderService {
 
             throw new IllegalStateException("주문 상태 변경 실패");
         }
+        
+//        List<OrderItem> items = orderRepository.findOrderItems(orderId);
+//
+//        
+//        for (OrderItem item : items) {
+//
+//            // 2️⃣ 재고 감소 (DB에서 stock = stock - ?)
+//            int result = productRepository.decreaseStock(
+//                    item.getProductId(),
+//                    item.getQuantity()
+//            );
+//
+//            // 3️⃣ 재고 부족이면 rollback
+//            if (result == 0) {
+//                throw new IllegalStateException("재고 부족");
+//            }
+//        }
+        
+        Member loginUser = (Member) session.getAttribute("loginUser");
+        cartService.clearByMember(loginUser.getId());
     }
     
 //    @Transactional

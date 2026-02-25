@@ -95,4 +95,20 @@
 	    WHERE oi.order_id = #{orderId}
 	
 	</select>
+	
+	<select id="findOrderItems"
+	        parameterType="long"
+	        resultType="com.CoreCommerce.domain.OrderItem">
+	
+	    SELECT *
+	    FROM order_item
+	    WHERE order_id = #{orderId}
+	
+	</select>
+	
+	<select id="getOrderItems" resultType="OrderItem">
+	    SELECT *
+	    FROM order_item
+	    WHERE order_id = #{orderId}
+	</select>
 </mapper>
