@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.CoreCommerce.repository.InquiryRepository">
+
+
+     <!-- 1:1 문의 목록 (회원별) -->
+    <select id="findByMemberId" parameterType="Inquiry" resultType="Inquiry">
+        SELECT 
+        	id as id
+           ,member_id as memberId
+           ,title as title
+           ,content as content
+           ,status as status
+           ,created_at as createdAt
+           ,updated_at as updatedAt
+        FROM inquiry
+        WHERE member_id = #{memberId}
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 단건 조회 -->
+    <select id="findById" parameterType="long" resultType="Inquiry">
+        SELECT 
+        	id as id
+           ,member_id as memberId
+           ,title as title
+           ,content as content
+           ,status as status
+           ,created_at as createdAt
+           ,updated_at as updatedAt
+        FROM inquiry
+        WHERE id = #{id}
+    </select>
+
+    <!-- 전체 문의 (관리자용) -->
+    <select id="findAll" resultType="Inquiry">
+        SELECT 
+        	id as id
+           ,member_id as memberId
+           ,title as title
+           ,content as content
+           ,status as status
+           ,created_at as createdAt
+           ,updated_at as updatedAt
+        FROM inquiry
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 문의 등록 -->
+    <insert id="saveInquiry" parameterType="Inquiry">
+        INSERT INTO inquiry (member_id, title, content)
+        VALUES (#{memberId}, #{title}, #{content})
+    </insert>
+
+    <!-- 답변 등록 -->
+    <insert id="saveAnswer" parameterType="InquiryAnswer">
+        INSERT INTO inquiry_answer (inquiry_id, admin_id, answer)
+        VALUES (#{inquiryId}, #{adminId}, #{answer})
+    </insert>
+
+    <!-- 답변 조회 -->
+    <select id="findAnswerByInquiryId" parameterType="long" resultType="InquiryAnswer">
+        SELECT 
+        	 id as id
+        	,inquiry_id as inquiryId
+        	,admin_id as adminId
+        	,answer as answer
+        	,created_at as createdAt
+        FROM inquiry_answer
+        WHERE inquiry_id = #{id}
+    </select>
+
+    <!-- 상태 변경 (답변 완료) -->
+    <update id="updateStatusToDone" parameterType="long">
+        UPDATE inquiry
+        SET status = 'DONE'
+        WHERE id = #{inquiryId}
+    </update>
+     
+     <update id="updateInquiry" parameterType="Inquiry">
+	    UPDATE inquiry
+	    SET title = #{title},
+	        content = #{content}
+	    WHERE id = #{id}
+	</update>
+	
+	<delete id="deleteInquiry" parameterType="long">
+	    DELETE FROM inquiry
+	    WHERE id = #{id}
+	</delete>
+	
+	<update id="updateAnswer" parameterType="InquiryAnswer">
+	    UPDATE inquiry_answer
+	    SET answer = #{answer}
+	    WHERE inquiry_id = #{inquiryId}
+	</update>
+	
+	<delete id="deleteAnswer" parameterType="long">
+	    DELETE FROM inquiry_answer
+	    WHERE inquiry_id = #{inquiryId}
+	</delete>
+</mapper>

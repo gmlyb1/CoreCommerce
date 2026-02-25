@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout/head :: head"></head>
+
+<body class="bg-light">
+
+<div th:replace="layout/header :: header"></div>
+
+<div class="container py-5" style="max-width:800px;">
+
+    <h3 class="fw-bold mb-4">💬 관리자 답변 수정</h3>
+
+    <div class="card shadow border-0 rounded-4">
+        <div class="card-body">
+
+            <form th:action="@{/inquiry/admin/answer/edit}" method="post">
+
+                <!-- 답변 ID -->
+                <input type="hidden"
+                       name="id"
+                       th:value="${answer.id}" />
+
+                <!-- 문의 ID -->
+                <input type="hidden"
+                       name="inquiryId"
+                       th:value="${answer.inquiryId}" />
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">답변 내용</label>
+                    <textarea name="answer"
+                              class="form-control"
+                              rows="6"
+                              required
+                              th:text="${answer.answer}">
+                    </textarea>
+                </div>
+
+                <div class="d-flex justify-content-between">
+
+                    <a th:href="@{/inquiry/{id}(id=${answer.inquiryId})}"
+                       class="btn btn-secondary">
+                        취소
+                    </a>
+
+                    <button type="submit"
+                            class="btn btn-primary">
+                        수정 완료
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+<div th:replace="layout/footer :: footer"></div>
+
+</body>
+</html>
