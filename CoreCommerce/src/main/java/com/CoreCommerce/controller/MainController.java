@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import com.CoreCommerce.domain.Member;
 import com.CoreCommerce.domain.Popup;
 import com.CoreCommerce.domain.Product;
+import com.CoreCommerce.domain.VisitLog;
 import com.CoreCommerce.repository.BannerRepository;
 import com.CoreCommerce.repository.MemberRepository;
 import com.CoreCommerce.repository.PopupRepository;
 import com.CoreCommerce.repository.ProductRepository;
+import com.CoreCommerce.repository.VisitLogRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -35,9 +37,20 @@ public class MainController {
 	@Autowired
 	private BannerRepository bannerRepository;
 	
+	@Autowired
+	private VisitLogRepository visitLogRepository;
+	
 	@GetMapping("/")
-	public String main(Model model, HttpSession session) throws Exception{
-	    Member loginMember = (Member) session.getAttribute("loginUser");
+	public String main(VisitLog log, HttpServletRequest request,Model model, HttpSession session) throws Exception{
+	    
+		log.setSessionId(request.getSession().getId());
+		log.setIpAddress(request.getRemoteAddr());
+		log.setRequestUrl(request.getRequestURI());
+		log.setUserAgent(request.getHeader("User-agent"));
+		log.setReferer(request.getHeader("Referer"));
+		visitLogRepository.insert(log);
+		
+		Member loginMember = (Member) session.getAttribute("loginUser");
 	    
 	    if (loginMember != null) {
 	        model.addAttribute("loginUser", loginMember);

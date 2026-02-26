@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- ✅ 공통 head -->
+<head th:replace="layout/head :: head"></head>
+
+<body>
+
+<!-- ✅ 공통 header -->
+<div th:replace="layout/header :: header"></div>
+
+
+<div class="container mt-5">
+
+    <h3 class="fw-bold mb-4">📊 관리자 접속 기록</h3>
+
+    <div class="card shadow-sm p-4">
+
+        <div class="table-responsive">
+
+            <table class="table table-hover text-center align-middle">
+
+                <thead class="table-dark">
+                <tr>
+                    <th>접속시간</th>
+                    <th>IP</th>
+                    <th>URL</th>
+                    <th>브라우저</th>
+                    <th>Referer</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr th:each="log : ${list}">
+
+                    <td th:text="${#temporals.format(log.visitTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+
+                    <td>
+                        <span class="badge bg-primary"
+                              th:text="${log.ipAddress}">
+                        </span>
+                    </td>
+
+                    <td style="max-width:250px; word-break:break-all;"
+                        th:text="${log.requestUrl}">
+                    </td>
+
+                    <td style="max-width:250px; word-break:break-all;"
+                        th:text="${log.userAgent}">
+                    </td>
+
+                    <td style="max-width:250px; word-break:break-all;"
+                        th:text="${log.referer}">
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <!-- 🔴 데이터 없을 때 -->
+        <div th:if="${#lists.isEmpty(list)}"
+             class="text-center text-muted py-4">
+            📭 접속 기록이 없습니다.
+        </div>
+
+    </div>
+
+
+    <!-- ================= 페이징 ================= -->
+    <div class="mt-4"
+         th:if="${pagination != null}">
+
+        <ul class="pagination justify-content-center">
+
+            <!-- ◀ 이전 -->
+            <li class="page-item"
+                th:classappend="${pagination.currentPage == 1} ? 'disabled'">
+
+                <a class="page-link"
+                   th:href="@{/admin/visitLog/list(page=${pagination.currentPage - 1})}">
+                    ‹
+                </a>
+            </li>
+
+            <!-- 페이지 번호 -->
+            <li class="page-item"
+                th:each="i : ${#numbers.sequence(pagination.startPage, pagination.endPage)}"
+                th:classappend="${i == pagination.currentPage} ? 'active'">
+
+                <a class="page-link"
+                   th:text="${i}"
+                   th:href="@{/admin/visitLog/list(page=${i})}">
+                </a>
+
+            </li>
+
+            <!-- ▶ 다음 -->
+            <li class="page-item"
+                th:classappend="${pagination.currentPage == pagination.totalPages} ? 'disabled'">
+
+                <a class="page-link"
+                   th:href="@{/admin/visitLog/list(page=${pagination.currentPage + 1})}">
+                    ›
+                </a>
+            </li>
+
+        </ul>
+
+    </div>
+
+</div>
+
+
+<!-- ✅ 공통 footer -->
+<div th:replace="layout/footer :: footer"></div>
+
+</body>
+</html>

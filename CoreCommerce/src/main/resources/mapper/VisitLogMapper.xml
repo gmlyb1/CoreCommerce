@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.CoreCommerce.repository.VisitLogRepository">
+	
+	<insert id="insert" parameterType="VisitLog">
+	    INSERT INTO visit_log
+	    (session_id, ip_address, request_url, user_agent, referer)
+	    VALUES
+	    (#{sessionId},
+	     #{ipAddress},
+	     #{requestUrl},
+	     #{userAgent},
+	     #{referer})
+	</insert>
+	
+	<select id="findAll" resultType="VisitLog">
+	    SELECT 
+	    	 id as id
+	    	,session_id as sessionId
+	    	,ip_address as ipAddress
+	    	,request_url as requestUrl
+	    	,user_agent as userAgent
+	    	,referer as referer
+	    	,visit_time as visitTime
+	    FROM visit_log
+	    ORDER BY visit_time DESC
+	    LIMIT #{offset}, #{size}
+	</select>
+	
+	<select id="countAll" resultType="int">
+	    SELECT COUNT(*) FROM visit_log
+	</select>
+
+</mapper>
