@@ -22,7 +22,14 @@
         <table class="table table-bordered table-hover align-middle text-center">
             <thead class="table-light">
                 <tr>
-                	<th><input type="checkbox" onclick="toggleAll(this)"></th>
+                	<th>
+                		<div class="form-check d-flex justify-content-center">
+					        <input class="form-check-input"
+					               type="checkbox"
+					               id="checkAll"
+					               onclick="toggleAll(this)">
+					    </div>
+					</th>
                     <th>이미지</th>
                     <th>상품명</th>
                     <th>가격</th>
@@ -33,14 +40,16 @@
             </thead>
             <tbody>
                 <tr th:each="item : ${items}">
-                	<td>
-                		 <input type="checkbox"
-					            class="item-check"
-					            th:value="${item.id}"
-					            th:data-price="${item.price}"
-					            th:data-quantity="${item.quantity}"
-					            onchange="updateTotal()">
-                	</td>
+                	<td class="text-center align-middle">
+					    <div class="form-check d-flex justify-content-center m-0">
+					        <input class="form-check-input item-check"
+					               type="checkbox"
+					               th:value="${item.id}"
+					               th:data-price="${item.price}"
+					               th:data-quantity="${item.quantity}"
+					               onchange="updateTotal(); updateCheckAllState();">
+					    </div>
+					</td>
                     <td>
                         <img th:src="${item.imageUrl}"
                              style="width:80px; height:80px; object-fit:cover;"
@@ -189,8 +198,30 @@
     
     function toggleAll(source) {
         const checks = document.querySelectorAll('.item-check');
+
         checks.forEach(c => c.checked = source.checked);
+
         updateTotal();
+    }
+
+    function updateCheckAllState() {
+
+        const checkAll = document.getElementById('checkAll');
+        const checks = document.querySelectorAll('.item-check');
+
+        const total = checks.length;
+        const checked = document.querySelectorAll('.item-check:checked').length;
+
+        if (checked === 0) {
+            checkAll.checked = false;
+            checkAll.indeterminate = false;
+        } else if (checked === total) {
+            checkAll.checked = true;
+            checkAll.indeterminate = false;
+        } else {
+            checkAll.checked = false;
+            checkAll.indeterminate = true; // 🔥 핵심
+        }
     }
 
     function updateTotal() {
