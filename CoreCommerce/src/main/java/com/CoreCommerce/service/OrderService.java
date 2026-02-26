@@ -25,9 +25,6 @@ public class OrderService {
     private final CartRepository cartRepository;
     private final CartService cartService;
     private final ProductRepository productRepository;
-
-    @Autowired
-    private HttpSession session;
     
     public OrderService(OrderRepository orderRepository,
                         CartRepository cartRepository,
@@ -138,12 +135,11 @@ public class OrderService {
             
             // 3️⃣ 재고 부족이면 rollback
             if (result == 0) {
-                throw new IllegalStateException("재고 부족");
+                throw new IllegalStateException("재고가 부족 합니다. 판매자에게 문의해 주시기 바랍니다.");
             }
         }
         
-        Member loginUser = (Member) session.getAttribute("loginUser");
-        cartService.clearByMember(loginUser.getId());
+        cartService.clearByMember(order.getMemberId());
     }
     
 //    @Transactional
