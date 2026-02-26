@@ -1,103 +1,181 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="layout/head :: head"></head>
+
+<style>
+/* 카드 스타일 */
+.login-card {
+    border: none;
+    border-radius: 18px;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* 입력창 */
+.login-card .form-control {
+    border-radius: 10px;
+    transition: all 0.2s ease-in-out;
+}
+
+.login-card .form-control:focus {
+    box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.25);
+}
+
+/* 버튼 */
+.login-btn {
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+.login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+/* 소셜 버튼 */
+.social-btn {
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+.social-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* 애니메이션 */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
+
 <body class="d-flex flex-column min-vh-100 bg-light">
 
 <!-- 헤더 -->
 <div th:replace="layout/header :: header"></div>
 
-<!-- 로그인 폼 -->
-<div class="container flex-grow-1 d-flex justify-content-center align-items-center" style="margin-top: 100px; margin-bottom: 100px;">
-    <div class="card shadow-lg p-5" style="max-width: 420px; width: 100%; border-radius: 15px; background: #ffffff;">
+<!-- 로그인 영역 -->
+<div class="container flex-grow-1 d-flex justify-content-center align-items-center"
+     style="margin-top: 100px; margin-bottom: 100px;">
+
+    <!-- 🔥 넓어진 카드 -->
+    <div class="card login-card shadow-lg p-4 bg-white"
+         style="max-width: 560px; width: 100%;">
+
         <div class="text-center mb-4">
             <h2 class="fw-bold">로그인</h2>
-            <p class="text-muted">계정으로 로그인하세요</p>
+            <p class="text-muted mb-0">계정으로 로그인하세요</p>
         </div>
 
         <form method="post" id="loginForm">
+
+            <!-- 아이디 -->
             <div class="mb-3">
                 <label class="form-label fw-semibold">아이디</label>
                 <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-                    <input type="text" name="username" class="form-control" placeholder="이메일 또는 아이디" required>
+                    <span class="input-group-text">
+                        <i class="bi bi-person-fill"></i>
+                    </span>
+                    <input type="text"
+                           name="username"
+                           class="form-control"
+                           placeholder="이메일 또는 아이디"
+                           required>
                 </div>
             </div>
 
+            <!-- 비밀번호 -->
             <div class="mb-3">
                 <label class="form-label fw-semibold">비밀번호</label>
                 <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                    <input type="password" name="password" class="form-control" placeholder="비밀번호" required>
+                    <span class="input-group-text">
+                        <i class="bi bi-lock-fill"></i>
+                    </span>
+                    <input type="password"
+                           name="password"
+                           class="form-control"
+                           id="password"
+                           placeholder="비밀번호"
+                           required>
+                    <button type="button"
+                            class="btn btn-outline-secondary"
+                            onclick="togglePassword()">
+                        👁
+                    </button>
                 </div>
             </div>
 
             <!-- 오류 메시지 -->
-            <div class="text-danger mb-3 text-center" th:if="${error}" th:text="${error}"></div>
+            <div class="text-danger mb-3 text-center"
+                 th:if="${error}"
+                 th:text="${error}">
+            </div>
 
-            <button class="btn btn-primary w-100 fw-bold py-2" style="border-radius: 10px;">로그인</button>
+            <!-- 로그인 버튼 -->
+            <button class="btn btn-primary w-100 fw-bold py-2 login-btn">
+                로그인
+            </button>
         </form>
 
+        <!-- 하단 링크 -->
         <div class="mt-4 text-center">
-		    <div>
-		        <span class="text-muted">계정이 없으신가요?</span>
-		        <a href="/register"
-		           class="text-decoration-none fw-semibold ms-1">
-		            회원가입
-		        </a>
-		    </div>
-		    <div class="mt-2">
-		
-		        <a href="/member/find-id"
-		           class="text-decoration-none small me-3">
-		            아이디 찾기
-		        </a>
-		
-		        <a href="/member/find-password"
-		           class="text-decoration-none small">
-		            비밀번호 찾기
-		        </a>
-		    </div>
-		</div>
+            <div>
+                <span class="text-muted">계정이 없으신가요?</span>
+                <a href="/register"
+                   class="text-decoration-none fw-semibold ms-1">
+                    회원가입
+                </a>
+            </div>
+            <div class="mt-2">
+                <a href="/member/find-id"
+                   class="text-decoration-none small me-3">
+                    아이디 찾기
+                </a>
+                <a href="/member/find-password"
+                   class="text-decoration-none small">
+                    비밀번호 찾기
+                </a>
+            </div>
+        </div>
 
         <hr class="my-4">
 
-        <div class="text-center text-muted">
+        <!-- 소셜 로그인 -->
+        <!-- <div class="text-center text-muted">
             <small>또는 소셜 계정으로 로그인</small>
         </div>
 
         <div class="d-flex justify-content-center mt-3 gap-2">
-            <button class="btn btn-outline-primary w-100"><i class="bi bi-google"></i> Google</button>
-            <button class="btn btn-outline-dark w-100"><i class="bi bi-github"></i> GitHub</button>
-        </div>
+            <button class="btn btn-light border social-btn w-100">
+                <i class="bi bi-google text-danger"></i> Google
+            </button>
+            <button class="btn btn-dark social-btn w-100">
+                <i class="bi bi-github"></i> GitHub
+            </button>
+        </div> -->
+
     </div>
 </div>
 
-<!-- Axios 로그인 스크립트 -->
+<!-- Axios -->
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 <script>
+function togglePassword() {
+    const input = document.getElementById("password");
+    input.type = input.type === "password" ? "text" : "password";
+}
+
 document.getElementById("loginForm").addEventListener("submit", async function(e) {
     e.preventDefault();
 
     const email = document.querySelector("input[name='username']").value;
     const password = document.querySelector("input[name='password']").value;
 
-    /* try {
-        const res = await axios.post("/api/auth/login", {
-            email: email,
-            password: password
-        });
+    const btn = document.querySelector(".login-btn");
+    btn.innerHTML = "로그인 중...";
+    btn.disabled = true;
 
-        // JWT 저장
-        localStorage.setItem("token", res.data.token);
-
-        alert("로그인에 성공하였습니다.");
-        window.location.href = "/";
-    } catch (err) {
-        alert("아이디 혹은 비밀번호가 일치하지 않습니다.");
-    } */
-    
     try {
-
         const res = await axios.post("/api/auth/login", {
             email: email,
             password: password
@@ -105,38 +183,35 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
 
         const result = res.data;
 
-        // 🔥 계정 잠김 처리
         if (typeof result === "string" && result.startsWith("LOCKED:")) {
-
             const days = result.split(":")[1];
-
             alert(`해당 계정은 ${days}일 동안 잠긴 계정입니다`);
-
+            btn.innerHTML = "로그인";
+            btn.disabled = false;
             return;
         }
 
-        // 🔥 일반 실패 메시지
         if (typeof result === "string" && result !== "redirect:/") {
-
             alert(result);
+            btn.innerHTML = "로그인";
+            btn.disabled = false;
             return;
         }
 
-        // 🔥 로그인 성공
         if (result === "redirect:/") {
-
-            alert("로그인에 성공 하였습니다.");
+            alert("로그인에 성공하였습니다.");
             location.href = "/";
         }
 
     } catch (err) {
-
-        alert("로그인 요청에 실패하였습니다. 관리자에게 문의하세요");
+        alert("로그인 요청에 실패하였습니다.");
+        btn.innerHTML = "로그인";
+        btn.disabled = false;
     }
 });
 </script>
 
-<!-- 푸터 -->sms 
+<!-- 푸터 -->
 <div th:replace="layout/footer :: footer"></div>
 
 </body>

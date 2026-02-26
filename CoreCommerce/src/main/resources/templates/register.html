@@ -5,6 +5,39 @@
 <!-- 다음(카카오) 우편번호 API -->
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
+<style>
+.register-card {
+    border: none;
+    border-radius: 20px;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.register-card .form-control {
+    border-radius: 10px;
+    transition: all 0.2s ease-in-out;
+}
+
+.register-card .form-control:focus {
+    box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.25);
+    transform: scale(1.01);
+}
+
+.register-btn {
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+.register-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
+
 <body class="d-flex flex-column min-vh-100 bg-light">
 
 <!-- 헤더 -->
@@ -14,96 +47,164 @@
 <div class="container flex-grow-1 d-flex justify-content-center align-items-center"
      style="margin-top: 80px; margin-bottom:80px;">
 
-    <div class="card shadow-lg p-4 rounded-4" style="max-width: 500px; width: 100%; background: #ffffff;">
+    <!-- 🔥 넓어진 카드 -->
+    <div class="card register-card shadow-lg p-5 bg-white"
+         style="max-width: 720px; width: 100%;">
+
         <h3 class="text-center mb-4 fw-bold text-primary">회원가입</h3>
 
         <form id="registerForm">
 
-            <div class="mb-3">
-                <label for="email" class="form-label fw-semibold">이메일</label>
-                <input type="email" id="email" class="form-control form-control-lg" placeholder="이메일 입력" required>
+            <!-- 🔥 2열 레이아웃 -->
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold">이메일</label>
+                    <input type="email"
+                           id="email"
+                           class="form-control form-control-lg"
+                           placeholder="이메일 입력"
+                           required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold">이름</label>
+                    <input type="text"
+                           id="name"
+                           class="form-control form-control-lg"
+                           placeholder="이름 입력"
+                           required>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold">비밀번호</label>
+                    <div class="input-group">
+                        <input type="password"
+                               id="password"
+                               class="form-control form-control-lg"
+                               placeholder="비밀번호 입력"
+                               required>
+                        <button type="button"
+                                class="btn btn-outline-secondary"
+                                onclick="togglePassword()">
+                            👁
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold">전화번호</label>
+                    <input type="text"
+                           id="phone"
+                           class="form-control form-control-lg"
+                           placeholder="010-1234-5678"
+                           required>
+                </div>
+
             </div>
 
-            <div class="mb-3">
-                <label for="name" class="form-label fw-semibold">이름</label>
-                <input type="text" id="name" class="form-control form-control-lg" placeholder="이름 입력" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="password" class="form-label fw-semibold">비밀번호</label>
-                <input type="password" id="password" class="form-control form-control-lg" placeholder="비밀번호 입력" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="phone" class="form-label fw-semibold">전화번호</label>
-                <input type="text" id="phone" class="form-control form-control-lg" placeholder="010-1234-5678" required>
-            </div>
-
-            <!-- 우편번호 -->
+            <!-- 주소 -->
             <div class="mb-3">
                 <label class="form-label fw-semibold">주소</label>
+
                 <div class="input-group mb-2">
-                    <input type="text" id="zipcode" class="form-control form-control-lg" placeholder="우편번호" readonly required>
+                    <input type="text"
+                           id="zipcode"
+                           class="form-control form-control-lg"
+                           placeholder="우편번호"
+                           readonly required>
+
                     <button type="button"
                             class="btn btn-outline-primary"
                             onclick="execDaumPostcode()">
                         주소찾기
                     </button>
                 </div>
-                <input type="text" id="address1" class="form-control form-control-lg mb-2" placeholder="기본주소" readonly required>
-                <input type="text" id="address2" class="form-control form-control-lg" placeholder="상세주소">
+
+                <input type="text"
+                       id="address1"
+                       class="form-control form-control-lg mb-2"
+                       placeholder="기본주소"
+                       readonly required>
+
+                <input type="text"
+                       id="address2"
+                       class="form-control form-control-lg"
+                       placeholder="상세주소">
             </div>
 
-            <button type="submit" class="btn btn-primary btn-lg w-100 rounded-3 fw-semibold">
+            <!-- 가입 버튼 -->
+            <button type="submit"
+                    class="btn btn-primary btn-lg w-100 register-btn fw-semibold mt-3">
                 회원가입
             </button>
+
         </form>
 
-        <p class="text-center mt-3 small text-muted">
-            이미 계정이 있으신가요? 
-            <a href="/login" class="text-decoration-none text-primary fw-semibold">로그인</a>
+        <p class="text-center mt-4 small text-muted">
+            이미 계정이 있으신가요?
+            <a href="/login"
+               class="text-decoration-none fw-semibold text-primary">
+                로그인
+            </a>
         </p>
+
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <script>
-    // 다음 주소 API 실행
-    function execDaumPostcode() {
-        new daum.Postcode({
-            oncomplete: function(data) {
-                let addr = data.roadAddress || data.jibunAddress;
-                document.getElementById('zipcode').value = data.zonecode;
-                document.getElementById('address1').value = addr;
-                document.getElementById('address2').focus();
-            }
-        }).open();
-    }
+// 비밀번호 보기 토글
+function togglePassword() {
+    const input = document.getElementById("password");
+    input.type = input.type === "password" ? "text" : "password";
+}
 
-    // 회원가입 처리
-    const form = document.getElementById('registerForm');
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const email = document.getElementById('email').value;
-        const name = document.getElementById('name').value;
-        const password = document.getElementById('password').value;
-        const phone = document.getElementById('phone').value;
-        const zipcode = document.getElementById('zipcode').value;
-        const address1 = document.getElementById('address1').value;
-        const address2 = document.getElementById('address2').value;
-
-        try {
-            await axios.post('/api/auth/register', {
-                email, name, password, phone, zipcode, address1, address2
-            });
-            alert('회원가입이 완료되었습니다.');
-            window.location.href = '/login';
-        } catch (err) {
-            alert(err.response?.data?.message || '회원가입에 실패하였습니다');
+// 다음 주소 API
+function execDaumPostcode() {
+    new daum.Postcode({
+        oncomplete: function(data) {
+            let addr = data.roadAddress || data.jibunAddress;
+            document.getElementById('zipcode').value = data.zonecode;
+            document.getElementById('address1').value = addr;
+            document.getElementById('address2').focus();
         }
-    });
+    }).open();
+}
+
+// 회원가입 처리
+document.getElementById('registerForm')
+.addEventListener('submit', async (e) => {
+
+    e.preventDefault();
+
+    const btn = document.querySelector('.register-btn');
+    btn.innerHTML = "가입 진행 중...";
+    btn.disabled = true;
+
+    const email = email.value;
+    const name = name.value;
+    const password = password.value;
+    const phone = phone.value;
+    const zipcode = zipcode.value;
+    const address1 = address1.value;
+    const address2 = address2.value;
+
+    try {
+        await axios.post('/api/auth/register', {
+            email, name, password, phone, zipcode, address1, address2
+        });
+
+        alert('회원가입이 완료되었습니다.');
+        window.location.href = '/login';
+
+    } catch (err) {
+        alert(err.response?.data?.message || '회원가입에 실패하였습니다');
+        btn.innerHTML = "회원가입";
+        btn.disabled = false;
+    }
+});
 </script>
 
 <!-- 푸터 -->
