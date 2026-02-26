@@ -126,8 +126,17 @@
                 <span th:class="'status-badge status-' + ${order.status}"
                       th:text="${order.status}">
                 </span>
+                
+                <div th:if="${order.status == 'SHIPPED'}"
+			         class="mt-2 small text-start">
+			
+			        🚚 <span th:text="${order.courier}"></span><br>
+			        📦 <span th:text="${order.trackingNumber}"></span>
+			
+			    </div>
 
             </div>
+            
 
             <!-- 버튼 -->
             <div class="col-md-3 text-md-end mt-3 mt-md-0">

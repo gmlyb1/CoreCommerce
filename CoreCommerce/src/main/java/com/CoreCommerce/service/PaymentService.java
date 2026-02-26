@@ -80,7 +80,7 @@ public class PaymentService {
         }
 
         // 4️⃣ 주문 상태 변경
-        orderService.updateStatus(orderId, "PAID");
+        orderService.updateStatus(orderId, "PAID",null,null);
 
         // 5️⃣ payment 저장
         Payment payment = new Payment();

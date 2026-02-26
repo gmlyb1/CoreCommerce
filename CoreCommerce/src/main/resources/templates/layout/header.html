@@ -4,9 +4,8 @@
 <div class="bg-white border-bottom small">
     <div class="container d-flex justify-content-end py-2 gap-3">
 
-        <a href="#" class="text-muted text-decoration-none">고객센터</a>
-        <a href="#" class="text-muted text-decoration-none">공지사항</a>
-        <a href="#" class="text-muted text-decoration-none">이벤트</a>
+        <a href="/inquiry/list" class="text-muted text-decoration-none">고객센터</a>
+        <a href="/notice/list" class="text-muted text-decoration-none">공지사항</a>
 
         <!-- 로그인 상태 표시 -->
         <div class="ms-3">
@@ -64,6 +63,12 @@
                                 🔑 권한 관리
                             </a>
                         </li>
+                        
+                        <li th:if="${loginUser.role == 'MANAGER' or loginUser.role == 'PRODUCTER'}">
+						    <a class="dropdown-item" href="/admin/orders">
+						        📦 주문 관리
+						    </a>
+						</li>
 
                         <li>
                             <a class="dropdown-item" href="/wishlist/list">

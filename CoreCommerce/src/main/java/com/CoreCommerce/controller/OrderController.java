@@ -1,5 +1,6 @@
 package com.CoreCommerce.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -78,7 +79,9 @@ public class OrderController {
 	    
 	    List<OrderItem> items = orderService.getOrderItems(id);
 	    model.addAttribute("order", order);
-
+	    model.addAttribute("items", items);
+	    
+	    
 	    return "order/detail";
 	}
 	
@@ -96,21 +99,46 @@ public class OrderController {
 		 return orderService.createOrderBySelectedItems( loginUser.getId(), cartItemIds  );
 	}
 	
+//	@PostMapping("/cancel/{orderId}")
+//	@ResponseBody
+//	public String cancelOrder(@PathVariable Long orderId,
+//	                          HttpSession session) {
+//
+//	    Member loginUser =
+//	            (Member) session.getAttribute("loginUser");
+//
+//	    if (loginUser == null) {
+//	        return "LOGIN_REQUIRED";
+//	    }
+//
+//	   try {
+//		   orderService.cancelOrder(orderId, loginUser.getId());
+//		} catch (Exception e) {
+//			return "FAIL";
+//		}
+//
+//	    return "OK";
+//	}
+	
 	@PostMapping("/cancel/{orderId}")
 	@ResponseBody
-	public String cancelOrder(@PathVariable Long orderId,
-	                          HttpSession session) {
+	public Map<String,Object> cancelOrder(@PathVariable Long orderId,
+            HttpSession session){
 
-	    Member loginUser =
-	            (Member) session.getAttribute("loginUser");
+	    Map<String,Object> res = new HashMap<>();
 
-	    if (loginUser == null) {
-	        return "LOGIN_REQUIRED";
+	    Member loginUser = (Member) session.getAttribute("loginUser");
+	    
+	    try{
+	        orderService.cancelOrder(orderId, loginUser.getId());
+	        res.put("success", true);
+	    }
+	    catch(Exception e){
+	        res.put("success", false);
+	        res.put("message", e.getMessage());
 	    }
 
-	    orderService.cancelOrder(orderId, loginUser.getId());
-
-	    return "OK";
+	    return res;
 	}
 	
 	@PostMapping("/create-single")

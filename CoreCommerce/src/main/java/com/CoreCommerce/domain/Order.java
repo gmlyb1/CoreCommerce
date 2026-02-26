@@ -25,4 +25,8 @@ public class Order {
     private int totalPrice;
     private String status;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private String courier;
+    private String trackingNumber;
+    private String email;
 }

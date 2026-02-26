@@ -13,7 +13,10 @@ public interface OrderRepository {
 
 	Order findById(Long id);
 
-    int updateStatus(Long orderId, String status);
+    int updateStatus(Long orderId,
+            String status,
+            String courier,
+            String trackingNumber);
 
 	void insert(Order order);
 
@@ -38,6 +41,13 @@ public interface OrderRepository {
 	void cancelOrder(Long orderId, Long id);
 
 	List<OrderItem> findItems(Long orderId);
+
+	List<Order> findAll();
+
+	List<Order> findPaging(@Param("offset") int offset, @Param("size") int size);
+
+	int countAll();
+
 
 
 }

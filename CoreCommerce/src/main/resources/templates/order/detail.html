@@ -106,12 +106,27 @@
             </button>
 
         </div>
+		        
+        <div th:if="${order.status == 'SHIPPED'}"
+		     class="mt-3 small">
+		
+		    🚚 택배사 :
+		    <span th:text="${order.courier}"></span>
+		
+		    <br>
+		
+		    📦 송장번호 :
+		    <span class="fw-bold text-primary"
+		          th:text="${order.trackingNumber}">
+		    </span>
+		
+		</div>
 
     </div>
 
 
     <!-- ================= 주문 상품 리스트 ================= -->
-    <h5 class="fw-bold mb-3">🛒 주문 상품</h5>
+   <!--  <h5 class="fw-bold mb-3">🛒 주문 상품</h5>
 
     <div class="row g-3">
 
@@ -122,11 +137,11 @@
 
                 <div class="d-flex align-items-center gap-4">
 
-                    <!-- 상품 이미지 -->
-                    <img th:src="${item.productImage}"
+                    상품 이미지
+                    <img th:src="${item.imageUrl}"
                          class="product-img">
 
-                    <!-- 상품 정보 -->
+                    상품 정보
                     <div class="flex-grow-1">
 
                         <h6 class="fw-bold"
@@ -150,7 +165,7 @@
 
         </div>
 
-    </div>
+    </div> -->
 
 </div>
 
@@ -165,20 +180,16 @@ function cancelOrder(orderId){
     fetch("/order/cancel/" + orderId, {
         method : "POST"
     })
-    .then(res => res.text())
-    .then(result => {
+    .then(res => res.json())
+    .then(data => {
 
-        if(result === "OK"){
-            alert("취소 완료");
-            location.reload();
-        }
-        else if(result === "LOGIN_REQUIRED"){
-            alert("로그인 필요");
-            location.href = "/login";
-        }
-        else{
-            alert("취소 실패");
-        }
+       if(data.success){
+           alert("취소 완료");
+           location.reload();
+       }
+       else{
+           alert(data.message);
+       }
 
     });
 

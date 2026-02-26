@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -92,8 +93,8 @@ public class OrderService {
         return orderRepository.findById(id);
     }
 
-    public void updateStatus(Long orderId, String status) {
-        orderRepository.updateStatus(orderId, status);
+    public void updateStatus(Long orderId, String status, String courier, String trackingNumber) {
+        orderRepository.updateStatus(orderId, status, courier, trackingNumber);
     }
 
     @Transactional
@@ -257,25 +258,26 @@ public class OrderService {
 	    Order order = orderRepository.findById(orderId);
 
 	    if (order == null) {
-	        throw new RuntimeException("주문 없음");
+	        throw new RuntimeException("주문이 없습니다.");
 	    }
 
 	    if (!order.getMemberId().equals(memberId)) {
-	        throw new RuntimeException("권한 없음");
+	        throw new RuntimeException("권한 없습니다.");
 	    }
 
 	    // 🔥 취소 불가능 상태 차단
 	    if ("CANCELLED".equals(order.getStatus())) {
-	        throw new RuntimeException("이미 취소된 주문");
+	        throw new RuntimeException("이미 취소된 주문 입니다.");
 	    }
 
 	    if ("SHIPPED".equals(order.getStatus())) {
-	        throw new RuntimeException("이미 배송된 주문은 취소 불가");
+	        throw new RuntimeException("이미 배송된 주문은 취소 불가합니다.");
 	    }
 
 	    // ✅ 상태 변경
-	    orderRepository.updateStatus(orderId, "CANCELLED");
-
+	    orderRepository.updateStatus(orderId, "CANCELLED",null,null);
+	    
+	    
 	    // ✅ 주문 아이템 조회
 	    List<OrderItem> items = orderRepository.findItems(orderId);
 
@@ -299,7 +301,7 @@ public class OrderService {
 	    Product product = productRepository.findById(productId);
 
 	    if(product.getStock() < quantity){
-	        throw new RuntimeException("재고 부족");
+	        throw new RuntimeException("재고가 부족합니다. 판매자에게 문의하세요.");
 	    }
 
 	    int totalPrice = product.getPrice() * quantity;
@@ -321,7 +323,19 @@ public class OrderService {
 
 	    return order.getId();
 	}
+	
+	public List<Order> findAll() {
+		return orderRepository.findAll();
+	}
+	
+	public List<Order> findPaging(int offset, int size){
+		return orderRepository.findPaging(offset, size);
+	}
 
-    
+	public int countAll() {
+		return orderRepository.countAll();
+	}
+
+	
     
 }
