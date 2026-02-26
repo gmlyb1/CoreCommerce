@@ -61,4 +61,8 @@ public class CartService {
 	public List<CartItem> getCartItems(Long id) {
 		return cartRepository.getCartItems(id);
 	}
+
+	public void deleteByCartItemIds(List<Long> cartItemIds) {
+		cartRepository.deleteByCartItemIds(cartItemIds);
+	}
 }

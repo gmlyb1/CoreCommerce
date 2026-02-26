@@ -1,6 +1,8 @@
 package com.CoreCommerce.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
@@ -124,6 +126,9 @@ public class OrderService {
         
         List<OrderItem> items = orderRepository.findOrderItems(orderId);
 
+        List<Long> cartItemIds = items.stream()
+        						.map(OrderItem::getCartItemId)
+        						.collect(Collectors.toList());
         
         for (OrderItem item : items) {
         	
@@ -137,9 +142,12 @@ public class OrderService {
             if (result == 0) {
                 throw new IllegalStateException("재고가 부족 합니다. 판매자에게 문의해 주시기 바랍니다.");
             }
+            
+//            cartItemIds.add(item.getCartItemId());
         }
         
-        cartService.clearByMember(order.getMemberId());
+          cartService.deleteByCartItemIds(cartItemIds);
+//        cartService.clearByMember(order.getMemberId());
     }
     
 //    @Transactional
@@ -203,6 +211,44 @@ public class OrderService {
 
 	public List<OrderItem> getOrderItems(Long id) {
 		return orderRepository.getOrderItems(id);
+	}
+
+	@Transactional
+	public Long createOrderBySelectedItems(Long memberId, List<Long> cartItemIds) {
+
+	    // 🔥 로그인 사용자 것만 조회 (보안)
+	    List<CartItem> items =
+	            cartRepository.findByIdsAndMemberId(cartItemIds, memberId);
+
+	    if (items.isEmpty()) {
+	        throw new IllegalStateException("선택한 상품이 없습니다.");
+	    }
+
+	    int totalPrice = 0;
+
+	    for (CartItem item : items) {
+	        totalPrice += item.getPrice() * item.getQuantity();
+	    }
+
+	    Order order = new Order();
+	    order.setMemberId(memberId);
+	    order.setStatus("READY");
+	    order.setTotalPrice(totalPrice);
+
+	    orderRepository.insert(order);
+
+	    for (CartItem item : items) {
+	        OrderItem orderItem = new OrderItem();
+	        orderItem.setOrderId(order.getId());
+	        orderItem.setProductId(item.getProductId());
+	        orderItem.setQuantity(item.getQuantity());
+	        orderItem.setPrice(item.getPrice());
+	        orderItem.setCartItemId(item.getId());
+	        
+	        orderRepository.insertOrderItem(orderItem);
+	    }
+
+	    return order.getId();
 	}
 
     

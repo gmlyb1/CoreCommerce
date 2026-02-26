@@ -45,5 +45,9 @@ public interface CartRepository {
 
 	List<CartItem> getCartItems(Long id);
 
+	List<CartItem> findByIdsAndMemberId(@Param("list") List<Long> list,  @Param("memberId") Long memberId);
+
+	void deleteByCartItemIds( @Param("cartItemIds") List<Long> cartItemIds);
+
     
 }

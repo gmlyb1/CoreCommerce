@@ -22,6 +22,7 @@
         <table class="table table-bordered table-hover align-middle text-center">
             <thead class="table-light">
                 <tr>
+                	<th><input type="checkbox" onclick="toggleAll(this)"></th>
                     <th>이미지</th>
                     <th>상품명</th>
                     <th>가격</th>
@@ -32,6 +33,14 @@
             </thead>
             <tbody>
                 <tr th:each="item : ${items}">
+                	<td>
+                		 <input type="checkbox"
+					            class="item-check"
+					            th:value="${item.id}"
+					            th:data-price="${item.price}"
+					            th:data-quantity="${item.quantity}"
+					            onchange="updateTotal()">
+                	</td>
                     <td>
                         <img th:src="${item.imageUrl}"
                              style="width:80px; height:80px; object-fit:cover;"
@@ -61,12 +70,12 @@
         </table>
         
         <!-- 🔥 페이징 -->
-		<div class="mt-4"
+		<!-- <div class="mt-4"
 		     th:if="${pagination != null and pagination.totalPages > 1}">
 		
 		    <ul class="pagination justify-content-center d-flex flex-row">
 		
-		        <!-- 이전 -->
+		        이전
 		        <li class="page-item"
 		            th:classappend="${pagination.first} ? 'disabled'">
 		
@@ -76,7 +85,7 @@
 		            </a>
 		        </li>
 		
-		        <!-- 번호 -->
+		        번호
 		        <li class="page-item"
 		            th:each="i : ${#numbers.sequence(1, pagination.totalPages)}"
 		            th:classappend="${i == pagination.page} ? 'active'">
@@ -87,7 +96,7 @@
 		            </a>
 		        </li>
 		
-		        <!-- 다음 -->
+		        다음
 		        <li class="page-item"
 		            th:classappend="${pagination.last} ? 'disabled'">
 		
@@ -99,14 +108,18 @@
 		
 		    </ul>
 		
-		</div>
+		</div> -->
 
         <!-- ✅ 총 금액 영역 -->
         <div class="text-end mt-4">
             <h4>
                 총 결제 금액 :
-                <span th:text="${T(java.lang.String)
+                <!-- <span id="selectedTotal"
+                      th:text="${T(java.lang.String)
                      .format('%,d원', totalPrice)}">
+                </span> -->
+                <span id="selectedTotal">
+                	0원
                 </span>
             </h4>
 
@@ -153,7 +166,7 @@
         }
     }
 
-    async function createOrder() {
+    /* async function createOrder() {
         if (!confirm('결제를 진행하시겠습니까?')) return;
 
         try {
@@ -167,7 +180,65 @@
             console.error(err);
             alert(err.response?.data?.message || '주문 생성 실패');
         }
+    } */
+    
+    function toggleAll(source) {
+        const checks = document.querySelectorAll('.item-check');
+        checks.forEach(c => c.checked = source.checked);
+        updateTotal();
     }
+
+    function updateTotal() {
+        const checks = document.querySelectorAll('.item-check:checked');
+
+        let total = 0;
+
+        checks.forEach(c => {
+            const price = parseInt(c.dataset.price);
+            const quantity = parseInt(c.dataset.quantity);
+            total += price * quantity;
+        });
+
+        document.getElementById("selectedTotal").innerText =
+            total.toLocaleString() + "원";
+    }
+
+    async function createOrder() {
+        const checks = document.querySelectorAll('.item-check:checked');
+
+        if (checks.length === 0) {
+            alert("상품을 선택하세요.");
+            return;
+        }
+
+        if (!confirm('선택한 상품으로 결제를 진행하시겠습니까?')) return;
+
+        const selectedIds = [];
+
+        checks.forEach(c => {
+            selectedIds.push(c.value);
+        });
+
+        try {
+        	const response = await axios.post('/order/create', selectedIds);
+
+        	console.log("response.data:", response.data);
+
+        	const orderId = response.data;
+
+        	alert('주문이 생성되었습니다.');
+        	window.location.href = `/payment?orderId=${orderId}`;
+
+        } catch (err) {
+            console.error(err);
+            alert(err.response?.data?.message || '주문 생성 실패');
+        }
+    }
+    
+    document.addEventListener("DOMContentLoaded", function() {
+        updateTotal();
+    });
+
 
 </script>
 

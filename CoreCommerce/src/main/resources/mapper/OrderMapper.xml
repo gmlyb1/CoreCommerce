@@ -70,8 +70,8 @@
 
 	<!-- 주문 상품 저장 -->
 	<insert id="insertOrderItem" parameterType="com.CoreCommerce.domain.OrderItem">
-	    INSERT INTO order_item (order_id, product_id, price, quantity)
-	    VALUES (#{orderId}, #{productId}, #{price}, #{quantity})
+	    INSERT INTO order_item (order_id, product_id, price, quantity,cart_item_id)
+	    VALUES (#{orderId}, #{productId}, #{price}, #{quantity},#{cartItemId})
 	</insert>
 
 	<update id="updateOrderToPaid" parameterType="long">
@@ -106,6 +106,7 @@
 	    	,product_id as productId
 	    	,price as price
 	    	,quantity as quantity
+	    	,cart_item_id as cartItemId
 	    FROM order_item
 	    WHERE order_id = #{orderId}
 	

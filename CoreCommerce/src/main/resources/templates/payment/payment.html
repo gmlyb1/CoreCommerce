@@ -73,7 +73,7 @@ document.getElementById("payBtn").addEventListener("click", async function () {
 
     try {
         await widgets.requestPayment({
-        	orderId: "ORDER_" + rawOrderId,
+        	orderId: "ORD_" + rawOrderId,
             orderName: "CoreCommerce 주문",
             successUrl: window.location.origin + "/payment/success",
             failUrl: window.location.origin + "/payment/fail"

@@ -94,7 +94,7 @@
 	    JOIN product p ON ci.product_id = p.id
 	    WHERE ci.cart_id = #{cartId}
 	    ORDER BY ci.id DESC
-	    LIMIT #{size} OFFSET #{offset}
+	   <!--  LIMIT #{size} OFFSET #{offset} -->
 	
 	</select>
 	
@@ -124,12 +124,38 @@
 	
 	</select>
 	
-	<delete id="clearByMember" parameterType="long">
+	<select id="findByIdsAndMemberId" resultType="CartItem">
+	    SELECT 
+	    	 ci.id as id
+	    	,ci.cart_id as cartId
+	    	,ci.product_id as productId
+	    	,ci.quantity as quantity
+	    	,p.price as price
+	    FROM cart_item ci
+	    JOIN cart c ON ci.cart_id = c.id
+	    JOIN product p ON ci.product_id = p.id
+	    WHERE ci.id IN
+	    <foreach collection="list" item="id"
+	             open="(" separator="," close=")">
+	        #{id}
+	    </foreach>
+	    AND c.member_id = #{memberId}
+	</select>
+	
+	<!-- <delete id="clearByMember" parameterType="long">
 
 	    DELETE FROM cart_item
 	    WHERE cart_id IN (
 	        SELECT id FROM cart WHERE member_id = #{memberId}
 	    )
 	
+	</delete> -->
+	<delete id="deleteByCartItemIds">
+	    DELETE FROM cart_item
+	    WHERE id IN
+	    <foreach collection="cartItemIds" item="id"
+	             open="(" separator="," close=")">
+	        #{id}
+	    </foreach>
 	</delete>
 </mapper>

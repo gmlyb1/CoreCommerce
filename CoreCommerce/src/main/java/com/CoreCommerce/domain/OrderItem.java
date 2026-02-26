@@ -23,4 +23,5 @@ public class OrderItem {
     private Long productId;
     private int price;
     private int quantity;
+    private Long cartItemId;
 }

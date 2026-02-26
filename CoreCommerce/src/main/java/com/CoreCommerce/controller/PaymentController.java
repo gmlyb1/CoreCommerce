@@ -71,9 +71,10 @@ public class PaymentController {
 	            request,
 	            String.class
 	    );
-
-	    Long realOrderId = Long.parseLong(orderId.replace("ORDER_", ""));
-
+	    
+//	    Long realOrderId = Long.parseLong(orderId.replace("ORDER_", ""));
+	    Long realOrderId = Long.parseLong(orderId.replace("ORD_", ""));
+	    
 	    orderService.completeOrder(realOrderId);
 
 	    // ✅ 주문 조회 후 모델에 추가

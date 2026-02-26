@@ -83,16 +83,17 @@ public class OrderController {
 	
 	@PostMapping("/create")
 	@ResponseBody
-	public Long createOrder(HttpSession session) {
+	public Long createOrder(@RequestBody List<Long> cartItemIds,HttpSession session) {
 		
 		Member loginUser = (Member) session.getAttribute("loginUser");
 		
 		if(loginUser == null) {
-			throw new RuntimeException("로그인 필요");
+			throw new RuntimeException("로그인 필요합니다.");
 		}
 		
 		
-		return orderService.createOrder(loginUser.getId());
+//		return orderService.createOrder(loginUser.getId());
+		 return orderService.createOrderBySelectedItems( loginUser.getId(), cartItemIds  );
 	}
 	
 }

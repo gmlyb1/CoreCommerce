@@ -204,7 +204,7 @@ public class AuthController {
 	            (Member) session.getAttribute("loginUser");
 
 	    if (loginUser == null) {
-	        return ResponseEntity.status(401).body("로그인 필요");
+	        return ResponseEntity.status(401).body("로그인이 필요합니다.");
 	    }
 
 	    // ==============================
@@ -267,7 +267,7 @@ public class AuthController {
 	    Member loginUser = (Member) session.getAttribute("loginUser");
 
 	    if(loginUser == null){
-	        return ResponseEntity.status(401).body("로그인 필요");
+	        return ResponseEntity.status(401).body("로그인이 필요합니다.");
 	    }
 
 	    String newPassword = req.get("newPassword");
