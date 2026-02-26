@@ -2,140 +2,138 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="layout/head :: head"></head>
 
-<body class="d-flex flex-column min-vh-100">
+<style>
+/* 상품 카드 */
+.product-card {
+    border: none;
+    border-radius: 15px;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* 품절 상태 */
+.out-of-stock {
+    opacity: 0.6;
+}
+
+/* 품절 배지 */
+.out-of-stock::after {
+    content: "품절";
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #dc3545;
+    color: #fff;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    border-radius: 20px;
+}
+
+/* disabled 버튼 UX 개선 */
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+</style>
+
+<body class="d-flex flex-column min-vh-100 bg-light">
 
 <!-- 헤더 -->
 <div th:replace="layout/header :: header"></div>
 
-<!-- 메인 컨테이너 -->
-<div class="container flex-grow-1 mt-5 mb-5">
+<div class="container mt-5 mb-5">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3>상품 목록</h3>
+    <h3 class="mb-4 fw-bold">상품 목록</h3>
 
-        <div>
-            <a th:href="@{/cart/list}" class="btn btn-outline-dark me-2">
-                🛒 장바구니
-            </a>
-            <a th:if="${loginUser != null and loginUser.role == 'MANAGER'}"
-			   th:href="@{/product/form}"
-			   class="btn btn-primary">
-			    상품 등록
-			</a>
-        </div>
-    </div>
+    <div class="row">
 
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        <div class="col" th:each="p : ${products}">
-            <div class="card h-100 shadow-sm">
+        <!-- 상품 반복 -->
+        <div class="col-md-4 mb-4"
+             th:each="p : ${products}">
+
+            <div class="card product-card shadow-sm p-3"
+                 th:classappend="${p.stock == 0} ? ' out-of-stock'">
 
                 <!-- 상품 이미지 -->
                 <a th:href="@{/product/{id}(id=${p.id})}">
-	                <img th:src="${p.imageUrl}"
-	                     class="card-img-top"
-	                     style="height:200px; object-fit:cover;"
-	                     alt="상품 이미지">
+				    <img th:src="${p.imageUrl}"
+				         class="card-img-top rounded"
+				         style="height: 200px; object-fit: cover; cursor:pointer;">
 				</a>
-                <div class="card-body">
+
+                <div class="card-body text-center">
 
                     <!-- 상품명 -->
-                    <h5 class="card-title" th:text="${p.name}">상품명</h5>
-
-                    <!-- 상품 설명 -->
-                    <p class="card-text text-truncate"
-                       th:text="${p.description}">
-                        설명
-                    </p>
+                    <h5 class="card-title fw-bold"
+                        th:text="${p.name}">
+                    </h5>
 
                     <!-- 가격 -->
-                    <p class="mb-1">
-                        <strong th:text="${T(java.lang.String)
-                        .format('%,d원', p.price)}">
-                        </strong>
+                    <p class="text-primary fw-semibold mb-1"
+                       th:text="${T(java.lang.String).format('%,d원', p.price)}">
                     </p>
 
-                    <!-- 재고 -->
-                    <p class="mb-0 text-muted"
-                       th:text="'재고: ' + ${p.stock}">
-                        재고
+                    <!-- 재고 표시 -->
+                    <p class="small text-muted mb-2"
+                       th:text="'재고 : ' + ${p.stock}">
                     </p>
 
-                </div>
-
-                <div class="card-footer d-flex justify-content-between">
-
-                    <a th:if="${loginUser.role == 'MANAGER'}"
-                       th:href="@{/product/form(id=${p.id})}"
-                       class="btn btn-sm btn-info">
-                        수정
-                    </a>
-
-                    <button class="btn btn-sm btn-danger"
-                            th:onclick="'deleteProduct(' + ${p.id} + ')'"
-                            th:if="${loginUser.role == 'MANAGER'}"
-                            >
-                        삭제
+                    <!-- 구매 버튼 -->
+                    <button class="btn btn-primary w-100 mb-2"
+                            th:disabled="${p.stock == 0}"
+                            th:text="${p.stock == 0} ? '품절' : '구매하기'">
                     </button>
 
-                    <button class="btn btn-sm btn-success"
-                            th:onclick="'addToCart(' + ${p.id} + ', 1)'">
-                        장바구니 담기
-                    </button>
+                    <!-- 관리자 전용 버튼 -->
+                    <div th:if="${loginUser != null and 
+                                 (loginUser.role == 'MANAGER' or loginUser.role == 'PRODUCTER')}">
+
+                        <a th:href="@{/product/form(id=${p.id})}"
+                           class="btn btn-sm btn-info me-2">
+                            수정
+                        </a>
+
+                        <button class="btn btn-sm btn-danger"
+                                th:onclick="'deleteProduct(' + ${p.id} + ')'">
+                            삭제
+                        </button>
+
+                    </div>
 
                 </div>
             </div>
+
         </div>
-    </div>
 
-    <!-- 상품 없을 때 -->
-    <div class="mt-4 text-center"
-         th:if="${#lists.isEmpty(products)}">
-        <p class="text-muted">등록된 상품이 없습니다.</p>
     </div>
-
 </div>
+
+<!-- 삭제 스크립트 -->
+<script>
+function deleteProduct(id) {
+    if (!confirm("정말 삭제하시겠습니까?")) return;
+
+    fetch("/product/delete?id=" + id, {
+        method: "POST"
+    })
+    .then(() => {
+        alert("삭제되었습니다.");
+        location.reload();
+    })
+    .catch(() => {
+        alert("삭제 실패");
+    });
+}
+</script>
 
 <!-- 푸터 -->
 <div th:replace="layout/footer :: footer"></div>
-
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-<script>
-
-    async function deleteProduct(id) {
-        if (!confirm('정말 삭제하시겠습니까?')) return;
-
-        try {
-            await axios.delete(`/product/${id}`);
-            alert('삭제되었습니다.');
-            location.reload();
-        } catch (err) {
-            console.error(err);
-            alert(err.response?.data?.message || '삭제 실패');
-        }
-    }
-
-    async function addToCart(productId, quantity) {
-        try {
-
-            await axios.post('/cart/add', null, {
-                params: {
-                    productId: productId,
-                    quantity: quantity
-                }
-            });
-
-            if (confirm('장바구니에 추가되었습니다.\n장바구니로 이동하시겠습니까?')) {
-                location.href = '/cart/list';
-            }
-
-        } catch (err) {
-            console.error(err);
-            alert(err.response?.data?.message || '장바구니 추가 실패');
-        }
-    }
-
-</script>
 
 </body>
 </html>

@@ -1,59 +1,33 @@
 <div th:fragment="header">
 
-<!-- Spinner -->
-<div id="spinner"
-     class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-    <div class="spinner-border text-primary"
-         style="width: 3rem; height: 3rem;"
-         role="status">
-        <span class="sr-only">Loading...</span>
-    </div>
-</div>
-
-
 <!-- ================= TOP BAR ================= -->
-<div class="container-fluid px-5 d-none border-bottom d-lg-block bg-white shadow-sm">
-    <div class="row gx-0 align-items-center py-2">
+<div class="bg-white border-bottom small">
+    <div class="container d-flex justify-content-end py-2 gap-3">
 
-        <!-- 왼쪽 -->
-        <div class="col-lg-4">
-            <div class="d-inline-flex gap-3">
-                <a href="#" class="text-muted small text-decoration-none">Help</a>
-                <a href="#" class="text-muted small text-decoration-none">Support</a>
-                <a href="#" class="text-muted small text-decoration-none">Contact</a>
-            </div>
-        </div>
+        <a href="#" class="text-muted text-decoration-none">고객센터</a>
+        <a href="#" class="text-muted text-decoration-none">공지사항</a>
+        <a href="#" class="text-muted text-decoration-none">이벤트</a>
 
-        <!-- 가운데 -->
-        <div class="col-lg-4 text-center">
-            <small class="text-muted">📞 Call :</small>
-            <a href="#" class="text-dark fw-bold text-decoration-none">
-                (+012) 1234 567890
-            </a>
-        </div>
+        <!-- 로그인 상태 표시 -->
+        <div class="ms-3">
 
-        <!-- 오른쪽 로그인 영역 -->
-        <div class="col-lg-4 text-end">
-
-            <!-- 프로필 -->
             <img th:if="${loginUser != null and loginUser.profileImage != null}"
                  th:src="@{${loginUser.profileImage}}"
-                 width="38"
-                 height="38"
-                 class="rounded-circle border me-2"
+                 width="28"
+                 height="28"
+                 class="rounded-circle border me-1"
                  style="object-fit: cover;">
 
             <span th:if="${loginUser != null}"
-                  class="me-3 fw-bold text-dark">
-                <span th:text="${loginUser.name}"></span> 님 👋
+                  class="fw-bold text-dark me-2">
+                <span th:text="${loginUser.name}"></span>
             </span>
 
-            <!-- 드롭다운 -->
             <div class="dropdown d-inline-block">
 
                 <a class="text-dark text-decoration-none dropdown-toggle"
                    data-bs-toggle="dropdown">
-                    <i class="fas fa-user-circle fs-5"></i>
+                    ⚙
                 </a>
 
                 <ul class="dropdown-menu dropdown-menu-end shadow-sm p-2">
@@ -72,153 +46,208 @@
 
                     <th:block th:if="${loginUser != null}">
 
-				        <!-- 관리자 메뉴 -->
-				        <li th:if="${loginUser.role == 'MANAGER'}">
-				            <a class="dropdown-item" href="/admin/banner/list">
-				                🏷 배너 관리
-				            </a>
-				        </li>
-				
-				        <li th:if="${loginUser.role == 'MANAGER'}">
-				            <a class="dropdown-item" href="/admin/popup/list">
-				                📢 팝업 관리
-				            </a>
-				        </li>
-				
-				        <li th:if="${loginUser.role == 'MANAGER'}">
-				            <a class="dropdown-item" href="/admin/member/list">
-				                🔑 권한 관리
-				            </a>
-				        </li>
-				
-				        <!-- 일반 사용자 메뉴 -->
-				        <li>
-				            <a class="dropdown-item" href="/wishlist/list">
-				                ❤️ 찜 목록
-				            </a>
-				        </li>
-				
-				        <li>
-				            <a class="dropdown-item" href="/member/profile">
-				                👤 프로필
-				            </a>
-				        </li>
-				
-				        <li>
-				            <a class="dropdown-item text-danger" href="/logout">
-				                🚪 로그아웃
-				            </a>
-				        </li>
-				
-				    </th:block>
+                        <!-- 관리자 메뉴 -->
+                        <li th:if="${loginUser.role == 'MANAGER'}">
+                            <a class="dropdown-item" href="/admin/banner/list">
+                                🏷 배너 관리
+                            </a>
+                        </li>
+
+                        <li th:if="${loginUser.role == 'MANAGER'}">
+                            <a class="dropdown-item" href="/admin/popup/list">
+                                📢 팝업 관리
+                            </a>
+                        </li>
+
+                        <li th:if="${loginUser.role == 'MANAGER'}">
+                            <a class="dropdown-item" href="/admin/member/list">
+                                🔑 권한 관리
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item" href="/wishlist/list">
+                                ❤️ 찜 목록
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item" href="/member/profile">
+                                👤 프로필
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item text-danger" href="/logout">
+                                🚪 로그아웃
+                            </a>
+                        </li>
+
+                    </th:block>
 
                 </ul>
             </div>
 
         </div>
-
     </div>
 </div>
 
 
-<!-- ================= 로고 + 검색 + 아이콘 ================= -->
-<div class="container-fluid px-5 py-4 bg-white border-bottom">
+<!-- ================= LOGO + SEARCH + ICON ================= -->
+<div class="bg-white shadow-sm">
+    <div class="container py-4">
 
-    <div class="row align-items-center">
+        <div class="row align-items-center">
 
-        <!-- 로고 -->
-        <div class="col-lg-3 text-start">
-            <a href="/" class="text-decoration-none">
-                <h2 class="fw-bold text-primary m-0">
-                    🛍 CoreCommerce
-                </h2>
-            </a>
-        </div>
+            <!-- 로고 -->
+            <div class="col-lg-3">
+                <a href="/" class="text-decoration-none">
+                    <h2 class="fw-bold text-primary m-0">
+                        🛍 CoreCommerce
+                    </h2>
+                </a>
+            </div>
 
-        <!-- 검색 -->
-        <div class="col-lg-6">
-            <div class="input-group rounded-pill overflow-hidden border shadow-sm">
+            <!-- 검색 -->
+            <div class="col-lg-6">
+                <form action="/product/list" method="get">
+                    <div class="input-group rounded-pill border overflow-hidden shadow-sm">
 
-                <input type="text"
-                       class="form-control border-0 px-3"
-                       placeholder="검색어를 입력하세요">
+                        <input type="text"
+                               name="keyword"
+                               class="form-control border-0 px-4 py-2"
+                               placeholder="검색어를 입력하세요">
 
-                <button class="btn btn-primary px-4">
-                    <i class="fas fa-search"></i>
-                </button>
+                        <button type="submit"
+                                class="btn btn-primary px-4">
+                            🔍
+                        </button>
+
+                    </div>
+                </form>
+            </div>
+
+            <!-- 아이콘 -->
+            <div class="col-lg-3 text-end">
+
+                <a href="/wishlist/list"
+                   class="btn btn-light border rounded-circle me-2"
+                   style="width:45px;height:45px;">
+                    ❤️
+                </a>
+
+                <a href="/order/orders"
+                   class="btn btn-light border rounded-circle me-2"
+                   style="width:45px;height:45px;">
+                    📦
+                </a>
+
+                <a href="/cart/list"
+                   class="btn btn-primary rounded-circle"
+                   style="width:45px;height:45px;">
+                    🛒
+                </a>
 
             </div>
-        </div>
-
-        <!-- 아이콘 -->
-        <div class="col-lg-3 text-end">
-
-            <a href="/wishlist/list"
-               class="btn btn-light rounded-circle border me-2">
-                ❤️
-            </a>
-
-            <a href="/order/orders"
-               class="btn btn-light rounded-circle border me-2">
-                📦
-            </a>
-
-            <a href="/cart/list"
-               class="btn btn-primary rounded-circle">
-                🛒
-            </a>
 
         </div>
-
     </div>
 </div>
 
 
 <!-- ================= NAVBAR ================= -->
-<div class="container-fluid bg-primary px-5">
+<div class="bg-white border-bottom">
+    <div class="container">
 
-    <nav class="navbar navbar-expand-lg navbar-dark">
+        <nav class="navbar navbar-expand-lg navbar-light px-0">
 
-        <button class="navbar-toggler"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarCollapse">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+            <button class="navbar-toggler"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="collapse navbar-collapse" id="navbarCollapse">
 
-            <div class="navbar-nav w-100 text-center">
+                <div class="navbar-nav w-100 text-center">
 
-                <a href="/"
-                   th:classappend="${#httpServletRequest.requestURI == '/'} ? 'active'"
-                   class="nav-link flex-fill">
-                    홈
-                </a>
+                    <a href="/"
+                       th:classappend="${#httpServletRequest.requestURI == '/'} ? 'active-line'"
+                       class="nav-link flex-fill py-3">
+                        홈
+                    </a>
 
-                <a href="/product/list"
-                   th:classappend="${#httpServletRequest.requestURI.startsWith('/product')} ? 'active'"
-                   class="nav-link flex-fill">
-                    상품
-                </a>
+                    <a href="/product/list"
+                       th:classappend="${#httpServletRequest.requestURI.startsWith('/product')} ? 'active-line'"
+                       class="nav-link flex-fill py-3">
+                        상품
+                    </a>
 
-                <a href="/notice"
-                   th:classappend="${#httpServletRequest.requestURI.startsWith('/notice')} ? 'active'"
-                   class="nav-link flex-fill">
-                    공지사항
-                </a>
+                    <a href="/notice"
+                       th:classappend="${#httpServletRequest.requestURI.startsWith('/notice')} ? 'active-line'"
+                       class="nav-link flex-fill py-3">
+                        공지사항
+                    </a>
 
-                <a href="/inquiry/list"
-                   th:classappend="${#httpServletRequest.requestURI.startsWith('/inquiry')} ? 'active'"
-                   class="nav-link flex-fill">
-                    1:1문의
-                </a>
+                    <a href="/inquiry/list"
+                       th:classappend="${#httpServletRequest.requestURI.startsWith('/inquiry')} ? 'active-line'"
+                       class="nav-link flex-fill py-3">
+                        1:1문의
+                    </a>
+
+                </div>
 
             </div>
 
-        </div>
+        </nav>
 
-    </nav>
-
+    </div>
 </div>
 
-</div>
+
+<!-- ================= NAV STYLE (고급 라인 애니메이션) ================= -->
+
+<style>
+
+/* 기본 스타일 */
+.navbar-nav .nav-link {
+    position: relative;
+    transition: color 0.3s ease;
+    color: #333 !important;
+    font-weight: 500;
+}
+
+/* 🔥 hover 글자 색만 변경 */
+.navbar-nav .nav-link:hover {
+    color: #0d6efd !important;
+}
+
+/* 🔵 밑줄 애니메이션 */
+.navbar-nav .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 0;
+    height: 3px;
+    background: #0d6efd;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+    border-radius: 10px;
+}
+
+/* hover 하면 라인 확장 */
+.navbar-nav .nav-link:hover::after {
+    width: 60%;
+}
+
+/* 현재 활성 메뉴 */
+.active-line {
+    color: #0d6efd !important;
+}
+
+.active-line::after {
+    width: 60%;
+}
+
+</style>

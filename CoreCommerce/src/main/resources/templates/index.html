@@ -1,46 +1,39 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="layout/head :: head">
     <meta charset="utf-8">
     <title>CoreCommerce</title>
 </head>
 
-<body>
+<body class="coupang-body">
 
 <div th:replace="layout/header :: header"></div>
 
 <!-- ========================= BANNER ========================= -->
 
-<div class="container-fluid carousel bg-light px-0">
-    <div class="row g-0 justify-content-end">
-        <div class="col-12 col-lg-7 col-xl-9">
+<div class="banner-wrap">
+    <div class="container">
+        <div class="header-carousel owl-carousel">
 
-            <div class="header-carousel owl-carousel bg-light py-5">
+            <div class="banner-item"
+                 th:each="banner : ${bannerList}"
+                 th:if="${banner.useYn == 'Y'}">
 
-                <div class="row g-0 header-carousel-item align-items-center"
-                     th:each="banner : ${bannerList}"
-                     th:if="${banner.useYn == 'Y'}">
+                <img th:if="${banner.imageUrl != null}"
+                     th:src="@{${banner.imageUrl}}"
+                     class="img-fluid rounded">
 
-                    <div class="col-xl-6">
-                        <img th:if="${banner.imageUrl != null}"
-                             th:src="@{${banner.imageUrl}}"
-                             class="img-fluid rounded-4">
-                    </div>
+                <div class="banner-text">
+                    <h5 th:text="${banner.subtitle}"></h5>
+                    <h2 th:text="${banner.title}"></h2>
+                    <p th:text="${banner.description}"></p>
 
-                    <div class="col-xl-6 p-4">
-                        <h4 th:text="${banner.subtitle}"></h4>
-                        <h1 th:text="${banner.title}"></h1>
-                        <p th:text="${banner.description}"></p>
-
-                        <a th:if="${banner.linkUrl != null}"
-                           th:href="${banner.linkUrl}"
-                           class="btn btn-primary rounded-pill">
-                            Shop Now
-                        </a>
-
-                    </div>
-
+                    <a th:if="${banner.linkUrl != null}"
+                       th:href="${banner.linkUrl}"
+                       class="btn btn-coupang">
+                        상품 보러가기
+                    </a>
                 </div>
 
             </div>
@@ -49,265 +42,281 @@
     </div>
 </div>
 
-<!-- 🔥 구분라인 -->
-<div class="section-divider"></div>
+<!-- ======================= 광고 상품 ======================= -->
 
-<!-- ========================================================= -->
-<!-- ======================= OFFER =========================== -->
-<!-- ========================================================= -->
+<div class="container section-block">
 
-<div class="container py-5">
-
-    <div class="text-center mb-5">
-        <h2 class="fw-bold">광고 상품</h2>
-        <div class="title-line mx-auto"></div>
-    </div>
+    <h2 class="section-title">광고 상품</h2>
 
     <div class="row g-4">
 
-        <div class="col-lg-6"
+        <div class="col-md-6"
              th:each="offer : ${offerProductList}">
 
             <a th:href="@{/product/{id}(id=${offer.id})}"
-               class="d-flex justify-content-between align-items-center border rounded p-4 bg-white shadow-sm">
+               class="offer-card">
 
                 <div>
-                    <p class="text-muted" th:text="${offer.description}"></p>
-                    <h3 class="fw-bold" th:text="${offer.name}"></h3>
-                    <h1 class="text-danger">
-                        <span th:text="${offer.discountPercent + '%'}"></span>
-                        Off
-                    </h1>
+                    <p class="text-muted small" th:text="${offer.description}"></p>
+                    <h4 class="fw-bold" th:text="${offer.name}"></h4>
+                    <h3 class="text-danger">
+                        <span th:text="${offer.discountPercent + '%'}"></span> 할인
+                    </h3>
                 </div>
 
-                <img th:src="${offer.imageUrl}"
-                     style="max-height:150px; object-fit:contain;">
+                <img th:src="${offer.imageUrl}" class="offer-img">
 
             </a>
 
         </div>
 
     </div>
-
 </div>
 
-<!-- 🔥 구분라인 -->
-<div class="section-divider"></div>
+<!-- ===================== 메인 상품 ====================== -->
 
-<!-- ========================================================= -->
-<!-- ===================== MAIN PRODUCT ====================== -->
-<!-- ========================================================= -->
+<div class="container section-block">
 
-<div class="container py-5">
-
-    <div class="text-center mb-5">
-        <h2 class="fw-bold">All Products</h2>
-        <div class="title-line mx-auto"></div>
-    </div>
+    <h2 class="section-title">전체 상품</h2>
 
     <div class="row g-4">
 
-        <div class="col-md-6 col-lg-4 col-xl-3"
+        <div class="col-md-6 col-lg-3"
              th:each="product : ${MainPageList}">
 
-            <div class="card product-card border-0 shadow-sm h-100">
+            <div class="product-card"
+                 th:classappend="${product.stock == 0} ? 'soldout-card'">
 
-                <div class="position-relative overflow-hidden product-img-wrap">
+                <div class="product-img-wrap">
 
                     <img th:src="${product.imageUrl}"
-                         class="card-img-top product-img">
+                         class="product-img"
+                         th:classappend="${product.stock == 0} ? 'soldout-img'">
 
-                    <div class="product-hover">
+                    <!-- <div class="soldout-label"
+                         th:if="${product.stock == 0}">
+                        품절
+                    </div> -->
 
-                        <a th:href="@{/product/{id}(id=${product.id})}"
-                           class="btn btn-light rounded-circle">
-                            <i class="fas fa-eye"></i>
-                        </a>
+                </div>
 
-                        <button type="button"
-                                class="btn btn-light rounded-circle"
-                                th:onclick="'toggleWishlist(' + ${product.id} + ', this)'">
+                <div class="product-info">
+                    <div class="category" th:text="${product.category}"></div>
+                    <div class="name" th:text="${product.name}"></div>
 
-                            <i th:class="${product.liked} ? 
-                               'fas fa-heart text-danger' :
-                               'far fa-heart text-muted'">
-                            </i>
-
-                        </button>
-
+                    <div class="price-wrap">
+                        <del th:text="${product.originalPrice + '원'}"></del>
+                        <span class="price"
+                              th:text="${product.price + '원'}"></span>
                     </div>
-
-                    <span class="badge bg-danger position-absolute top-0 start-0 m-2"
-                          th:if="${product.sale}"
-                          th:text="'SALE'">
-                    </span>
-
                 </div>
 
-                <div class="card-body text-center">
-                    <small class="text-muted" th:text="${product.category}"></small>
-                    <h6 class="fw-bold mt-2" th:text="${product.name}"></h6>
-
-                    <div class="mt-2">
-                        <del class="text-muted me-2"
-                             th:text="${product.originalPrice + '원'}">
-                        </del>
-
-                        <span class="fw-bold text-danger"
-                              th:text="${product.price + '원'}">
-                        </span>
-                    </div>
-
-                </div>
-
-                <div class="card-footer bg-white text-center">
-
-                    <button class="btn btn-primary w-100 rounded-pill"
-                            th:onclick="'addToCart(' + ${product.id} + ')'">
-
-                        <i class="fas fa-shopping-cart me-2"></i>
-                        장바구니
-
-                    </button>
-
-                </div>
+                <button class="btn btn-coupang w-100"
+                        th:disabled="${product.stock == 0}"
+                        th:text="${product.stock == 0} ? '품절' : '장바구니'"
+                        th:onclick="${product.stock > 0} ? 
+                        'addToCart(' + ${product.id} + ')'">
+                </button>
 
             </div>
 
         </div>
 
     </div>
-
 </div>
 
-<!-- 🔥 구분라인 -->
-<div class="section-divider"></div>
+<!-- ===================== 전체 상품 캐러셀 ====================== -->
 
-<!-- ========================================================= -->
-<!-- ================= PRODUCT CAROUSEL ====================== -->
-<!-- ========================================================= -->
+<div class="container section-block">
 
-<div class="container py-5">
-
-    <div class="text-center mb-4">
-        <h2 class="fw-bold">Products</h2>
-        <div class="title-line mx-auto"></div>
-    </div>
+    <h2 class="section-title">추천 상품</h2>
 
     <div class="productList-carousel owl-carousel">
 
-        <div class="border rounded p-3"
+        <div class="mini-product"
              th:each="product : ${AllProductList}">
 
-            <div class="row">
+            <img th:src="${product.imageUrl}" class="mini-img">
 
-                <div class="col-5 position-relative">
-
-                    <img th:src="${product.imageUrl}"
-                         class="img-fluid rounded"
-                         style="height:120px; object-fit:cover;">
-
-                    <a th:href="@{/product/{id}(id=${product.id})}"
-                       class="mini-view-icon">
-                        <i class="fa fa-eye"></i>
-                    </a>
-
-                </div>
-
-                <div class="col-7">
-
-                    <span class="badge bg-light text-dark"
-                          th:text="${product.category}">
-                    </span>
-
-                    <h6 class="fw-bold mt-2"
-                        th:text="${product.name}">
-                    </h6>
-
-                    <div class="mt-2">
-
-                        <del class="text-muted small me-2"
-                             th:text="${product.originalPrice + '원'}">
-                        </del>
-
-                        <span class="text-danger fw-bold"
-                              th:text="${product.price + '원'}">
-                        </span>
-
-                    </div>
-
-                </div>
-
+            <div class="mini-info">
+                <div class="mini-name" th:text="${product.name}"></div>
+                <div class="mini-price"
+                     th:text="${product.price + '원'}"></div>
             </div>
 
         </div>
 
     </div>
-
 </div>
 
-<!-- ========================= CSS =========================== -->
+<div th:replace="layout/footer :: footer"></div>
+
+<!-- ========================= STYLE =========================== -->
 
 <style>
 
+body.coupang-body {
+    background-color: #f5f6f7;
+}
+
+/* 섹션 블록 */
+.section-block {
+    background: #ffffff;
+    padding: 40px;
+    margin-top: 30px;
+    border-radius: 8px;
+}
+
+/* 섹션 타이틀 */
+.section-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+/* 배너 */
+.banner-wrap {
+    background: #ffffff;
+    padding: 40px 0;
+}
+
+.banner-item {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.banner-text h2 {
+    font-weight: 700;
+}
+
+/* 광고 카드 */
+.offer-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #eee;
+    padding: 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #000;
+    transition: 0.2s;
+}
+
+.offer-card:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.offer-img {
+    max-height: 130px;
+}
+
+/* 상품 카드 */
 .product-card {
-    transition: 0.3s ease;
+    border: 1px solid #eee;
+    padding: 15px;
+    border-radius: 6px;
+    background: #fff;
+    transition: 0.2s;
 }
 
 .product-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 .product-img {
-    height: 250px;
+    width: 100%;
+    height: 220px;
     object-fit: cover;
 }
 
-.product-hover {
+.product-info {
+    margin-top: 10px;
+}
+
+.category {
+    font-size: 12px;
+    color: #777;
+}
+
+.name {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 5px 0;
+}
+
+.price-wrap del {
+    font-size: 12px;
+    color: #aaa;
+}
+
+.price {
+    font-size: 16px;
+    font-weight: 700;
+    color: #e60023;
+    margin-left: 5px;
+}
+
+/* 품절 */
+.soldout-card {
+    opacity: 0.7;
+}
+
+.soldout-img {
+    filter: grayscale(80%);
+}
+
+.soldout-label {
     position: absolute;
-    bottom: -50px;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    transition: 0.3s ease;
-}
-
-.product-img-wrap:hover .product-hover {
-    bottom: 15px;
-}
-
-/* ✅ 섹션 구분라인 */
-.section-divider {
-    height: 1px;
-    background: linear-gradient(to right, transparent, #dee2e6, transparent);
-    margin: 60px 0;
-}
-
-.title-line {
-    width: 70px;
-    height: 4px;
-    background: #0d6efd;
-    border-radius: 10px;
-    margin: 10px auto;
-}
-
-.mini-view-icon {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 35px;
-    height: 35px;
-    background: #0d6efd;
+    top: 10px;
+    left: 10px;
+    background: #000;
     color: #fff;
-    border-radius: 50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-decoration:none;
+    font-size: 12px;
+    padding: 4px 8px;
 }
+
+/* 버튼 */
+.btn-coupang {
+    background-color: #346aff;
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.btn-coupang:hover {
+    background-color: #1f4ed8;
+}
+
+/* 미니 상품 */
+.mini-product {
+    border: 1px solid #eee;
+    padding: 15px;
+    border-radius: 6px;
+    background: #fff;
+    text-align: center;
+}
+
+.mini-img {
+    height: 120px;
+    object-fit: cover;
+    width: 100%;
+}
+
+.mini-name {
+    font-size: 13px;
+    margin-top: 8px;
+}
+
+.mini-price {
+    font-weight: 700;
+    color: #e60023;
+}
+
+/* ================= 화살표 ================= */
 
 .productList-carousel {
     position: relative;
@@ -315,99 +324,92 @@
 
 .productList-carousel .owl-nav {
     position: absolute;
-    top: 40%;
+    top: 50%;
     width: 100%;
+    transform: translateY(-50%);
     display: flex;
     justify-content: space-between;
     pointer-events: none;
 }
 
 .productList-carousel .owl-nav button {
-    width: 45px;
-    height: 45px;
-    background: #ffffff !important;
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    background: #ffffff !important;
+    border: 1px solid #e5e5e5 !important;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
     pointer-events: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.3s ease;
 }
 
 .productList-carousel .owl-nav button span {
-    font-size: 26px;
-    color: #0d6efd;
+    font-size: 22px;
     font-weight: bold;
 }
 
+/* hover */
 .productList-carousel .owl-nav button:hover {
-    background: #0d6efd !important;
-    transform: scale(1.1);
-}
-
-.productList-carousel .owl-nav button:hover span {
-    color: #fff;
+    background: #346aff !important;
+    border-color: #346aff !important;
+    color: #fff !important;
 }
 </style>
+	<script th:inline="javascript">
+/*<![CDATA[*/
 
-<!-- ========================= JS ============================ -->
+document.addEventListener("DOMContentLoaded", function () {
 
-<script>
+    var popup = /*[[${popup}]]*/ null;
 
-function addToCart(productId) {
+    if (popup != null) {
 
-    fetch("/cart/add", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: "productId=" + productId + "&quantity=1"
-    })
-    .then(res => {
-        if (!res.ok) throw new Error();
-        return res.text();
-    })
-    .then(() => {
-        if (confirm("장바구니에 추가되었습니다.\n이동하시겠습니까?")) {
-            location.href = "/cart/list";
-        }
-    })
-    .catch(() => alert("장바구니 추가 실패"));
-}
+        window.open(
+            "/popup/view/" + popup.id,
+            "popupWindow",
+            "width=600,height=700,left=500,top=200"
+        );
+    }
 
-function toggleWishlist(productId, btn) {
+});
 
-    fetch("/wishlist/toggle", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: "productId=" + productId
-    })
-    .then(res => {
-        if (!res.ok) throw new Error();
-        return res.json();
-    })
-    .then(data => {
-
-        const icon = btn.querySelector("i");
-
-        if (data === true) {
-            icon.classList.remove("far","text-muted");
-            icon.classList.add("fas","text-danger");
-        } else {
-            icon.classList.remove("fas","text-danger");
-            icon.classList.add("far","text-muted");
-        }
-
-    })
-    .catch(() => alert("로그인 후 이용 가능합니다."));
-}
-
+/*]]>*/
 </script>
+	<script>
+	$(document).ready(function(){
+	
+	    $(".productList-carousel").owlCarousel({
+	        loop: true,
+	        margin: 20,
+	        nav: true,          // 🔥 이거 있어야 화살표 나옴
+	        dots: false,
+	        autoplay: false,
+	        responsive: {
+	            0: { items: 1 },
+	            768: { items: 2 },
+	            1024: { items: 4 }
+	        }
+	    });
+	
+	});
+	
+	function addToCart(productId) {
 
-<div th:replace="layout/footer :: footer"></div>
-
+	    fetch("/cart/add", {
+	        method: "POST",
+	        headers: {
+	            "Content-Type": "application/x-www-form-urlencoded"
+	        },
+	        body: "productId=" + productId + "&quantity=1"
+	    })
+	    .then(res => {
+	        if (!res.ok) throw new Error();
+	        return res.text();
+	    })
+	    .then(() => {
+	        alert("장바구니에 추가하였습니다.");
+	    })
+	    .catch(() => alert("로그인 필요 또는 서버 오류"));
+	}
+	</script>
 </body>
 </html>

@@ -5,29 +5,70 @@
     <title>Popup</title>
 </head>
 
-<body style="margin:0; text-align:center;">
+<body style="margin:0; background:#f5f6f8; font-family:Arial, sans-serif;">
 
-<img th:if="${popup.imageUrl != null}"
-     th:src="@{${popup.imageUrl}}"
-     style="max-width:100%;">
+<div style="max-width:500px; margin:0 auto; background:#fff; border-radius:20px; overflow:hidden; box-shadow:0 15px 40px rgba(0,0,0,0.15);">
 
-<br><br>
+    <!-- ================= 이미지 ================= -->
+    <div th:if="${popup.imageUrl != null}">
+        <img th:src="@{${popup.imageUrl}}"
+             style="width:100%; display:block;">
+    </div>
 
-<a th:href="${popup.linkUrl}" target="_blank">
-    🔗 상세보기
-</a>
 
-<br><br>
+    <!-- ================= 내용 영역 ================= -->
+    <div style="padding:25px; text-align:center;">
 
-<!-- 오늘 하루 안보기 -->
-<input type="checkbox" id="hideToday">
-<label for="hideToday">오늘 하루 안보기</label>
+        <!-- 링크 버튼 -->
+        <a th:if="${popup.linkUrl != null}"
+           th:href="${popup.linkUrl}"
+           target="_blank"
+           style="display:inline-block;
+                  background:#0d6efd;
+                  color:#fff;
+                  padding:12px 24px;
+                  border-radius:30px;
+                  text-decoration:none;
+                  font-weight:bold;
+                  transition:0.2s;">
+            🔗 자세히 보기
+        </a>
 
-<br><br>
 
-<button onclick="closePopup()">
-    닫기
-</button>
+        <!-- 오늘 하루 안보기 -->
+        <div style="margin-top:20px; display:flex; justify-content:center; align-items:center; gap:8px;">
+
+            <input type="checkbox"
+                   id="hideToday"
+                   style="width:18px; height:18px; cursor:pointer;">
+
+            <label for="hideToday"
+                   style="font-size:14px; cursor:pointer; color:#555;">
+                오늘 하루 안보기
+            </label>
+
+        </div>
+
+
+        <!-- 닫기 버튼 -->
+        <button onclick="closePopup()"
+                style="margin-top:20px;
+                       width:100%;
+                       padding:14px;
+                       border:none;
+                       border-radius:12px;
+                       background:#222;
+                       color:#fff;
+                       font-weight:bold;
+                       cursor:pointer;
+                       transition:0.2s;">
+            닫기
+        </button>
+
+    </div>
+
+</div>
+
 
 <script>
 
@@ -35,7 +76,6 @@ function closePopup() {
 
     if (document.getElementById("hideToday").checked) {
 
-        // 쿠키 1일 설정
         document.cookie =
             "popup_" + [[${popup.id}]] + "=hide; path=/; max-age=86400";
     }

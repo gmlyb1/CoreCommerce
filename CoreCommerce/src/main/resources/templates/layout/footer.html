@@ -1,95 +1,135 @@
 <div th:fragment="footer">
 
 <!-- ================= FOOTER ================= -->
-<footer class="bg-dark text-light pt-5">
+<footer class="bg-white border-top mt-5">
 
-    <div class="container">
+    <div class="container py-5">
 
-        <div class="row g-5">
+        <div class="row g-4">
 
-            <!-- 회사 정보 -->
+            <!-- ================= 회사 정보 ================= -->
             <div class="col-md-6 col-lg-3">
-                <h5 class="fw-bold text-white mb-4">
+                <h5 class="fw-bold text-dark mb-3">
                     🛍 CoreCommerce
                 </h5>
 
-                <p class="small text-muted">
-                    고객 만족을 최우선으로 하는 프리미엄 쇼핑몰 플랫폼입니다.
+                <p class="small text-muted lh-lg">
+                    고객 만족을 최우선으로 하는
+                    프리미엄 쇼핑몰 플랫폼입니다.
                 </p>
 
-                <div class="d-flex gap-3 mt-3">
-                    <a href="#" class="text-light fs-5">
+                <div class="d-flex gap-3 mt-3 fs-5">
+
+                    <a href="#" class="text-secondary">
                         <i class="fab fa-facebook"></i>
                     </a>
-                    <a href="#" class="text-light fs-5">
+
+                    <a href="#" class="text-secondary">
                         <i class="fab fa-instagram"></i>
                     </a>
-                    <a href="#" class="text-light fs-5">
+
+                    <a href="#" class="text-secondary">
                         <i class="fab fa-twitter"></i>
                     </a>
+
                 </div>
             </div>
 
 
-            <!-- 고객 서비스 -->
+            <!-- ================= 고객 서비스 ================= -->
             <div class="col-md-6 col-lg-3">
-                <h5 class="text-white mb-4">고객 서비스</h5>
 
-                <ul class="list-unstyled">
+                <h6 class="fw-bold mb-3 text-dark">고객 서비스</h6>
+
+                <ul class="list-unstyled small">
+
                     <li class="mb-2">
-                        <a href="#" class="text-muted text-decoration-none">
-                            문의하기
-                        </a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="/inquiry/list" class="text-muted text-decoration-none">
+                        <a href="/inquiry/list"
+                           class="text-muted text-decoration-none hover-link">
                             1:1 문의
                         </a>
                     </li>
+
                     <li class="mb-2">
-                        <a href="/wishlist/list" class="text-muted text-decoration-none">
+                        <a href="/wishlist/list"
+                           class="text-muted text-decoration-none hover-link">
                             찜 목록
                         </a>
                     </li>
+
                     <li class="mb-2">
-                        <a href="/order/orders" class="text-muted text-decoration-none">
+                        <a href="/order/orders"
+                           class="text-muted text-decoration-none hover-link">
                             주문내역
                         </a>
                     </li>
+
                 </ul>
+
             </div>
 
 
-            <!-- 정보 -->
+            <!-- ================= 정보 ================= -->
             <div class="col-md-6 col-lg-3">
-                <h5 class="text-white mb-4">정보</h5>
 
-                <ul class="list-unstyled">
-                    <li class="mb-2"><a href="#" class="text-muted text-decoration-none">회사소개</a></li>
-                    <li class="mb-2"><a href="#" class="text-muted text-decoration-none">이용약관</a></li>
-                    <li class="mb-2"><a href="#" class="text-muted text-decoration-none">개인정보처리방침</a></li>
-                    <li class="mb-2"><a href="#" class="text-muted text-decoration-none">FAQ</a></li>
+                <h6 class="fw-bold mb-3 text-dark">정보</h6>
+
+                <ul class="list-unstyled small">
+
+                    <li class="mb-2">
+                        <a href="#" class="text-muted text-decoration-none hover-link">
+                            회사소개
+                        </a>
+                    </li>
+
+                    <li class="mb-2">
+                        <a href="#" class="text-muted text-decoration-none hover-link">
+                            이용약관
+                        </a>
+                    </li>
+
+                    <li class="mb-2">
+                        <a href="#" class="text-muted text-decoration-none hover-link">
+                            개인정보처리방침
+                        </a>
+                    </li>
+
+                    <li class="mb-2">
+                        <a href="#" class="text-muted text-decoration-none hover-link">
+                            FAQ
+                        </a>
+                    </li>
+
                 </ul>
+
             </div>
 
 
-            <!-- 뉴스레터 -->
+            <!-- ================= 뉴스레터 ================= -->
             <div class="col-md-6 col-lg-3">
-                <h5 class="text-white mb-4">뉴스레터</h5>
+
+                <h6 class="fw-bold mb-3 text-dark">
+                    뉴스레터 구독
+                </h6>
 
                 <p class="small text-muted">
-                    최신 할인 소식과 이벤트를 받아보세요.
+                    할인 정보와 이벤트 소식을 빠르게 받아보세요.
                 </p>
 
-                <div class="position-relative">
-                    <input type="email"
-                           class="form-control rounded-pill ps-3 pe-5"
-                           placeholder="이메일 입력">
+                <form>
+                    <div class="position-relative">
 
-                    <button class="btn btn-primary rounded-pill position-absolute top-0 end-0">
-                        구독
-                    </button>
-                </div>
+                        <input type="email"
+                               class="form-control rounded-pill px-3 py-2"
+                               placeholder="이메일 입력">
+
+                        <button type="submit"
+                                class="btn btn-primary rounded-pill position-absolute top-0 end-0 px-3 py-2">
+                            구독
+                        </button>
+
+                    </div>
+                </form>
 
             </div>
 
@@ -99,8 +139,10 @@
 
 
     <!-- ================= COPYRIGHT ================= -->
-    <div class="border-top mt-5 py-3">
+    <div class="border-top py-3 bg-light">
+
         <div class="container">
+
             <div class="row">
 
                 <div class="col-md-6 text-center text-md-start">
@@ -111,12 +153,14 @@
 
                 <div class="col-md-6 text-center text-md-end">
                     <small class="text-muted">
-                        Designed By Your Dev Team 🚀
+                        Designed By CoreCommerce Dev Team 🚀
                     </small>
                 </div>
 
             </div>
+
         </div>
+
     </div>
 
 </footer>
@@ -128,5 +172,14 @@
 <script src="/lib/wow/wow.min.js"></script>
 <script src="/lib/owlcarousel/owl.carousel.min.js"></script>
 <script src="/js/main.js"></script>
+
+<!-- hover 효과 -->
+<style>
+.hover-link:hover {
+    color: #0d6efd !important;
+    padding-left: 4px;
+    transition: 0.2s;
+}
+</style>
 
 </div>
