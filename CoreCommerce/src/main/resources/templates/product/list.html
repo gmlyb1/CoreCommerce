@@ -84,12 +84,19 @@ button:disabled {
                        th:text="'재고 : ' + ${p.stock}">
                     </p>
 
-                    <!-- 구매 버튼 -->
-                    <button class="btn btn-primary w-100 mb-2"
-                            th:disabled="${p.stock == 0}"
-                            th:text="${p.stock == 0} ? '품절' : '구매하기'">
-                    </button>
-
+					<button class="btn btn-outline-primary w-100 mb-2"
+					        th:disabled="${p.stock == 0}"
+					        th:onclick="'addToCart(' + ${p.id} + ')'">
+					    🛒 장바구니 추가
+					</button>
+					
+					<!-- 바로 구매 -->
+					<button class="btn btn-primary w-100"
+					        th:disabled="${p.stock == 0}"
+					        th:onclick="'buyNow(' + ${p.id} + ')'">
+					    💳 바로 구매
+					</button>
+					<br><br>
                     <!-- 관리자 전용 버튼 -->
                     <div th:if="${loginUser != null and 
                                  (loginUser.role == 'MANAGER' or loginUser.role == 'PRODUCTER')}">
@@ -104,7 +111,7 @@ button:disabled {
                             삭제
                         </button>
 
-                    </div>
+                    </div> 
 
                 </div>
             </div>
@@ -130,6 +137,59 @@ function deleteProduct(id) {
         alert("삭제 실패");
     });
 }
+
+function addToCart(productId){
+
+    fetch("/cart/add?productId=" + productId + "&quantity=1", {
+        method: "POST"
+    })
+    .then(res => res.text())
+    .then(() => {
+        alert("장바구니에 추가되었습니다.");
+    })
+    .catch(() => alert("로그인 필요"));
+}
+
+
+async function buyNow(productId){
+
+    if(!confirm("바로 결제하시겠습니까?")) return;
+
+    try {
+
+        // 🔥 단건 주문 생성 API 호출
+        const res = await fetch("/order/create-single", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                productId: productId,
+                quantity: 1
+            })
+        });
+
+        if(res.status === 401){
+            alert("로그인 필요");
+            location.href = "/login";
+            return;
+        }
+
+        if(!res.ok){
+            throw new Error("주문 생성 실패");
+        }
+
+        const orderId = await res.text();
+
+        // 🔥 바로 결제 페이지 이동
+        location.href = "/payment?orderId=" + orderId;
+
+    } catch(e){
+        alert(e.message);
+    }
+}
+
+
 </script>
 
 <!-- 푸터 -->

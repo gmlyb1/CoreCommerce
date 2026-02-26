@@ -75,12 +75,12 @@
             <span th:class="'status-badge status-' + ${order.status}"
                   th:text="${order.status}">
             </span>
+            
         </div>
 
         <hr>
 
         <div class="row">
-
             <div class="col-md-6">
                 <p><strong>💰 총 결제금액</strong></p>
                 <h4 class="text-danger fw-bold"
@@ -98,8 +98,7 @@
         </div>
 
         <!-- ✅ 주문 취소 버튼 -->
-        <div class="text-end mt-3"
-             th:if="${order.status != 'CANCELLED'}">
+        <div class="text-end mt-3">
 
             <button class="btn btn-danger px-4"
                     th:onclick="'cancelOrder(' + ${order.id} + ')'">

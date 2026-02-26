@@ -251,6 +251,77 @@ public class OrderService {
 	    return order.getId();
 	}
 
+	@Transactional
+	public void cancelOrder(Long orderId, Long memberId) {
+
+	    Order order = orderRepository.findById(orderId);
+
+	    if (order == null) {
+	        throw new RuntimeException("주문 없음");
+	    }
+
+	    if (!order.getMemberId().equals(memberId)) {
+	        throw new RuntimeException("권한 없음");
+	    }
+
+	    // 🔥 취소 불가능 상태 차단
+	    if ("CANCELLED".equals(order.getStatus())) {
+	        throw new RuntimeException("이미 취소된 주문");
+	    }
+
+	    if ("SHIPPED".equals(order.getStatus())) {
+	        throw new RuntimeException("이미 배송된 주문은 취소 불가");
+	    }
+
+	    // ✅ 상태 변경
+	    orderRepository.updateStatus(orderId, "CANCELLED");
+
+	    // ✅ 주문 아이템 조회
+	    List<OrderItem> items = orderRepository.findItems(orderId);
+
+	    // ✅ 재고 복구
+	    for (OrderItem item : items) {
+
+	        productRepository.increaseStock(
+	                item.getProductId(),
+	                item.getQuantity()
+	        );
+	    }
+	}
+	
+	public List<OrderItem> findItems(Long orderId) {
+		return orderRepository.findItems(orderId);
+	}
+
+	@Transactional
+	public Long createSingleOrder(Long memberId, Long productId, int quantity){
+
+	    Product product = productRepository.findById(productId);
+
+	    if(product.getStock() < quantity){
+	        throw new RuntimeException("재고 부족");
+	    }
+
+	    int totalPrice = product.getPrice() * quantity;
+
+	    Order order = new Order();
+	    order.setMemberId(memberId);
+	    order.setStatus("READY");
+	    order.setTotalPrice(totalPrice);
+
+	    orderRepository.insert(order);
+
+	    OrderItem item = new OrderItem();
+	    item.setOrderId(order.getId());
+	    item.setProductId(productId);
+	    item.setPrice(product.getPrice());
+	    item.setQuantity(quantity);
+
+	    orderRepository.insertOrderItem(item);
+
+	    return order.getId();
+	}
+
     
     
 }

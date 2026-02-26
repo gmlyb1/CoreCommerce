@@ -35,5 +35,9 @@ public interface OrderRepository {
 
 	List<OrderItem> findOrderItems(Long orderId);
 
+	void cancelOrder(Long orderId, Long id);
+
+	List<OrderItem> findItems(Long orderId);
+
 
 }

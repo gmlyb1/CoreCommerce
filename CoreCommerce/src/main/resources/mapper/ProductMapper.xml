@@ -74,11 +74,12 @@
 	      AND stock >= #{quantity}
 	</update>
 	
-	<!-- 🔥 재고 복구 -->
 	<update id="increaseStock">
 	    UPDATE product
 	    SET stock = stock + #{quantity}
 	    WHERE id = #{productId}
 	</update>
+
+
 
 </mapper>

@@ -1,6 +1,7 @@
 package com.CoreCommerce.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -92,8 +93,41 @@ public class OrderController {
 		}
 		
 		
-//		return orderService.createOrder(loginUser.getId());
 		 return orderService.createOrderBySelectedItems( loginUser.getId(), cartItemIds  );
+	}
+	
+	@PostMapping("/cancel/{orderId}")
+	@ResponseBody
+	public String cancelOrder(@PathVariable Long orderId,
+	                          HttpSession session) {
+
+	    Member loginUser =
+	            (Member) session.getAttribute("loginUser");
+
+	    if (loginUser == null) {
+	        return "LOGIN_REQUIRED";
+	    }
+
+	    orderService.cancelOrder(orderId, loginUser.getId());
+
+	    return "OK";
+	}
+	
+	@PostMapping("/create-single")
+	@ResponseBody
+	public Long createSingleOrder(@RequestBody Map<String, Object> req,
+	                              HttpSession session){
+
+	    Member loginUser = (Member) session.getAttribute("loginUser");
+
+	    if(loginUser == null){
+	        throw new RuntimeException("LOGIN_REQUIRED");
+	    }
+
+	    Long productId = Long.parseLong(req.get("productId").toString());
+	    int quantity = Integer.parseInt(req.get("quantity").toString());
+
+	    return orderService.createSingleOrder(loginUser.getId(), productId, quantity);
 	}
 	
 }
