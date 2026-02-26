@@ -49,5 +49,7 @@ public interface CartRepository {
 
 	void deleteByCartItemIds( @Param("cartItemIds") List<Long> cartItemIds);
 
+	void deleteByIdsAndMemberId( @Param("ids") List<Long> ids,  @Param("memberId") Long memberId );
+
     
 }
