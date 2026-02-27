@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.CoreCommerce.domain.Member;
@@ -145,5 +146,14 @@ public class ProductController {
     public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
         productRepository.delete(id); // MyBatis 매퍼 호출
         return ResponseEntity.ok().build();
+    }
+    
+    @GetMapping("/api/list")
+    @ResponseBody
+    public List<Product> loadMoreProducts(
+            @RequestParam int offset,
+            @RequestParam int limit) {
+
+        return productRepository.findPaging(offset, limit);
     }
 }

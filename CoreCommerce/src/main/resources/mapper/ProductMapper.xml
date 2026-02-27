@@ -107,6 +107,15 @@
 	    SET stock = stock + #{quantity}
 	    WHERE id = #{productId}
 	</update>
+	
+	<select id="findPaging" resultMap="ProductMap">
+
+		SELECT *
+		FROM product
+		ORDER BY created_at DESC
+		LIMIT #{limit} OFFSET #{offset}
+		
+	</select>
 
 
 

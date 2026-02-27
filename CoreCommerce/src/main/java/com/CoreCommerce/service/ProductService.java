@@ -65,4 +65,8 @@ public class ProductService {
     public List<Product> search(String keyword, Integer minPrice, Integer maxPrice, String sort) {
     	return productRepository.search(keyword, minPrice, maxPrice, sort);
     }
+    
+    public List<Product> findPaging(int offset, int limit) {
+    	return productRepository.findPaging(offset, limit);
+    }
 }

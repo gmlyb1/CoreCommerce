@@ -177,6 +177,16 @@ button:disabled {
         </div>
 
     </div>
+    
+    <!-- 🔥 더보기 버튼 -->
+	<div class="text-center mt-4">
+	    <button id="loadMoreBtn"
+	            class="btn btn-outline-dark"
+	            onclick="loadMore()">
+	        ➕ 더보기
+	    </button>
+	</div>
+    
 </div>
 
 <!-- 삭제 스크립트 -->
@@ -246,6 +256,58 @@ async function buyNow(productId){
         alert(e.message);
     }
 }
+
+let offset = 9;   // 처음 9개 로딩했다고 가정
+const limit = 9;
+
+function loadMore(){
+
+    fetch(`/product/api/list?offset=${offset}&limit=${limit}`)
+        .then(res => res.json())
+        .then(data => {
+
+            if(data.length === 0){
+                document.getElementById("loadMoreBtn").disabled = true;
+                document.getElementById("loadMoreBtn").innerText = "더 이상 상품 없음";
+                return;
+            }
+
+            appendProducts(data);
+            offset += limit;
+        });
+}
+
+
+function appendProducts(products){
+
+    const container = document.querySelector(".row");
+
+    products.forEach(p => {
+
+        const div = document.createElement("div");
+        div.className = "col-md-4 mb-4";
+
+        div.innerHTML = `
+            <div class="card product-card shadow-sm p-3">
+                <a href="/product/${p.id}">
+                    <img src="${p.imageUrl}"
+                         style="height:200px; object-fit:cover;"
+                         class="card-img-top rounded">
+                </a>
+
+                <div class="card-body text-center">
+                    <h5>${p.name}</h5>
+                    <p class="text-primary">
+                        ${p.price.toLocaleString()}원
+                    </p>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(div);
+    });
+}
+
 
 
 </script>

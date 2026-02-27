@@ -31,4 +31,6 @@ public interface ProductRepository{
 	void increaseStock(Long productId, int quantity);
 
 	List<Product> search(String keyword, Integer minPrice, Integer maxPrice, String sort);
+
+	List<Product> findPaging(int offset, int limit);
 }
