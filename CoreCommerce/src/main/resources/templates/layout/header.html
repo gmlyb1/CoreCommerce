@@ -69,6 +69,12 @@
 						        📦 주문 관리
 						    </a>
 						</li>
+						
+						<li th:if="${loginUser.role == 'MANAGER'}">
+						    <a class="dropdown-item" href="/admin/visitLog/list">
+						        🕓 접속기록 관리
+						    </a>
+						</li>
 
                         <li>
                             <a class="dropdown-item" href="/wishlist/list">

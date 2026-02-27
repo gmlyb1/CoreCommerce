@@ -27,27 +27,37 @@ public class VisitLogController {
 	private VisitLogRepository visitLogRepository;
 	
 	@GetMapping("/list")
-    public String visitList(@RequestParam(defaultValue = "1") int page,
-                            Model model,HttpSession session){
+	public String visitList(@RequestParam(defaultValue = "1") int page,
+	                        Model model,
+	                        HttpSession session){
 
-		Member loginUser = (Member) session.getAttribute("loginUser");
-		
-		if(!loginUser.getRole().equals("MANAGER"))
-		{
-			return "redirect:/";
-		}
-		
-        int size = 10;
-        int totalCount = visitLogRepository.countAll();
-        
-        Pagination pagination = new Pagination(page, size, totalCount);
-        
-        List<VisitLog> list = visitLogRepository.findAll(pagination.getOffset(), pagination.getSize());
+	    Member loginUser = (Member) session.getAttribute("loginUser");
 
-        model.addAttribute("list", list);
-        model.addAttribute("pagination", pagination);
-        
-        return "admin/visitLog/list";
-    }
+	    // 🔴 로그인 안 되어 있으면
+	    if(loginUser == null){
+	        return "redirect:/login";
+	    }
+
+	    // 🔴 관리자 체크 (Null 안전)
+	    if(!"MANAGER".equals(loginUser.getRole())){
+	        return "redirect:/";
+	    }
+
+	    int size = 10;
+	    int totalCount = visitLogRepository.countAll();
+
+	    Pagination pagination = new Pagination(page, size, totalCount);
+
+	    List<VisitLog> list =
+	            visitLogRepository.findAll(
+	                    pagination.getOffset(),
+	                    pagination.getSize()
+	            );
+
+	    model.addAttribute("list", list);
+	    model.addAttribute("pagination", pagination);
+
+	    return "admin/visitLog/list";
+	}
 	
 }

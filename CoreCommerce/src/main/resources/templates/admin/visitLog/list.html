@@ -9,7 +9,6 @@
 <!-- ✅ 공통 header -->
 <div th:replace="layout/header :: header"></div>
 
-
 <div class="container mt-5">
 
     <h3 class="fw-bold mb-4">📊 관리자 접속 기록</h3>
@@ -21,41 +20,33 @@
             <table class="table table-hover text-center align-middle">
 
                 <thead class="table-dark">
-                <tr>
-                    <th>접속시간</th>
-                    <th>IP</th>
-                    <th>URL</th>
-                    <th>브라우저</th>
-                    <th>Referer</th>
-                </tr>
+                    <tr>
+                        <th>접속시간</th>
+                        <th>IP</th>
+                        <th>URL</th>
+                        <th>브라우저</th>
+                        <th>Referer</th>
+                    </tr>
                 </thead>
 
                 <tbody>
-
-                <tr th:each="log : ${list}">
-
-                    <td th:text="${#temporals.format(log.visitTime,'yyyy-MM-dd HH:mm:ss')}"></td>
-
-                    <td>
-                        <span class="badge bg-primary"
-                              th:text="${log.ipAddress}">
-                        </span>
-                    </td>
-
-                    <td style="max-width:250px; word-break:break-all;"
-                        th:text="${log.requestUrl}">
-                    </td>
-
-                    <td style="max-width:250px; word-break:break-all;"
-                        th:text="${log.userAgent}">
-                    </td>
-
-                    <td style="max-width:250px; word-break:break-all;"
-                        th:text="${log.referer}">
-                    </td>
-
-                </tr>
-
+                    <tr th:each="log : ${list}">
+                        <td th:text="${log.visitTime != null ? #temporals.format(log.visitTime,'yyyy-MM-dd HH:mm:ss') : '-'}"></td>
+                        <td>
+                            <span class="badge bg-primary"
+                                  th:text="${log.ipAddress != null ? log.ipAddress : '-'}">
+                            </span>
+                        </td>
+                        <td style="max-width:250px; word-break:break-all;"
+                            th:text="${log.requestUrl != null ? log.requestUrl : '-'}">
+                        </td>
+                        <td style="max-width:250px; word-break:break-all;"
+                            th:text="${log.userAgent != null ? log.userAgent : '-'}">
+                        </td>
+                        <td style="max-width:250px; word-break:break-all;"
+                            th:text="${log.referer != null ? log.referer : '-'}">
+                        </td>
+                    </tr>
                 </tbody>
 
             </table>
@@ -70,50 +61,58 @@
 
     </div>
 
-
     <!-- ================= 페이징 ================= -->
-    <div class="mt-4"
-         th:if="${pagination != null}">
-
-        <ul class="pagination justify-content-center">
-
-            <!-- ◀ 이전 -->
-            <li class="page-item"
-                th:classappend="${pagination.currentPage == 1} ? 'disabled'">
-
-                <a class="page-link"
-                   th:href="@{/admin/visitLog/list(page=${pagination.currentPage - 1})}">
-                    ‹
-                </a>
-            </li>
-
-            <!-- 페이지 번호 -->
-            <li class="page-item"
-                th:each="i : ${#numbers.sequence(pagination.startPage, pagination.endPage)}"
-                th:classappend="${i == pagination.currentPage} ? 'active'">
-
-                <a class="page-link"
-                   th:text="${i}"
-                   th:href="@{/admin/visitLog/list(page=${i})}">
-                </a>
-
-            </li>
-
-            <!-- ▶ 다음 -->
-            <li class="page-item"
-                th:classappend="${pagination.currentPage == pagination.totalPages} ? 'disabled'">
-
-                <a class="page-link"
-                   th:href="@{/admin/visitLog/list(page=${pagination.currentPage + 1})}">
-                    ›
-                </a>
-            </li>
-
-        </ul>
-
-    </div>
-
+    <div class="mt-5"
+	     th:if="${pagination != null and pagination.totalPages > 1}">
+	
+	    <nav>
+	        <ul class="pagination justify-content-center">
+	
+	            <!-- 이전 -->
+	            <li class="page-item"
+	                th:classappend="${pagination.first} ? 'disabled'">
+	
+	                <a class="page-link"
+	                   th:href="@{/admin/visitLog/List(page=${pagination.page - 1})}">
+	                    ‹
+	                </a>
+	            </li>
+	
+	            <!-- 페이지 번호 -->
+	            <li class="page-item"
+	                th:each="i : ${#numbers.sequence(1, pagination.totalPages)}"
+	                th:classappend="${i == pagination.page} ? 'active'">
+	
+	                <a class="page-link"
+	                   th:href="@{/admin/visitLog/list(page=${i})}"
+	                   th:text="${i}">
+	                </a>
+	
+	            </li>
+	
+	            <!-- 다음 -->
+	            <li class="page-item"
+	                th:classappend="${pagination.last} ? 'disabled'">
+	
+	                <a class="page-link"
+	                   th:href="@{/admin/visitLog/list(page=${pagination.page + 1})}">
+	                    ›
+	                </a>
+	
+	            </li>
+	
+	        </ul>
+	    </nav>
+	
+	</div>
 </div>
+
+<style>
+.pagination {
+    display: flex !important;
+    flex-direction: row !important;
+}
+</style>
 
 
 <!-- ✅ 공통 footer -->

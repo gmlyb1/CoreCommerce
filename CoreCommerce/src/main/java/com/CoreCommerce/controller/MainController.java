@@ -44,7 +44,7 @@ public class MainController {
 	public String main(VisitLog log, HttpServletRequest request,Model model, HttpSession session) throws Exception{
 	    
 		log.setSessionId(request.getSession().getId());
-		log.setIpAddress(request.getRemoteAddr());
+		log.setIpAddress(getClientIp(request));
 		log.setRequestUrl(request.getRequestURI());
 		log.setUserAgent(request.getHeader("User-agent"));
 		log.setReferer(request.getHeader("Referer"));
@@ -64,4 +64,24 @@ public class MainController {
 	    
 	    return "index";
 	}
+	
+	private String getClientIp(HttpServletRequest request){
+
+	    String ip = request.getHeader("X-Forwarded-For");
+
+	    if(ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)){
+	        ip = request.getHeader("Proxy-Client-IP");
+	    }
+
+	    if(ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)){
+	        ip = request.getHeader("WL-Proxy-Client-IP");
+	    }
+
+	    if(ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)){
+	        ip = request.getRemoteAddr();
+	    }
+
+	    return ip;
+	}
+	
 }
