@@ -22,6 +22,34 @@
         ORDER BY id DESC
     </select>
     
+    <select id="search" resultMap="ProductMap">
+
+		SELECT *
+		FROM product
+		WHERE 1=1
+		
+		<if test="keyword != null and keyword != ''">
+		    AND name LIKE CONCAT('%', #{keyword}, '%')
+		</if>
+		<if test="minPrice != null">
+		    AND price &gt;= #{minPrice}
+		</if>
+		<if test="maxPrice != null">
+		    AND price &lt;= #{maxPrice}
+		</if>
+		<choose>
+		    <when test="sort == 'price_low'">
+		        ORDER BY price ASC
+		    </when>
+		    <when test="sort == 'price_high'">
+		        ORDER BY price DESC
+		    </when>
+		    <otherwise>
+		        ORDER BY created_at DESC
+		    </otherwise>
+		</choose>
+	</select>
+    
     <select id="findOfferProductList" resultMap="ProductMap">
     	 SELECT *
 	     FROM product

@@ -29,4 +29,6 @@ public interface ProductRepository{
 	int decreaseStock(Long productId, int quantity);
 
 	void increaseStock(Long productId, int quantity);
+
+	List<Product> search(String keyword, Integer minPrice, Integer maxPrice, String sort);
 }

@@ -61,4 +61,8 @@ public class ProductService {
 
         productRepository.increaseStock(productId, quantity);
     }
+    
+    public List<Product> search(String keyword, Integer minPrice, Integer maxPrice, String sort) {
+    	return productRepository.search(keyword, minPrice, maxPrice, sort);
+    }
 }

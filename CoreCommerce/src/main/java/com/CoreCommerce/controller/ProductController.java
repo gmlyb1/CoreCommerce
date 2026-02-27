@@ -49,9 +49,24 @@ public class ProductController {
 
     // 상품 목록 페이지
     @GetMapping("/list")
-    public String listProducts(HttpSession session, Model model) {
-        List<Product> products = productRepository.findAll();
+    public String listProducts( @RequestParam(required = false) String keyword,
+					            @RequestParam(required = false) Integer minPrice,
+					            @RequestParam(required = false) Integer maxPrice,
+					            @RequestParam(defaultValue = "latest") String sort,
+					            HttpSession session, Model model) {
+    	
+    	List<Product> products;
+    	if(keyword == null && minPrice == null && maxPrice == null) {
+    		products = productRepository.findAll();
+    	}else {
+    		products = productRepository.search(keyword, minPrice, maxPrice, sort);
+    	}
         model.addAttribute("products", products);
+        
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("minPrice", minPrice);
+        model.addAttribute("maxPrice", maxPrice);
+        model.addAttribute("sort", sort);
         return "product/list";
     }
 
