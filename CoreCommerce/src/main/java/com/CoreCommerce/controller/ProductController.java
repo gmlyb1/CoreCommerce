@@ -25,23 +25,27 @@ import org.springframework.web.multipart.MultipartFile;
 import com.CoreCommerce.domain.Member;
 import com.CoreCommerce.domain.Product;
 import com.CoreCommerce.repository.ProductRepository;
+import com.CoreCommerce.repository.ReviewRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.RequiredArgsConstructor;
 
 
 @Controller
 @RequestMapping("/product")
+@RequiredArgsConstructor
 public class ProductController {
 
+	@Autowired
 	private final ProductRepository productRepository;
 	
+	@Autowired
+	private final ReviewRepository reviewRepository;
 	  // application.properties에서 지정한 이미지 저장 경로
     @Value("${upload.path}")
     private String uploadPath;
 
-    public ProductController(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
 
     // 상품 목록 페이지
     @GetMapping("/list")
@@ -52,14 +56,19 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public String productDetail(@PathVariable Long id, Model model) {
+    public String productDetail(HttpSession session,@PathVariable Long id, Model model) {
 
         Product product = productRepository.findById(id);
 
         if (product == null) {
             return "redirect:/product/list";
         }
-
+        
+        Member loginUser = (Member)  session.getAttribute("loginUser");
+        
+        model.addAttribute("loginUser", loginUser);
+        model.addAttribute("reviewList", reviewRepository.findByProductId(id));
+        model.addAttribute("avgRating", reviewRepository.getAverageRating(id));
         model.addAttribute("product", product);
         return "product/detail";
     }

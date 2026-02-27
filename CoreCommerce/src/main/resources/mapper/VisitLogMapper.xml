@@ -5,7 +5,7 @@
 
 <mapper namespace="com.CoreCommerce.repository.VisitLogRepository">
 	
-	<insert id="insert" parameterType="VisitLog">
+	<insert id="insert" parameterType="com.CoreCommerce.domain.VisitLog">
 	    INSERT INTO visit_log
 	    (session_id, ip_address, request_url, user_agent, referer)
 	    VALUES
@@ -16,7 +16,7 @@
 	     #{referer})
 	</insert>
 	
-	<select id="findAll" resultType="VisitLog">
+	<select id="findAll" resultType="com.CoreCommerce.domain.VisitLog">
 	    SELECT 
 	    	 id as id
 	    	,session_id as sessionId

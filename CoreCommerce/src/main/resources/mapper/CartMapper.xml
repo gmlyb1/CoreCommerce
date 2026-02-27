@@ -124,7 +124,7 @@
 	
 	</select>
 	
-	<select id="findByIdsAndMemberId" resultType="CartItem">
+	<select id="findByIdsAndMemberId" resultType="com.CoreCommerce.domain.CartItem">
 	    SELECT 
 	    	 ci.id as id
 	    	,ci.cart_id as cartId

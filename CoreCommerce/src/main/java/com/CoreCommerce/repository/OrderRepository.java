@@ -48,6 +48,20 @@ public interface OrderRepository {
 
 	int countAll();
 
+	int getTodayOrderCount();
+
+	int getTodaySales();
+
+	int getMonthlySales();
+
+	int getTotalSales();
+
+	List<java.util.Map<String, Object>> getWeeklySales();
+
+	List<java.util.Map<String, Object>> getWeeklyOrderCount();
+
+
+
 
 
 }

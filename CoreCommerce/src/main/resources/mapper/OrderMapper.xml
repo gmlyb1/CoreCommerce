@@ -98,7 +98,7 @@
 	
 	</select>
 	
-	<select id="getOrderItems" resultType="OrderItem">
+	<select id="getOrderItems" resultType="com.CoreCommerce.domain.OrderItem">
 	    SELECT 
 	    	 id as id
 	    	,order_id as orderId
@@ -169,5 +169,6 @@
 	    LIMIT #{size} OFFSET #{offset}
 	
 	</select>
+	
 	
 </mapper>

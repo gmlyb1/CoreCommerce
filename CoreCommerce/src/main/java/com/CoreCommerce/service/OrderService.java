@@ -9,6 +9,8 @@ import javax.transaction.Transactional;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import com.CoreCommerce.domain.Cart;
@@ -28,15 +30,18 @@ public class OrderService {
     private final CartRepository cartRepository;
     private final CartService cartService;
     private final ProductRepository productRepository;
+    private final SimpMessagingTemplate simpMessagingTemplate;
     
     public OrderService(OrderRepository orderRepository,
                         CartRepository cartRepository,
                         CartService cartService,
-                        ProductRepository productRepository) {
+                        ProductRepository productRepository,
+                        SimpMessagingTemplate simpMessagingTemplate) {
         this.orderRepository = orderRepository;
         this.cartRepository = cartRepository;
         this.cartService = cartService;
         this.productRepository = productRepository;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
     
     @Transactional
@@ -144,59 +149,10 @@ public class OrderService {
                 throw new IllegalStateException("재고가 부족 합니다. 판매자에게 문의해 주시기 바랍니다.");
             }
             
-//            cartItemIds.add(item.getCartItemId());
         }
         
           cartService.deleteByCartItemIds(cartItemIds);
-//        cartService.clearByMember(order.getMemberId());
     }
-    
-//    @Transactional
-//    public void completeOrder(Long orderId) {
-//
-//        Order order = orderRepository.findById(orderId);
-//
-//        if (order == null) {
-//            throw new IllegalArgumentException("주문이 존재하지 않습니다.");
-//        }
-//
-//        // ✅ 이미 결제 완료면 멱등 처리
-//        if ("PAID".equals(order.getStatus())) {
-//            return;
-//        }
-//
-//        // ✅ 1. 주문 상태 PAID로 변경
-//        int updated = orderRepository.updateOrderToPaid(orderId);
-//
-//        if (updated == 0) {
-//
-//            Order retry = orderRepository.findById(orderId);
-//
-//            if ("PAID".equals(retry.getStatus())) {
-//                return;
-//            }
-//
-//            throw new IllegalStateException("주문 상태 변경 실패");
-//        }
-//
-//        // ✅ 2. 주문 아이템 조회
-//        List<OrderItem> items = orderRepository.findByOrderId(orderId);
-//
-//        // ✅ 3. 재고 차감 (ProductService 통해서)
-//        for (OrderItem item : items) {
-//
-//            int result = productRepository.decreaseStock(
-//                    item.getProductId(),
-//                    item.getQuantity()
-//            );
-//
-//            if (result == 0) {
-//                throw new IllegalStateException("재고 부족");
-//            }
-//        }
-//    }
-    
-    
     
     public List<Order> findByMemberId(Long memberId) {
         return orderRepository.findByMemberId(memberId);

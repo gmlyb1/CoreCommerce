@@ -146,32 +146,134 @@
 
 
         <!-- ================= 추가 정보 섹션 ================= -->
-        <div class="mt-5 border-top pt-4">
-
-            <h4 class="fw-bold mb-3">📦 배송 정보</h4>
-
-            <ul class="text-muted">
-                <li>🚚 평균 배송기간 : 2~3일</li>
-                <li>💳 결제 완료 후 출고</li>
-                <li>🔄 7일 이내 반품 가능</li>
-            </ul>
-
-        </div>
-
-
         <!-- ================= 리뷰 섹션 ================= -->
-        <div class="mt-5 border-top pt-4">
+<div class="mt-5 border-top pt-4">
 
-            <h4 class="fw-bold mb-3">⭐ 상품 후기</h4>
+    <h4 class="fw-bold mb-3">⭐ 상품 후기</h4>
 
-            <div class="text-muted">
-                <p>등록된 리뷰가 없습니다.</p>
+    <!-- 🔥 리뷰 작성 폼 -->
+    <div th:if="${loginUser != null}" class="mb-4">
+
+        <form action="/review/add" method="post">
+
+            <input type="hidden" name="productId"
+                   th:value="${product.id}"/>
+
+            <div class="mb-2">
+                <textarea name="content"
+                          class="form-control"
+                          placeholder="리뷰를 작성하세요"
+                          required></textarea>
             </div>
 
-        </div>
+            <div class="mb-2">
+                ⭐ 별점 :
+                <select name="rating" class="form-select w-25 d-inline">
+                    <option value="5">★★★★★</option>
+                    <option value="4">★★★★</option>
+                    <option value="3">★★★</option>
+                    <option value="2">★★</option>
+                    <option value="1">★</option>
+                </select>
+            </div>
+
+            <button type="submit"
+                    class="btn btn-dark btn-sm">
+                리뷰 등록
+            </button>
+
+        </form>
 
     </div>
 
+    <!-- 🔥 리뷰 목록 -->
+	    <div>
+	
+	        <div th:if="${reviewList == null || reviewList.isEmpty()}">
+	            <p class="text-muted">등록된 리뷰가 없습니다.</p>
+	        </div>
+	
+	        <div th:each="review : ${reviewList}" class="border rounded p-3 mb-3">
+
+			    <b th:text="${review.memberId}"></b>
+			
+			    ⭐ <span th:text="${review.rating}"></span>
+			
+			    <p th:text="${review.content}"></p>
+			
+			    <!-- 🔥 내가 쓴 리뷰면 수정/삭제 버튼 -->
+			    <div th:if="${ review.memberId == loginUser.email}">
+		
+		        <!-- 수정 버튼 -->
+		        <button type="button"
+		                class="btn btn-sm btn-warning"
+		                th:onclick="|toggleEdit(${review.id})|">
+		            수정
+		        </button>
+
+        <!-- 삭제 버튼 -->
+        <form action="/review/delete"  method="post" style="display:inline;">
+
+            <input type="hidden" name="id"
+                   th:value="${review.id}" />
+
+            <input type="hidden" name="productId"
+                   th:value="${product.id}" />
+
+            <button class="btn btn-sm btn-danger">
+                삭제
+            </button>
+
+        </form>
+    </div>
+
+    <!-- 🔥 수정 폼 (숨김 상태) -->
+    <div th:id="'editForm-' + ${review.id}"
+         style="display:none; margin-top:10px;">
+        <form action="/review/update" method="post">
+			            <input type="hidden" name="id"
+			                   th:value="${review.id}" />
+			            <input type="hidden" name="productId"
+			                   th:value="${product.id}" />
+			            <textarea name="content"
+			                      class="form-control"
+			                      th:text="${review.content}">
+			            </textarea>
+			            <select name="rating" class="form-select mt-2">
+						    <option th:value="5"
+						            th:selected="${review.rating == 5}">
+						        ★★★★★
+						    </option>
+						
+						    <option th:value="4"
+						            th:selected="${review.rating == 4}">
+						        ★★★★
+						    </option>
+						
+						    <option th:value="3"
+						            th:selected="${review.rating == 3}">
+						        ★★★
+						    </option>
+						
+						    <option th:value="2"
+						            th:selected="${review.rating == 2}">
+						        ★★
+						    </option>
+						
+						    <option th:value="1"
+						            th:selected="${review.rating == 1}">
+						        ★
+						    </option>
+						</select>
+			            <button class="btn btn-success btn-sm mt-2">
+			                저장
+			            </button>
+			        </form>
+			    </div>
+			</div>
+	    </div>
+	</div>
+  </div>
 </div>
 
 
@@ -226,6 +328,17 @@ function toggleWishlist(productId) {
     })
     .catch(() => alert("오류 발생"));
 
+}
+
+function toggleEdit(id) {
+
+    const form = document.getElementById("editForm-" + id);
+
+    if (form.style.display === "none") {
+        form.style.display = "block";
+    } else {
+        form.style.display = "none";
+    }
 }
 
 </script>

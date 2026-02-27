@@ -7,7 +7,7 @@
 
 
      <!-- 1:1 문의 목록 (회원별) -->
-    <select id="findByMemberId" parameterType="Inquiry" resultType="Inquiry">
+    <select id="findByMemberId" parameterType="com.CoreCommerce.domain.Inquiry" resultType="com.CoreCommerce.domain.Inquiry">
         SELECT 
         	id as id
            ,member_id as memberId
@@ -22,7 +22,7 @@
     </select>
 
     <!-- 단건 조회 -->
-    <select id="findById" parameterType="long" resultType="Inquiry">
+    <select id="findById" parameterType="long" resultType="com.CoreCommerce.domain.Inquiry">
         SELECT 
         	id as id
            ,member_id as memberId
@@ -36,7 +36,7 @@
     </select>
 
     <!-- 전체 문의 (관리자용) -->
-    <select id="findAll" resultType="Inquiry">
+    <select id="findAll" resultType="com.CoreCommerce.domain.Inquiry">
         SELECT 
         	id as id
            ,member_id as memberId
@@ -49,7 +49,7 @@
         ORDER BY created_at DESC
     </select>
 
-	<select id="findAllPaged" resultType="Inquiry">
+	<select id="findAllPaged" resultType="com.CoreCommerce.domain.Inquiry">
 	    SELECT 
 	        id as id
            ,member_id as memberId
@@ -67,7 +67,7 @@
 	    SELECT COUNT(*) FROM inquiry
 	</select>
 	
-	<select id="findByMemberIdPaged" resultType="Inquiry">
+	<select id="findByMemberIdPaged" resultType="com.CoreCommerce.domain.Inquiry">
 	    SELECT 
 	        id as id
            ,member_id as memberId
@@ -89,19 +89,19 @@
 	</select>
 
     <!-- 문의 등록 -->
-    <insert id="saveInquiry" parameterType="Inquiry">
+    <insert id="saveInquiry" parameterType="com.CoreCommerce.domain.Inquiry">
         INSERT INTO inquiry (member_id, title, content)
         VALUES (#{memberId}, #{title}, #{content})
     </insert>
 
     <!-- 답변 등록 -->
-    <insert id="saveAnswer" parameterType="InquiryAnswer">
+    <insert id="saveAnswer" parameterType="com.CoreCommerce.domain.InquiryAnswer">
         INSERT INTO inquiry_answer (inquiry_id, admin_id, answer)
         VALUES (#{inquiryId}, #{adminId}, #{answer})
     </insert>
 
     <!-- 답변 조회 -->
-    <select id="findAnswerByInquiryId" parameterType="long" resultType="InquiryAnswer">
+    <select id="findAnswerByInquiryId" parameterType="long" resultType="com.CoreCommerce.domain.InquiryAnswer">
         SELECT 
         	 id as id
         	,inquiry_id as inquiryId
@@ -119,7 +119,7 @@
         WHERE id = #{inquiryId}
     </update>
      
-     <update id="updateInquiry" parameterType="Inquiry">
+     <update id="updateInquiry" parameterType="com.CoreCommerce.domain.Inquiry">
 	    UPDATE inquiry
 	    SET title = #{title},
 	        content = #{content}
@@ -131,7 +131,7 @@
 	    WHERE id = #{id}
 	</delete>
 	
-	<update id="updateAnswer" parameterType="InquiryAnswer">
+	<update id="updateAnswer" parameterType="com.CoreCommerce.domain.InquiryAnswer">
 	    UPDATE inquiry_answer
 	    SET answer = #{answer}
 	    WHERE inquiry_id = #{inquiryId}
