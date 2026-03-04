@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout/head :: head"></head>
+
+<body>
+
+<div th:replace="layout/header :: header"></div>
+
+<div class="container mt-5" style="max-width:900px;">
+
+    <h3 class="mb-4">🎁 사용 가능 쿠폰</h3>
+
+    <!-- 쿠폰 반복 -->
+    <div th:each="coupon : ${coupons}"
+         class="card shadow-sm rounded-4 p-4 mb-4">
+
+        <!-- ================= 쿠폰 헤더 ================= -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+
+            <div>
+                <h5 class="fw-bold mb-1"
+                    th:text="${coupon.name}">
+                </h5>
+
+                <span class="badge bg-dark">
+                    <span th:text="${coupon.type}"></span>
+                </span>
+
+            </div>
+
+            <!-- 수량 -->
+            <div class="text-end">
+                <div class="small text-muted">
+                    총 발급 :
+                    <span th:text="${coupon.totalQuantity}"></span>
+                </div>
+
+                <div class="small text-muted">
+                    발급 완료 :
+                    <span th:text="${coupon.issuedQuantity}"></span>
+                </div>
+
+                <div class="small text-danger fw-bold"
+                     th:if="${coupon.totalQuantity > 0}">
+                    남은 수량 :
+                    <span th:text="${coupon.totalQuantity - coupon.issuedQuantity}"></span>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- ================= 쿠폰 상세 ================= -->
+
+        <div class="mb-2">
+            💰 할인 :
+
+            <span class="fw-bold text-primary"
+                  th:text="${coupon.discountValue}">
+            </span>
+
+            <span th:if="${coupon.type == 'PERCENT'}">%</span>
+            <span th:if="${coupon.type == 'FIXED'}">원</span>
+        </div>
+
+        <div class="mb-2">
+            🛒 최소 주문 금액 :
+
+            <span th:text="${#numbers.formatInteger(coupon.minOrderPrice,3,'COMMA')}">
+            </span> 원
+        </div>
+
+        <div class="mb-2">
+            ⏰ 유효기간 :
+
+            <span th:text="${coupon.startDate}"></span>
+            ~
+            <span th:text="${coupon.endDate}"></span>
+        </div>
+
+        <div class="mb-3">
+            🔥 상태 :
+
+            <span th:if="${coupon.active}"
+                  class="badge bg-success">
+                사용 가능
+            </span>
+
+            <span th:if="${!coupon.active}"
+                  class="badge bg-danger">
+                사용 불가
+            </span>
+        </div>
+
+
+        <!-- ================= 쿠폰 버튼 ================= -->
+
+        <div class="text-end">
+
+            <!-- 이미 보유 -->
+            <button class="btn btn-secondary rounded-pill px-4"
+                    th:if="${myCouponIds.contains(coupon.id)}"
+                    disabled>
+                ✅ 보유중
+            </button>
+
+            <!-- 받기 가능 -->
+            <form method="post"
+                  th:action="@{/coupons/receive}"
+                  th:if="${!myCouponIds.contains(coupon.id)}">
+
+                <input type="hidden"
+                       name="couponId"
+                       th:value="${coupon.id}">
+
+                <button class="btn btn-primary rounded-pill px-4">
+                    🎟 쿠폰 받기
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div th:replace="layout/footer :: footer"></div>
+
+</body>
+</html>

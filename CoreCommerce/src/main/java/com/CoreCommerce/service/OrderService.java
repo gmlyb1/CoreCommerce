@@ -296,6 +296,10 @@ public class OrderService {
 	public List<OrderItem> findByOrderId(Long orderId) {
 		return orderRepository.findByOrderId(orderId);
 	}
+
+	public void updateDiscount(Long orderId, Object object, int i, int totalPrice) {
+		orderRepository.updateDiscount(orderId, orderId, i, totalPrice);
+	}
 	
     
 }

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout/head :: head"></head>
+
+<body>
+
+<div th:replace="layout/header :: header"></div>
+
+<div class="container mt-5" style="max-width:600px;">
+
+    <h3 class="mb-4">✏ 쿠폰 수정</h3>
+
+    <div class="card shadow-sm rounded-4 p-4">
+
+        <form method="post" action="/admin/coupons/edit">
+
+            <input type="hidden"
+                   name="id"
+                   th:value="${coupon.id}">
+
+            <div class="mb-3">
+                <label class="form-label">쿠폰 이름</label>
+                <input type="text"
+                       name="name"
+                       class="form-control"
+                       th:value="${coupon.name}">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">타입</label>
+                <select name="type" class="form-select">
+
+                    <option value="FIXED"
+                            th:selected="${coupon.type == 'FIXED'}">
+                        정액
+                    </option>
+
+                    <option value="PERCENT"
+                            th:selected="${coupon.type == 'PERCENT'}">
+                        정률
+                    </option>
+
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">할인 값</label>
+                <input type="number"
+                       name="discountValue"
+                       class="form-control"
+                       th:value="${coupon.discountValue}">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">최소 주문 금액</label>
+                <input type="number"
+                       name="minOrderPrice"
+                       class="form-control"
+                       th:value="${coupon.minOrderPrice}">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">총 발급 수량</label>
+                <input type="number"
+                       name="totalQuantity"
+                       class="form-control"
+                       th:value="${coupon.totalQuantity}">
+            </div>
+
+            <div class="mb-3">
+				<label>
+				    <input type="checkbox"
+				           name="active"
+				           value="true"
+				           th:checked="${coupon.active}">
+				    활성
+				</label>
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary w-100">
+                수정
+            </button>
+
+        </form>
+
+    </div>
+</div>
+
+<div th:replace="layout/footer :: footer"></div>
+
+</body>
+</html>

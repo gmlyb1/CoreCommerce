@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- ✅ HEAD -->
+<head th:replace="layout/head :: head"></head>
+
+<body>
+
+<!-- ✅ HEADER -->
+<div th:replace="layout/header :: header"></div>
+
+<div class="container mt-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3>🎟 쿠폰 관리</h3>
+
+        <a href="/admin/coupons/create"
+           class="btn btn-primary">
+            + 쿠폰 생성
+        </a>
+    </div>
+
+    <!-- ✅ 쿠폰 테이블 -->
+    <div class="card shadow-sm rounded-4 p-3">
+        <table class="table table-hover text-center align-middle">
+
+            <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>이름</th>
+                <th>타입</th>
+                <th>할인</th>
+                <th>최소금액</th>
+                <th>수량</th>
+                <th>상태</th>
+                <th>관리</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="coupon : ${coupons}">
+
+                <td th:text="${coupon.id}"></td>
+
+                <td th:text="${coupon.name}"></td>
+
+                <td th:text="${coupon.type}"></td>
+
+                <td>
+                    <span th:text="${coupon.discountValue}"></span>
+                </td>
+
+                <td>
+                    <span th:text="${#numbers.formatInteger(coupon.minOrderPrice,3,'COMMA')} + '원'"></span>
+                </td>
+
+                <td>
+                    <span th:text="${coupon.issuedQuantity}"></span>
+                    /
+                    <span th:text="${coupon.totalQuantity}"></span>
+                </td>
+
+                <td>
+                    <span class="badge px-3 py-2"
+                          th:classappend="${coupon.active} ? 'bg-success' : 'bg-danger'">
+
+                        <span th:text="${coupon.active} ? '활성' : '비활성'"></span>
+
+                    </span>
+                </td>
+
+                <td>
+
+                    <a th:href="@{/admin/coupons/edit/{id}(id=${coupon.id})}"
+                       class="btn btn-sm btn-warning">
+                        수정
+                    </a>
+
+                    <a th:href="@{/admin/coupons/delete/{id}(id=${coupon.id})}"
+                       class="btn btn-sm btn-danger"
+                       onclick="return confirm('삭제하시겠습니까?')">
+                        삭제
+                    </a>
+
+                </td>
+
+            </tr>
+            </tbody>
+
+        </table>
+    </div>
+
+</div>
+
+<!-- ✅ FOOTER -->
+<div th:replace="layout/footer :: footer"></div>
+
+</body>
+</html>

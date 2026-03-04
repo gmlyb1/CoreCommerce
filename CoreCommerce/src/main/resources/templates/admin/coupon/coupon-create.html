@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout/head :: head"></head>
+
+<body>
+
+<div th:replace="layout/header :: header"></div>
+
+<div class="container mt-5" style="max-width:600px;">
+
+    <h3 class="mb-4">🎟 쿠폰 생성</h3>
+
+    <div class="card shadow-sm rounded-4 p-4">
+
+        <form method="post" action="/admin/coupons/create">
+
+            <div class="mb-3">
+                <label class="form-label">쿠폰 이름</label>
+                <input type="text" name="name"
+                       class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">타입</label>
+                <select name="type" class="form-select">
+                    <option value="FIXED">정액</option>
+                    <option value="PERCENT">정률</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">할인 값</label>
+                <input type="number" name="discountValue"
+                       class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">최소 주문 금액</label>
+                <input type="number" name="minOrderPrice"
+                       class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">총 발급 수량</label>
+                <input type="number" name="totalQuantity"
+                       class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-check-label">
+                    <input type="checkbox" name="active"
+                           value="true" checked>
+                    활성
+                </label>
+            </div>
+
+            <button type="submit"
+                    class="btn btn-success w-100">
+                생성
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<div th:replace="layout/footer :: footer"></div>
+
+</body>
+</html>

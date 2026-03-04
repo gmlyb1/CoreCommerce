@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.CoreCommerce.repository.CouponRepository">
+	
+	<resultMap id="CouponMap" type="com.CoreCommerce.domain.Coupon">
+
+	    <id property="id" column="id"/>
+	
+	    <result property="name" column="name"/>
+	    <result property="type" column="type"/>
+	    <result property="discountValue" column="discount_value"/>
+	    <result property="minOrderPrice" column="min_order_price"/>
+	    <result property="startDate" column="start_date"/>
+	    <result property="endDate" column="end_date"/>
+	    <result property="active" column="active"/>
+	    <result property="totalQuantity" column="total_quantity"/>
+	    <result property="issuedQuantity" column="issued_quantity"/>
+	    <result property="createdAt" column="created_at"/>
+	    <result property="usedQuantity" column="used_quantity"/>
+	
+	</resultMap>
+	
+	<resultMap id="MemberCouponMap" type="com.CoreCommerce.domain.MemberCoupon">
+
+	    <id property="id" column="id"/>
+	
+	    <result property="memberId" column="member_id"/>
+	    <result property="couponId" column="coupon_id"/>
+	    <result property="orderId" column="order_id"/>
+	    <result property="used" column="used"/>
+	    <result property="usedAt" column="used_at"/>
+	    <result property="createdAt" column="created_at"/>
+	
+	</resultMap>
+	
+	
+	<insert id="insertCoupon" parameterType="com.CoreCommerce.domain.Coupon"
+        useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO coupon
+	    (name,type,discount_value,min_order_price,
+	     start_date,end_date,active,total_quantity,issued_quantity)
+	    VALUES
+	    (#{name},#{type},#{discountValue},#{minOrderPrice},
+	     #{startDate},#{endDate},#{active},
+	     #{totalQuantity},#{issuedQuantity})
+	</insert>
+	
+	
+	<select id="findAll" resultMap="CouponMap">
+	    SELECT * FROM coupon ORDER BY created_at DESC
+	</select>
+	
+	
+	<select id="findById" resultMap="CouponMap">
+	    SELECT * FROM coupon WHERE id = #{id}
+	</select>
+	
+	
+	<update id="updateCoupon"
+        parameterType="com.CoreCommerce.domain.Coupon">
+
+	    UPDATE coupon
+	    SET name = #{name},
+	        type = #{type},
+	        discount_value = #{discountValue},
+	        min_order_price = #{minOrderPrice},
+	        start_date = #{startDate},
+	        end_date = #{endDate},
+	        active = #{active},
+	        total_quantity = #{totalQuantity}
+	    WHERE id = #{id}
+	
+	</update>
+	
+	
+	<delete id="deleteCoupon">
+	    DELETE FROM coupon WHERE id=#{id}
+	</delete>
+	
+	<update id="increaseUsedQuantity">
+   		UPDATE coupon
+	    	SET used_quantity = used_quantity + 1
+	    WHERE id = #{couponId}
+	</update>
+	
+	<update id="decreaseUsedQuantity">
+	    UPDATE coupon
+	    	SET used_quantity = used_quantity - 1
+	    WHERE id = #{couponId}
+	      AND used_quantity > 0
+	</update>
+	
+	
+	<!-- ================= 회원 쿠폰 ================= -->
+	
+	<insert id="issueCouponToMember">
+	    INSERT INTO member_coupon
+	    (member_id,coupon_id,used)
+	    VALUES
+	    (#{memberId},#{couponId},0)
+	</insert>
+	
+	<select id="findMemberCouponById" resultMap="MemberCouponMap">
+    	SELECT *
+	    	FROM member_coupon
+	    WHERE id = #{id}
+	</select>
+	
+	<select id="findMemberCoupons" resultMap="MemberCouponMap">
+	    SELECT *
+	    FROM member_coupon
+	    WHERE member_id = #{memberId}
+	</select>
+	
+	
+	<update id="useCoupon">
+	    UPDATE member_coupon
+	    SET used = 1,
+	        used_at = NOW(),
+	        order_id = #{orderId}
+	    WHERE id = #{memberCouponId}
+	      AND used = 0
+	</update>
+	
+	
+	<!-- ================= 할인 계산 ================= -->
+	
+	<select id="calculateDiscount" resultType="int">
+	    SELECT
+	        CASE
+	            WHEN type = 'FIXED'
+	                THEN discount_value
+	
+	            WHEN type = 'PERCENT'
+	                THEN FLOOR(#{orderPrice} * discount_value / 100)
+	
+	            ELSE 0
+	        END
+	    FROM coupon
+	    WHERE id = #{couponId}
+	      AND active = 1
+	</select>
+	
+	<update id="increaseIssuedQuantity">
+	    UPDATE coupon
+	    SET issued_quantity = issued_quantity + 1
+	    WHERE id = #{couponId}
+	</update>
+	
+	<update id="cancelCouponUsage">
+    	UPDATE member_coupon
+	    SET used = 0,
+	        used_at = NULL,
+	        order_id = NULL
+	    WHERE id = #{memberCouponId}
+	</update>
+	
+</mapper>

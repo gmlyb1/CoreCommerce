@@ -75,6 +75,12 @@
 						        🕓 접속기록 관리
 						    </a>
 						</li>
+						
+						<li th:if="${loginUser.role == 'MANAGER'}">
+						    <a class="dropdown-item" href="/admin/coupons">
+						        🎟 쿠폰관리
+						    </a>
+						</li>
 
                         <li>
                             <a class="dropdown-item" href="/wishlist/list">
@@ -158,6 +164,13 @@
                    style="width:45px;height:45px;">
                     🛒
                 </a>
+				<a th:if="${loginUser != null and loginUser.role == 'MANAGER'}"
+				   href="/admin/coupons"
+				   class="btn btn-light border rounded-circle me-2"
+				   style="width:45px;height:45px;"
+				   >
+				    🎟
+				</a>
 
             </div>
 
@@ -199,6 +212,13 @@
                        th:if="${loginUser != null}"
                        class="nav-link flex-fill py-3">
                         주문상품
+                    </a>
+
+                    <a href="/coupons/list"
+                       th:classappend="${#httpServletRequest.requestURI.startsWith('/coupons')} ? 'active-line'"
+                       th:if="${loginUser != null}"
+                       class="nav-link flex-fill py-3">
+                        쿠폰
                     </a>
 
                     <a href="/notice"

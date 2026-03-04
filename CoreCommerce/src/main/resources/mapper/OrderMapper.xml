@@ -170,5 +170,13 @@
 	
 	</select>
 	
+	<update id="updateDiscount">
+	    UPDATE orders
+	    SET member_coupon_id = #{memberCouponId},
+	        discount_price = #{discountPrice},
+	        final_price = #{finalPrice}
+	    WHERE id = #{orderId}
+	</update>
+	
 	
 </mapper>

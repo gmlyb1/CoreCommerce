@@ -3,7 +3,11 @@ package com.CoreCommerce.controller;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -19,9 +23,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
+import com.CoreCommerce.domain.Member;
+import com.CoreCommerce.domain.MemberCoupon;
 import com.CoreCommerce.domain.Order;
 import com.CoreCommerce.repository.OrderRepository;
 import com.CoreCommerce.repository.PaymentRepository;
+import com.CoreCommerce.service.CouponService;
 import com.CoreCommerce.service.OrderService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,11 +42,20 @@ public class PaymentController {
 
 	private final PaymentRepository paymentRepository;
 	private final OrderService orderService;
+	private final CouponService couponService;
 	
 	@GetMapping
-    public String paymentPage(@RequestParam Long orderId, Model model) {
-        Order order = orderService.getOrder(orderId);
-        model.addAttribute("order", order);
+    public String paymentPage(HttpSession session,@RequestParam Long orderId, Model model) {
+        Member loginUser = (Member) session.getAttribute("loginUser");
+		Order order = orderService.getOrder(orderId);
+
+		List<MemberCoupon> myCoupons = couponService.findMemberCoupons(loginUser.getId())
+				.stream()
+				.filter(mc -> mc.isUsed() == false)
+				.collect(Collectors.toList());
+		
+		model.addAttribute("order", order);
+		model.addAttribute("myCoupons", myCoupons);
         return "payment/payment";
     }
 
@@ -83,6 +99,39 @@ public class PaymentController {
 
 	    return "payment/success";
 	}
+	
+	@PostMapping("/apply-coupon")
+	@ResponseBody
+	public Map<String, Object> applyCoupon(
+	        @RequestParam Long orderId,
+	        @RequestParam(required = false) Long memberCouponId
+	){
+
+	    Order order = orderService.getOrder(orderId);
+
+	    int discount = 0;
+	    int finalPrice = order.getTotalPrice();
+
+	    if(memberCouponId != null){
+
+	        discount = couponService.calculateDiscount(
+	                memberCouponId,
+	                order.getTotalPrice()
+	        );
+
+	        finalPrice = order.getTotalPrice() - discount;
+
+	        // 🔥 쿠폰 사용 처리
+	        couponService.useCoupon(memberCouponId, orderId);
+	    }
+
+	    Map<String, Object> result = new HashMap<>();
+	    result.put("discount", discount);
+	    result.put("finalPrice", finalPrice);
+
+	    return result;
+	}
+	
 
     // 결제 실패
     @GetMapping("/fail")
