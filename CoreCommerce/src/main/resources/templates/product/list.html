@@ -52,7 +52,18 @@ button:disabled {
     <h3 class="mb-4 fw-bold">상품 목록</h3>
 
 	<form method="get" action="/product/list" class="mb-4">
-
+		
+		<div th:if="${loginUser != null and 
+             (loginUser.role == 'MANAGER' or loginUser.role == 'PRODUCTER')}"
+		     class="mb-3">
+		
+		    <a href="/product/form"
+		       class="btn btn-primary">
+		        ➕ 상품 등록
+		    </a>
+		
+		</div>
+		
 	    <div class="row g-2 align-items-end">
 	
 	        <div class="col-md-4">
@@ -158,7 +169,7 @@ button:disabled {
                     <!-- 관리자 전용 버튼 -->
                     <div th:if="${loginUser != null and 
                                  (loginUser.role == 'MANAGER' or loginUser.role == 'PRODUCTER')}">
-
+						
                         <a th:href="@{/product/form(id=${p.id})}"
                            class="btn btn-sm btn-info me-2">
                             수정

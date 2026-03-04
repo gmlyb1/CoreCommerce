@@ -73,7 +73,7 @@ let amount = /*[[${order != null ? order.totalPrice : 0}]]*/ 0;
 
 let widgets;
 
-// ================= Toss 초기화 =================
+/* ================= Toss 초기화 ================= */
 async function init() {
 
     const tossPayments = TossPayments(clientKey);
@@ -99,22 +99,32 @@ async function init() {
 init();
 
 
-// ================= 쿠폰 선택 =================
+/* ================= 쿠폰 선택 ================= */
 document.getElementById("couponSelect")
 .addEventListener("change", function () {
 
     const memberCouponId = this.value || null;
+
+    let bodyData = "orderId=" + rawOrderId;
+
+    // 🔥 memberCouponId가 있을 때만 전송
+    if(memberCouponId){
+        bodyData += "&memberCouponId=" + memberCouponId;
+    }
 
     fetch("/payment/apply-coupon", {
         method: "POST",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
         },
-        body:
-            "orderId=" + rawOrderId +
-            "&memberCouponId=" + (memberCouponId ?? "")
+        body: bodyData
     })
-    .then(res => res.json())
+    .then(res => {
+        if(!res.ok){
+            throw new Error("서버 에러");
+        }
+        return res.json();
+    })
     .then(data => {
 
         // 🔥 서버에서 계산된 최종 금액
@@ -138,17 +148,20 @@ document.getElementById("couponSelect")
 });
 
 
-// ================= 결제 =================
+/* ================= 결제 ================= */
 document.getElementById("payBtn")
 .addEventListener("click", async function () {
 
     try {
 
         await widgets.requestPayment({
+
             orderId: "ORD_" + rawOrderId,
             orderName: "CoreCommerce 주문",
+
             successUrl: window.location.origin + "/payment/success",
             failUrl: window.location.origin + "/payment/fail"
+
         });
 
     } catch (error) {

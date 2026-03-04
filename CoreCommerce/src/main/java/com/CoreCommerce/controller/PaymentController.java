@@ -63,6 +63,7 @@ public class PaymentController {
 	public String success(@RequestParam String paymentKey,
 	                      @RequestParam String orderId,
 	                      @RequestParam int amount,
+	                      @RequestParam(required = false) Long memberCouponId,
 	                      Model model) {
 
 	    String secretKey = "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6";
@@ -93,6 +94,10 @@ public class PaymentController {
 	    
 	    orderService.completeOrder(realOrderId);
 
+	    if(memberCouponId != null) {
+	    	couponService.useCoupon(memberCouponId, realOrderId);
+	    }
+	    
 	    // ✅ 주문 조회 후 모델에 추가
 	    Order order = orderService.getOrder(realOrderId);
 	    model.addAttribute("order", order);
@@ -122,7 +127,7 @@ public class PaymentController {
 	        finalPrice = order.getTotalPrice() - discount;
 
 	        // 🔥 쿠폰 사용 처리
-	        couponService.useCoupon(memberCouponId, orderId);
+//	        couponService.useCoupon(memberCouponId, orderId);
 	    }
 
 	    Map<String, Object> result = new HashMap<>();
