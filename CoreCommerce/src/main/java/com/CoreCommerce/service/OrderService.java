@@ -284,7 +284,8 @@ public class OrderService {
 		return orderRepository.findAll();
 	}
 	
-	public List<Order> findPaging(int offset, int size){
+	public List<Order> findPaging(@Param("size") int size,
+							      @Param("offset") int offset){
 		return orderRepository.findPaging(offset, size);
 	}
 
@@ -292,6 +293,9 @@ public class OrderService {
 		return orderRepository.countAll();
 	}
 
+	public List<OrderItem> findByOrderId(Long orderId) {
+		return orderRepository.findByOrderId(orderId);
+	}
 	
     
 }

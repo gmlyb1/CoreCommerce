@@ -128,7 +128,7 @@
                     </li>
 
                     <!-- 번호 -->
-                    <li class="page-item"
+                    <!-- <li class="page-item"
                         th:each="i : ${#numbers.sequence(1, pagination.totalPages)}"
                         th:classappend="${i == pagination.page} ? 'active'">
 
@@ -136,7 +136,21 @@
                            th:href="@{/notice(page=${i})}"
                            th:text="${i}">
                         </a>
-                    </li>
+                    </li> -->
+                    
+                    <li class="page-item"
+			            th:each="i : ${#numbers.sequence(
+			                T(java.lang.Math).max(1, pagination.page - 2),
+			                T(java.lang.Math).min(pagination.totalPages, pagination.page + 2)
+			            )}"
+			            th:classappend="${i == pagination.page} ? 'active'">
+			
+			            <a class="page-link"
+			               th:href="@{/notice(page=${i})}"
+			               th:text="${i}">
+			            </a>
+			
+			        </li>
 
                     <!-- 다음 -->
                     <li class="page-item"

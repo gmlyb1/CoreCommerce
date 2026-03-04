@@ -193,6 +193,13 @@
                        class="nav-link flex-fill py-3">
                         상품
                     </a>
+                    
+                     <a href="/order/mypage/my-orders"
+                       th:classappend="${#httpServletRequest.requestURI.startsWith('/order/mypage')} ? 'active-line'"
+                       th:if="${loginUser != null}"
+                       class="nav-link flex-fill py-3">
+                        주문상품
+                    </a>
 
                     <a href="/notice"
                        th:classappend="${#httpServletRequest.requestURI.startsWith('/notice')} ? 'active-line'"

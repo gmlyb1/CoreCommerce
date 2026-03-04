@@ -30,25 +30,16 @@
             <td th:text="${order.totalPrice}"></td>
 
             <td>
-               <span class="badge"
-				      th:classappend="${order.status == 'READY' ? 'bg-secondary'
-				                      : order.status == 'PAID' ? 'bg-primary'
-				                      : order.status == 'SHIPPED' ? 'bg-info'
-				                      : order.status == 'CANCELLED' ? 'bg-danger'
-				                      : ''}"
-				      th:text="${order.status == 'READY' ? '준비중' 
-				               : order.status == 'PAID' ? '결제완료'
-				               : order.status == 'SHIPPED' ? '배송중'
-				               : order.status == 'CANCELLED' ? '주문취소'
-				               : order.status}">
-				</span>
+                <span class="badge bg-primary"
+                      th:text="${order.status}">
+                </span>
             </td>
 
            <td>
 
 		    <!-- 상태 -->
 		   <select th:id="'status-' + ${order.id}" class="form-select mb-2">
-			    <option th:each="s : ${T(java.util.Arrays).asList('READY','PAID','SHIPPED','CANCELLED')}"
+			    <option th:each="s : ${T(java.util.Arrays).asList('READY','PAID','SHIPPED','CANCELLED','DELIVERED')}"
 			            th:value="${s}"
 			            th:text="${s}"
 			            th:selected="${order.status == s}">
@@ -109,8 +100,22 @@
 	            </a>
 	        </li>
 	
-	        <li class="page-item"
+	        <!-- <li class="page-item"
 	            th:each="i : ${#numbers.sequence(1, pagination.totalPages)}"
+	            th:classappend="${i == pagination.page} ? 'active'">
+	
+	            <a class="page-link"
+	               th:href="@{/admin/orders(page=${i})}"
+	               th:text="${i}">
+	            </a>
+	
+	        </li> -->
+	        
+	        <li class="page-item"
+	            th:each="i : ${#numbers.sequence(
+	                T(java.lang.Math).max(1, pagination.page - 2),
+	                T(java.lang.Math).min(pagination.totalPages, pagination.page + 2)
+	            )}"
 	            th:classappend="${i == pagination.page} ? 'active'">
 	
 	            <a class="page-link"

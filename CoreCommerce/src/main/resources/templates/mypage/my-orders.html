@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout/head :: head">
+    <title>내가 주문한 상품</title>
+</head>
+
+<body class="bg-light">
+
+<!-- ✅ Header -->
+<div th:replace="layout/header :: header"></div>
+
+<div class="container py-5" style="max-width:1000px;">
+
+    <h3 class="fw-bold mb-4">📦 내가 주문한 상품</h3>
+
+    <div class="card shadow-sm rounded-4">
+        <div class="card-body">
+
+            <table class="table align-middle">
+                <thead class="table-light">
+                <tr>
+                    <th>주문번호</th>
+                    <th>총 금액</th>
+                    <th>주문 상태</th>
+                    <th>배송 정보</th>
+                    <th>상세</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="order : ${orders}">
+                    <!-- 주문번호 -->
+                    <td th:text="${order.id}"></td>
+
+                    <!-- 금액 -->
+                    <td th:text="${#numbers.formatInteger(order.totalPrice, 3, 'COMMA')} + '원'"></td>
+
+                    <!-- 상태 뱃지 -->
+                   <td th:switch="${order.status}">
+					    <span th:case="'READY'"
+					          class="badge bg-secondary px-3 py-2">
+					        결제대기
+					    </span>
+					
+					    <span th:case="'PAID'"
+					          class="badge bg-primary px-3 py-2">
+					        결제완료
+					    </span>
+					
+					    <span th:case="'SHIPPED'"
+					          class="badge bg-warning text-dark px-3 py-2">
+					        배송중
+					    </span>
+					
+					    <span th:case="'DELIVERED'"
+					          class="badge bg-success px-3 py-2">
+					        배송완료
+					    </span>
+					
+					    <span th:case="'CANCELLED'"
+					          class="badge bg-danger px-3 py-2">
+					        주문취소
+					    </span>
+					</td>
+
+                    <!-- 배송 정보 -->
+                    <td>
+                        <div th:if="${order.trackingNumber != null}">
+                            <div class="small text-muted"
+                                 th:text="'택배사: ' + ${order.courier}"></div>
+                            <div class="small"
+                                 th:text="'송장번호: ' + ${order.trackingNumber}"></div>
+                        </div>
+                        <span th:if="${order.trackingNumber == null}"
+                              class="text-muted small">
+                            배송 준비중
+                        </span>
+                    </td>
+
+                    <!-- 상세보기 -->
+                    <td>
+                        <a th:href="@{'/order/mypage/' + ${order.id}}"
+                           class="btn btn-sm btn-dark rounded-pill">
+                            상세보기
+                        </a>
+                    </td>
+                </tr>
+
+                <!-- 주문이 없을 때 -->
+                <tr th:if="${#lists.isEmpty(orders)}">
+                    <td colspan="5" class="text-center py-4 text-muted">
+                        주문 내역이 없습니다.
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+
+			<div class="mt-4" th:if="${pagination != null and pagination.totalPages > 1}">
+	
+			    <ul class="pagination justify-content-center d-flex flex-row">
+			
+			        <li class="page-item"
+			            th:classappend="${pagination.first} ? 'disabled'">
+			
+			            <a class="page-link"
+			               th:href="@{/order/mypage/my-orders(page=${pagination.page - 1})}">
+			                ‹
+			            </a>
+			        </li>
+			
+			        <!-- <li class="page-item"
+			            th:each="i : ${#numbers.sequence(1, pagination.totalPages)}"
+			            th:classappend="${i == pagination.page} ? 'active'">
+			
+			            <a class="page-link"
+			               th:href="@{/order/mypage/my-orders(page=${i})}"
+			               th:text="${i}">
+			            </a>
+			
+			        </li> -->
+			        <li class="page-item"
+				            th:each="i : ${#numbers.sequence(
+				                T(java.lang.Math).max(1, pagination.page - 2),
+				                T(java.lang.Math).min(pagination.totalPages, pagination.page + 2)
+				            )}"
+				            th:classappend="${i == pagination.page} ? 'active'">
+				
+				            <a class="page-link"
+				               th:href="@{/order/mypage/my-orders(page=${i})}"
+				               th:text="${i}">
+				            </a>
+				
+				        </li>
+			
+			        <li class="page-item"
+			            th:classappend="${pagination.last} ? 'disabled'">
+			
+			            <a class="page-link"
+			               th:href="@{/order/mypage/my-orders(page=${pagination.page + 1})}">
+			                ›
+			            </a>
+			        </li>
+			
+			    </ul>
+			
+			</div>
+
+
+        </div>
+    </div>
+
+</div>
+
+<!-- ✅ Footer -->
+<div th:replace="layout/footer :: footer"></div>
+
+</body>
+</html>

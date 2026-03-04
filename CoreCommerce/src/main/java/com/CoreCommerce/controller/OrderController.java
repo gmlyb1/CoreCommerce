@@ -158,4 +158,57 @@ public class OrderController {
 	    return orderService.createSingleOrder(loginUser.getId(), productId, quantity);
 	}
 	
+	@GetMapping("/mypage/my-orders")
+	public String myOrders(@RequestParam(defaultValue = "1") int page,HttpSession session, Model model){
+
+	    Member loginUser = (Member) session.getAttribute("loginUser");
+
+	    if(loginUser == null){
+	        return "redirect:/login";
+	    }
+
+	    int size = 10;
+	    int totalCount = orderService.countByMemberId(loginUser.getId());
+
+	    Pagination pagination = new Pagination(page, size, totalCount);
+
+	    List<Order> orders =
+        orderService.findByMemberIdPaging(
+                loginUser.getId(),
+                pagination.getOffset(),
+                pagination.getSize()
+        );
+
+	    model.addAttribute("orders", orders);
+	    model.addAttribute("pagination", pagination);
+
+	    return "mypage/my-orders";
+	}
+	
+	@GetMapping("/mypage/{id}")
+	public String orderDetailforUser(@PathVariable Long id,
+	                          HttpSession session,
+	                          Model model){
+
+	    Member loginUser = (Member) session.getAttribute("loginUser");
+
+	    if(loginUser == null){
+	        return "redirect:/login";
+	    }
+
+	    Order order = orderService.getOrder(id);
+
+	    // 🔥 본인 주문만 조회 가능하도록 보안 처리
+	    if(!order.getMemberId().equals(loginUser.getId())){
+	        return "redirect:/";
+	    }
+
+	    List<OrderItem> items = orderService.findByOrderId(id);
+
+	    model.addAttribute("order", order);
+	    model.addAttribute("items", items);
+
+	    return "mypage/order-detail";
+	}
+	
 }
