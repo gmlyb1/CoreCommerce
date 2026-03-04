@@ -29,4 +29,7 @@ public class Order {
     private String courier;
     private String trackingNumber;
     private String email;
+    private Long memberCouponId; 
+    private int discountPrice;   
+    private int finalPrice;     
 }

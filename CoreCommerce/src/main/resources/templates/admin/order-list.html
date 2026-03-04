@@ -30,9 +30,18 @@
             <td th:text="${order.totalPrice}"></td>
 
             <td>
-                <span class="badge bg-primary"
-                      th:text="${order.status}">
-                </span>
+               <span class="badge"
+				      th:classappend="${order.status == 'READY' ? 'bg-secondary'
+				                      : order.status == 'PAID' ? 'bg-primary'
+				                      : order.status == 'SHIPPED' ? 'bg-info'
+				                      : order.status == 'CANCELLED' ? 'bg-danger'
+				                      : ''}"
+				      th:text="${order.status == 'READY' ? '준비중' 
+				               : order.status == 'PAID' ? '결제완료'
+				               : order.status == 'SHIPPED' ? '배송중'
+				               : order.status == 'CANCELLED' ? '주문취소'
+				               : order.status}">
+				</span>
             </td>
 
            <td>

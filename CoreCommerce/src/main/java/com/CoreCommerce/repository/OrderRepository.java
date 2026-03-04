@@ -60,6 +60,8 @@ public interface OrderRepository {
 
 	List<java.util.Map<String, Object>> getWeeklyOrderCount();
 
+	void updateDiscount(Long orderId, Long couponId, int discount, int finalPrice);
+
 
 
 
