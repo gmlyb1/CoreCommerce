@@ -18,6 +18,9 @@ import com.CoreCommerce.domain.Member;
 import com.CoreCommerce.domain.Notice;
 import com.CoreCommerce.domain.Pagination;
 import com.CoreCommerce.service.NoticeService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 @Controller
 @RequestMapping("/notice")
@@ -41,7 +44,7 @@ public class NoticeController {
                 noticeService.findPaged(offset, size);
 
         int totalCount = noticeService.countAll();
-
+        
         model.addAttribute("notices", notices);
         model.addAttribute("pagination", new Pagination(page, size, totalCount));
 

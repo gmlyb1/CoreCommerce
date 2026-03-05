@@ -27,6 +27,7 @@
 	        title,
 	        content,
 	        writer,
+	        is_pinned as isPinned,
 	        created_at AS createdAt,  
 	        updated_at AS updatedAt
 	    FROM notice
