@@ -37,8 +37,8 @@ public class CouponService {
 		return couponRepository.findById(id);
 	}
 	
-	public List<Coupon> findAll() {
-		return couponRepository.findAll();
+	public List<Coupon> findAll(int offset, int size) {
+		return couponRepository.findAll(offset, size);
 	}
 	
 	// ===== MemberCoupon =====
@@ -139,5 +139,9 @@ public class CouponService {
 
 	    // coupon 사용 수량 감소
 	    couponRepository.decreaseUsedQuantity(mc.getCouponId());
+	}
+
+	public int countFindAll() {
+		return couponRepository.countFindAll();
 	}
 }

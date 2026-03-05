@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.CoreCommerce.domain.Coupon;
 import com.CoreCommerce.domain.Member;
+import com.CoreCommerce.domain.Pagination;
 import com.CoreCommerce.service.CouponService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,16 +31,21 @@ public class CouponAdminController {
 	
 	 // ✅ 쿠폰 목록 화면
     @GetMapping
-    public String couponList(Model model,HttpSession session) {
+    public String couponList(@RequestParam(defaultValue = "1") int page,Model model,HttpSession session) {
 
     	Member loginUser = (Member) session.getAttribute("loginUser");
     	if(!"MANAGER".equals(loginUser.getRole())) {
     		return "redirect:/login";
     	}
-    	
-        List<Coupon> list = couponService.findAll();
-        model.addAttribute("coupons", list);
 
+    	int size = 10;
+    	int offset = (page -1) * size;
+    	
+        List<Coupon> list = couponService.findAll(offset,size);
+        int totalCount = couponService.countFindAll();
+
+        model.addAttribute("coupons", list);
+        model.addAttribute("pagination", new Pagination(page, size, totalCount));
         return "admin/coupon/coupon-list";
     }
 

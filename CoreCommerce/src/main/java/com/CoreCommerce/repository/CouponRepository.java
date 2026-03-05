@@ -21,7 +21,7 @@ public interface CouponRepository {
 
     Coupon findById(Long id);
 
-    List<Coupon> findAll();
+    List<Coupon> findAll(@Param("offset") int offset, @Param("size") int size);
 
 
     // ===== MemberCoupon =====
@@ -46,5 +46,7 @@ public interface CouponRepository {
 	void decreaseUsedQuantity(Long couponId);
 
 	void cancelCouponUsage(Long memberCouponId);
+
+	int countFindAll();
 	
 }

@@ -123,8 +123,60 @@
         </div>
 
     </div>
-
+    
+    <div th:if="${pagination != null and pagination.totalPages > 1}">
+	    <ul class="pagination justify-content-center">
+	
+	        <!-- 이전 -->
+	        <li class="page-item"
+	            th:classappend="${pagination.first} ? 'disabled'">
+	            <a class="page-link"
+	               th:href="@{/coupons/list(page=${pagination.page - 1})}">
+	                ‹
+	            </a>
+	        </li>
+	
+	          <li class="page-item"
+		            th:each="i : ${#numbers.sequence(
+		                T(java.lang.Math).max(1, pagination.page - 2),
+		                T(java.lang.Math).min(pagination.totalPages, pagination.page + 2)
+		            )}"
+		            th:classappend="${i == pagination.page} ? 'active'">
+		
+		            <a class="page-link"
+		               th:href="@{/coupons/list(page=${i})}"
+		               th:text="${i}">
+		            </a>
+		
+		        </li>
+					        
+	
+	        <!-- 다음 -->
+	        <li class="page-item"
+	            th:classappend="${pagination.last} ? 'disabled'">
+	
+	            <a class="page-link"
+	               th:href="@{/coupons/list(page=${pagination.page + 1})}">
+	                ›
+	            </a>
+	        </li>
+	
+	    </ul>
+	</div>
 </div>
+
+<style>
+.pagination {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 5px;
+}
+
+.pagination .page-item {
+    display: inline-block;
+}
+</style>
 
 <div th:replace="layout/footer :: footer"></div>
 

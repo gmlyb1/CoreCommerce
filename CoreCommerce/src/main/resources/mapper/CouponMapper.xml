@@ -65,7 +65,15 @@
 	
 	
 	<select id="findAll" resultMap="CouponMap">
-	    SELECT * FROM coupon ORDER BY created_at DESC
+	    SELECT 
+	    	* 
+	    FROM coupon 
+	    ORDER BY created_at DESC
+	    LIMIT #{size} OFFSET #{offset}
+	</select>
+	
+	<select id="countFindAll" resultType="int">
+		SELECT COUNT(*) FROM coupon
 	</select>
 	
 	
