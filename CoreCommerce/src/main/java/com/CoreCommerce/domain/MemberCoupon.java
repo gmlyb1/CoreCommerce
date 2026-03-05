@@ -18,4 +18,5 @@ public class MemberCoupon {
     private LocalDateTime usedAt;
     private LocalDateTime createdAt;
     private Long orderId;
+    private Coupon coupon;
 }

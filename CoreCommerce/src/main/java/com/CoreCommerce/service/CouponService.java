@@ -113,8 +113,8 @@ public class CouponService {
 	    couponRepository.increaseUsedQuantity(mc.getCouponId());
 	}
 	
-	public int calculateDiscount(Long couponId,int orderPrice) {
-		return couponRepository.calculateDiscount(couponId, orderPrice);
+	public int calculateDiscount(Long memberCouponId,int orderPrice) {
+		return couponRepository.calculateDiscount(memberCouponId, orderPrice);
 	}
 	
 	public void increaseUsedQuantity(Long couponId) {

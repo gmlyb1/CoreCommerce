@@ -33,7 +33,22 @@
 	    <result property="used" column="used"/>
 	    <result property="usedAt" column="used_at"/>
 	    <result property="createdAt" column="created_at"/>
-	
+		
+		<association property="coupon" javaType="com.CoreCommerce.domain.Coupon">
+	        <id property="id" column="c_id"/>
+	        <result property="name" column="name"/>
+	        <result property="type" column="type"/>
+	        <result property="discountValue" column="discount_value"/>
+	        <result property="minOrderPrice" column="min_order_price"/>
+	        <result property="startDate" column="start_date"/>
+	        <result property="endDate" column="end_date"/>
+	        <result property="active" column="active"/>
+	        <result property="totalQuantity" column="total_quantity"/>
+	        <result property="issuedQuantity" column="issued_quantity"/>
+	        <result property="usedQuantity" column="used_quantity"/>
+	        <result property="createdAt" column="c_created_at"/>
+	    </association>
+		
 	</resultMap>
 	
 	
@@ -109,10 +124,30 @@
 	    WHERE id = #{id}
 	</select>
 	
-	<select id="findMemberCoupons" resultMap="MemberCouponMap">
+	<!-- <select id="findMemberCoupons" resultMap="MemberCouponMap">
 	    SELECT *
 	    FROM member_coupon
 	    WHERE member_id = #{memberId}
+	</select> -->
+	<select id="findMemberCoupons" resultMap="MemberCouponMap">
+	    SELECT 
+	    	mc.*,
+	    	c.id as c_id,
+	        c.name,
+	        c.type,
+	        c.discount_value,
+	        c.min_order_price,
+	        c.start_date,
+	        c.end_date,
+	        c.active,
+	        c.total_quantity,
+	        c.issued_quantity,
+	        c.used_quantity,
+	        c.created_at as c_created_at
+	    FROM member_coupon mc 
+	    join coupon c 
+	    on mc.coupon_id = c.id 
+	    WHERE mc.member_id = #{memberId}
 	</select>
 	
 	
@@ -128,7 +163,7 @@
 	
 	<!-- ================= 할인 계산 ================= -->
 	
-	<select id="calculateDiscount" resultType="int">
+	<!-- <select id="calculateDiscount" resultType="int">
 	    SELECT
 	        CASE
 	            WHEN type = 'FIXED'
@@ -142,6 +177,22 @@
 	    FROM coupon
 	    WHERE id = #{couponId}
 	      AND active = 1
+	</select> -->
+	<select id="calculateDiscount" resultType="int">
+	    SELECT
+	        CASE
+	            WHEN c.type = 'FIXED'
+	                THEN c.discount_value
+	
+	            WHEN c.type = 'PERCENT'
+	                THEN FLOOR(#{orderPrice} * c.discount_value / 100)
+	
+	            ELSE 0
+	        END
+	    FROM member_coupon mc
+	    JOIN coupon c ON mc.coupon_id = c.id
+	    WHERE mc.id = #{memberCouponId}
+	      AND c.active = 1
 	</select>
 	
 	<update id="increaseIssuedQuantity">

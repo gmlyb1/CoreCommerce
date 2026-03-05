@@ -34,7 +34,7 @@
     <div class="mt-4">
         <h5>🎁 쿠폰 사용</h5>
 
-        <select id="couponSelect"
+       <!--  <select id="couponSelect"
                 class="form-select w-50 mx-auto">
 
             <option value="">쿠폰 선택 안함</option>
@@ -45,7 +45,48 @@
                     th:disabled="${mc.used}">
             </option>
 
-        </select>
+        </select> -->
+        
+         <select id="couponSelect"
+            class="form-select w-50 mx-auto">
+
+        <option value="">쿠폰 선택 안함</option>
+
+        <option th:each="mc : ${myCoupons}"
+                th:value="${mc.id}"
+                th:disabled="${mc.used}"
+                th:data-coupon-id="${mc.couponId}">
+
+            <!-- 🔥 쿠폰 정보 동적 표시 -->
+            <span th:with="coupon=${mc.coupon}">
+                <span th:text="${coupon.name}"></span>
+
+                |
+
+                <span th:if="${coupon.type == 'FIXED'}">
+                    💰 - 
+                    <span th:text="${coupon.discountValue}"></span>원
+                </span>
+
+                <span th:if="${coupon.type == 'PERCENT'}">
+                    📊 - 
+                    <span th:text="${coupon.discountValue}"></span>%
+                </span>
+
+                |
+
+                최소주문:
+                <span th:text="${coupon.minOrderPrice}"></span>원
+
+                |
+
+                <span th:text="${#temporals.format(coupon.endDate,'yyyy-MM-dd')}"></span>
+                까지
+            </span>
+
+        </option>
+
+    </select>
     </div>
 
     <!-- ================= Toss ================= -->

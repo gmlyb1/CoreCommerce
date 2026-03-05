@@ -36,7 +36,7 @@ public interface CouponRepository {
                   @Param("orderId") Long orderId);
 
     // 할인 계산
-    int calculateDiscount(@Param("couponId") Long couponId,
+    int calculateDiscount(@Param("memberCouponId") Long memberCouponId,
                           @Param("orderPrice") int orderPrice);
 
 	void increaseIssuedQuantity(Long couponId);
