@@ -45,8 +45,10 @@ public interface CouponRepository {
 
 	void decreaseUsedQuantity(Long couponId);
 
-	void cancelCouponUsage(Long memberCouponId);
+//	void cancelCouponUsage(Long memberCouponId);
 
 	int countFindAll();
+
+	void expireCoupons();
 	
 }

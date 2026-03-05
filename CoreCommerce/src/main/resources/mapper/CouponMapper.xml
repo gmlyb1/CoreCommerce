@@ -209,12 +209,19 @@
 	    WHERE id = #{couponId}
 	</update>
 	
-	<update id="cancelCouponUsage">
+	<!-- <update id="cancelCouponUsage">
     	UPDATE member_coupon
 	    SET used = 0,
 	        used_at = NULL,
 	        order_id = NULL
 	    WHERE id = #{memberCouponId}
+	</update> -->
+	
+	<update id="expireCoupons">
+	    UPDATE coupon
+	    SET active = FALSE
+	    WHERE active = TRUE
+	      AND end_date &lt; CURRENT_DATE
 	</update>
 	
 </mapper>

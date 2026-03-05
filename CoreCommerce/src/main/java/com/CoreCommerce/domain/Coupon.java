@@ -2,6 +2,8 @@ package com.CoreCommerce.domain;
 
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import groovy.transform.ToString;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +18,9 @@ public class Coupon {
 	    private String type;
 	    private int discountValue;
 	    private int minOrderPrice;
+	    @DateTimeFormat(pattern = "yyyy-MM-dd")
 	    private LocalDate startDate;
+	    @DateTimeFormat(pattern = "yyyy-MM-dd")
 	    private LocalDate endDate;
 	    private boolean active;
 	    private LocalDate createdAt;

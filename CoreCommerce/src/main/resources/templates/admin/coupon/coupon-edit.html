@@ -67,6 +67,22 @@
                        class="form-control"
                        th:value="${coupon.totalQuantity}">
             </div>
+            
+            <div class="mb-3">
+			    <label class="form-label">시작일</label>
+			    <input type="date"
+			           name="startDate"
+			           class="form-control"
+			           th:value="${coupon.startDate}">
+			</div>
+			
+			<div class="mb-3">
+			    <label class="form-label">종료일</label>
+			    <input type="date"
+			           name="endDate"
+			           class="form-control"
+			           th:value="${coupon.endDate}">
+			</div>
 
             <div class="mb-3">
 				<label>

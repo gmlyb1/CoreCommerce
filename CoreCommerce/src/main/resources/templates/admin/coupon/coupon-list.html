@@ -31,6 +31,8 @@
                 <th>타입</th>
                 <th>할인</th>
                 <th>최소금액</th>
+                <th>시작일</th>
+                <th>종료일</th>
                 <th>수량</th>
                 <th>상태</th>
                 <th>관리</th>
@@ -53,7 +55,12 @@
                 <td>
                     <span th:text="${#numbers.formatInteger(coupon.minOrderPrice,3,'COMMA')} + '원'"></span>
                 </td>
-
+				<th>
+					<span th:text="${coupon.startDate}"></span>
+				</th>
+				<th>
+					<span th:text="${coupon.endDate}"></span>
+				</th>
                 <td>
                     <span th:text="${coupon.issuedQuantity}"></span>
                     /

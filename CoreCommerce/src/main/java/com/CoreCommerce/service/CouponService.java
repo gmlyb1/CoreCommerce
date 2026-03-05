@@ -125,23 +125,27 @@ public class CouponService {
 		couponRepository.decreaseUsedQuantity(couponId);
 	}
 	
-	@Transactional
-	public void cancelCouponUsage(Long memberCouponId) {
-
-	    MemberCoupon mc = couponRepository.findMemberCouponById(memberCouponId);
-
-	    if (mc == null || !mc.isUsed()) {
-	        return;
-	    }
-
-	    // member_coupon 복구
-	    couponRepository.cancelCouponUsage(memberCouponId);
-
-	    // coupon 사용 수량 감소
-	    couponRepository.decreaseUsedQuantity(mc.getCouponId());
-	}
+//	@Transactional
+//	public void cancelCouponUsage(Long memberCouponId) {
+//
+//	    MemberCoupon mc = couponRepository.findMemberCouponById(memberCouponId);
+//
+//	    if (mc == null || !mc.isUsed()) {
+//	        return;
+//	    }
+//
+//	    // member_coupon 복구
+//	    couponRepository.cancelCouponUsage(memberCouponId);
+//
+//	    // coupon 사용 수량 감소
+//	    couponRepository.decreaseUsedQuantity(mc.getCouponId());
+//	}
 
 	public int countFindAll() {
 		return couponRepository.countFindAll();
+	}
+
+	public void expireCoupons() {
+		couponRepository.expireCoupons();
 	}
 }
