@@ -18,7 +18,7 @@
 }
 
 .register-card .form-control:focus {
-    box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.25);
+    box-shadow: 0 0 0 0.15rem rgba(13,110,253,0.25);
     transform: scale(1.01);
 }
 
@@ -33,29 +33,25 @@
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { opacity:0; transform:translateY(15px); }
+    to { opacity:1; transform:translateY(0); }
 }
 </style>
 
 <body class="d-flex flex-column min-vh-100 bg-light">
 
-<!-- 헤더 -->
 <div th:replace="layout/header :: header"></div>
 
-<!-- 회원가입 폼 -->
 <div class="container flex-grow-1 d-flex justify-content-center align-items-center"
-     style="margin-top: 80px; margin-bottom:80px;">
+     style="margin-top:80px;margin-bottom:80px;">
 
-    <!-- 🔥 넓어진 카드 -->
     <div class="card register-card shadow-lg p-5 bg-white"
-         style="max-width: 720px; width: 100%;">
+         style="max-width:720px;width:100%;">
 
         <h3 class="text-center mb-4 fw-bold text-primary">회원가입</h3>
 
         <form id="registerForm">
 
-            <!-- 🔥 2열 레이아웃 -->
             <div class="row">
 
                 <div class="col-md-6 mb-3">
@@ -133,7 +129,6 @@
                        placeholder="상세주소">
             </div>
 
-            <!-- 가입 버튼 -->
             <button type="submit"
                     class="btn btn-primary btn-lg w-100 register-btn fw-semibold mt-3">
                 회원가입
@@ -155,59 +150,81 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <script>
-// 비밀번호 보기 토글
+
+// ================= 비밀번호 토글 =================
 function togglePassword() {
     const input = document.getElementById("password");
     input.type = input.type === "password" ? "text" : "password";
 }
 
-// 다음 주소 API
+// ================= 다음 주소 API =================
 function execDaumPostcode() {
+
     new daum.Postcode({
+
         oncomplete: function(data) {
+
             let addr = data.roadAddress || data.jibunAddress;
-            document.getElementById('zipcode').value = data.zonecode;
-            document.getElementById('address1').value = addr;
-            document.getElementById('address2').focus();
+
+            document.getElementById("zipcode").value = data.zonecode;
+            document.getElementById("address1").value = addr;
+            document.getElementById("address2").focus();
         }
+
     }).open();
 }
 
-// 회원가입 처리
-document.getElementById('registerForm')
-.addEventListener('submit', async (e) => {
+// ================= 회원가입 처리 =================
+document.addEventListener("DOMContentLoaded", function () {
 
-    e.preventDefault();
+    const form = document.getElementById("registerForm");
 
-    const btn = document.querySelector('.register-btn');
-    btn.innerHTML = "가입 진행 중...";
-    btn.disabled = true;
+    form.addEventListener("submit", async function (e) {
 
-    const email = email.value;
-    const name = name.value;
-    const password = password.value;
-    const phone = phone.value;
-    const zipcode = zipcode.value;
-    const address1 = address1.value;
-    const address2 = address2.value;
+        e.preventDefault();
 
-    try {
-        await axios.post('/api/auth/register', {
-            email, name, password, phone, zipcode, address1, address2
-        });
+        const btn = document.querySelector(".register-btn");
+        btn.innerHTML = "가입 진행 중...";
+        btn.disabled = true;
 
-        alert('회원가입이 완료되었습니다.');
-        window.location.href = '/login';
+        // ✅ 안전하게 값만 가져오기
+        const emailVal = document.getElementById("email").value;
+        const nameVal = document.getElementById("name").value;
+        const passwordVal = document.getElementById("password").value;
+        const phoneVal = document.getElementById("phone").value;
+        const zipcodeVal = document.getElementById("zipcode").value;
+        const address1Val = document.getElementById("address1").value;
+        const address2Val = document.getElementById("address2").value;
 
-    } catch (err) {
-        alert(err.response?.data?.message || '회원가입에 실패하였습니다');
-        btn.innerHTML = "회원가입";
-        btn.disabled = false;
-    }
+        try {
+
+            await axios.post("/api/auth/register", {
+                email: emailVal,
+                name: nameVal,
+                password: passwordVal,
+                phone: phoneVal,
+                zipcode: zipcodeVal,
+                address1: address1Val,
+                address2: address2Val
+            });
+
+            alert("회원가입이 완료되었습니다.");
+            window.location.href = "/login";
+
+        } catch (err) {
+
+            alert(err.response?.data?.message || "회원가입 실패");
+
+            btn.innerHTML = "회원가입";
+            btn.disabled = false;
+        }
+
+    });
+
 });
+
 </script>
 
-<!-- 푸터 -->
 <div th:replace="layout/footer :: footer"></div>
 
 </body>

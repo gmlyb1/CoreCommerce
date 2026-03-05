@@ -73,6 +73,7 @@
                     <th>변경</th>
                     <th>삭제</th>
                     <th>잠금 만료일</th>
+                    <th>잠금 해제</th>
                 </tr>
                 </thead>
 
@@ -178,15 +179,25 @@
 					                    : '-'}">
 					    </span>
 					</td>
-
+					<td>
+					    <form th:action="@{/admin/member/unlock}"
+					          method="post">
+					
+					        <input type="hidden"
+					               name="memberId"
+					               th:value="${member.id}">
+					
+					        <button class="btn btn-success btn-sm"
+					                th:if="${member.lockedUntil}">
+					            🔓 해제
+					        </button>
+					    </form>
+					</td>
                 </tr>
-
                 </tbody>
             </table>
-
         </div>
     </div>
-
 </div>
 
 <div th:replace="layout/footer :: footer"></div>

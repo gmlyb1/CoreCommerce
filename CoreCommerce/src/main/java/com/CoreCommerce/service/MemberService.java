@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import com.CoreCommerce.domain.Member;
@@ -48,7 +49,11 @@ public class MemberService {
     	memberRepository.changeRole(memberId, role);
     }
     
-    public void lockAccount(Long id, boolean b, Object object) {
-    	memberRepository.lockAccount(id, b, object);
+    public void lockAccount(Long memberId, boolean locked, LocalDateTime lockedUntil) {
+    	memberRepository.lockAccount(memberId, locked, lockedUntil);
+    }
+    
+    public void unlockAccount(Long memberId) {
+    	memberRepository.unlockAccount(memberId);
     }
 }

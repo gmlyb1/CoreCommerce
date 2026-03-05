@@ -66,4 +66,12 @@ public class MemberManageController {
 
 	    return "redirect:/admin/member/list";
 	}
+	
+	@PostMapping("/unlock")
+	public String unlockAccount(@RequestParam Long memberId) {
+		
+		memberRepository.unlockAccount(memberId);
+		
+		return "redirect:/admin/member/list";
+	}
 }

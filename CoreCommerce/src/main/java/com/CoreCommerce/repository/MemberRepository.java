@@ -25,6 +25,8 @@ public interface MemberRepository{
 
 	void changeRole(@Param("id") Long id,  @Param("role") String rolee);
 
-	void lockAccount(Long id, boolean b, Object object);
+	void lockAccount(@Param("id")Long memberId, @Param("locked")boolean locked,@Param("lockedUntil")LocalDateTime lockedUntil);
+
+	void unlockAccount(@Param("id")Long memberId);
 
 }

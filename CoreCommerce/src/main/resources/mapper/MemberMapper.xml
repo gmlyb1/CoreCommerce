@@ -111,5 +111,12 @@
 	        locked_until = #{lockedUntil}
 	    where id = #{id}
 	</update>
+	
+	<update id="unlockAccount">
+		UPDATE member
+		SET account_locked = false,
+			locked_until = null
+		where id = #{id}
+	</update>
 
 </mapper>
