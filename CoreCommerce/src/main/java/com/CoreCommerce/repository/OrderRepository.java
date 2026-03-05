@@ -62,6 +62,8 @@ public interface OrderRepository {
 
 	void updateDiscount(Long orderId, Long couponId, int discount, int finalPrice);
 
+	void updateFinalPrice(@Param("orderId")Long realOrderId, @Param("finalPrice")int finalPrice);
+
 
 
 

@@ -300,6 +300,10 @@ public class OrderService {
 	public void updateDiscount(Long orderId, Object object, int i, int totalPrice) {
 		orderRepository.updateDiscount(orderId, orderId, i, totalPrice);
 	}
+
+	public void updateFinalPrice(Long realOrderId, int finalPrice) {
+		orderRepository.updateFinalPrice(realOrderId, finalPrice);
+	}
 	
     
 }

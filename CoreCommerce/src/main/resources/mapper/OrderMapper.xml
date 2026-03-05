@@ -178,5 +178,11 @@
 	    WHERE id = #{orderId}
 	</update>
 	
+	<update id="updateFinalPrice">
+	    UPDATE orders
+	    SET final_price = #{finalPrice}
+	    WHERE id = #{orderId}
+	</update>
+	
 	
 </mapper>

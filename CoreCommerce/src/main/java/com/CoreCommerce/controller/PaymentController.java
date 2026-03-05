@@ -91,17 +91,31 @@ public class PaymentController {
 	            String.class
 	    );
 	    
-//	    Long realOrderId = Long.parseLong(orderId.replace("ORDER_", ""));
 	    Long realOrderId = Long.parseLong(orderId.replace("ORD_", ""));
 	    
 	    orderService.completeOrder(realOrderId);
 
+	    Order order = orderService.getOrder(realOrderId);
+	    int discount = 0;
+	    int finalPrice = order.getTotalPrice();
+	    
 	    if(memberCouponId != null) {
+	    	discount = couponService.calculateDiscount(memberCouponId, order.getTotalPrice());
+	    	if(discount < 0) {
+	    		discount = 0;
+	    	}
+	    	
+	    	finalPrice = order.getTotalPrice() - discount;
+	    	if(finalPrice < 0) {
+	    		finalPrice = 0;
+	    	}
+	    	
 	    	couponService.useCoupon(memberCouponId, realOrderId);
 	    }
 	    
+	    orderService.updateFinalPrice(realOrderId,finalPrice);
+	    
 	    // ✅ 주문 조회 후 모델에 추가
-	    Order order = orderService.getOrder(realOrderId);
 	    model.addAttribute("order", order);
 
 	    return "payment/success";
@@ -125,9 +139,17 @@ public class PaymentController {
 	        		memberCouponId,
 	                order.getTotalPrice()
 	        );
+	        
+	        if(discount < 0) {
+	        	discount = 0;
+	        }
 
 	        finalPrice = order.getTotalPrice() - discount;
 
+	        if(finalPrice < 0) {
+	        	finalPrice = 0;
+	        }
+	        
 	        // 🔥 쿠폰 사용 처리
 //	        couponService.useCoupon(memberCouponId, orderId);
 	    }
