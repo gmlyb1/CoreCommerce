@@ -190,15 +190,64 @@ button:disabled {
     </div>
     
     <!-- 🔥 더보기 버튼 -->
-	<div class="text-center mt-4">
-	    <button id="loadMoreBtn"
-	            class="btn btn-outline-dark"
-	            onclick="loadMore()">
-	        ➕ 더보기
-	    </button>
-	</div>
+	<div class="mt-4 pb-4" th:if="${pagination != null and pagination.totalPages > 1}">
+
+         <ul class="pagination justify-content-center">
+
+             <!-- 이전 -->
+             <li class="page-item"
+                 th:classappend="${pagination.first} ? 'disabled'">
+
+                 <a class="page-link"
+                    th:href="@{/product/list(page=${pagination.page - 1})}">
+                     ‹
+                 </a>
+             </li>
+             
+             <li class="page-item"
+        th:each="i : ${#numbers.sequence(
+            T(java.lang.Math).max(1, pagination.page - 2),
+            T(java.lang.Math).min(pagination.totalPages, pagination.page + 2)
+        )}"
+        th:classappend="${i == pagination.page} ? 'active'">
+
+        <a class="page-link"
+           th:href="@{/product/list(page=${i})}"
+           th:text="${i}">
+        </a>
+
+    </li>
+
+             <!-- 다음 -->
+             <li class="page-item"
+                 th:classappend="${pagination.last} ? 'disabled'">
+
+                 <a class="page-link"
+                    th:href="@{/product/list(page=${pagination.page + 1})}">
+                     ›
+                 </a>
+             </li>
+
+         </ul>
+     </div>
     
 </div>
+
+<style>
+.pagination {
+    display: flex !important;
+    justify-content: center !important;
+    flex-direction: row !important;
+}
+
+.pagination .page-item {
+    display: inline-block !important;
+}
+
+.pagination .page-link {
+    display: inline-block !important;
+}
+</style>
 
 <!-- 삭제 스크립트 -->
 <script>

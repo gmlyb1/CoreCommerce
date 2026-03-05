@@ -69,4 +69,8 @@ public class ProductService {
     public List<Product> findPaging(int offset, int limit) {
     	return productRepository.findPaging(offset, limit);
     }
+    
+    public int findAllCount() {
+    	return productRepository.findAllCount();
+    }
 }

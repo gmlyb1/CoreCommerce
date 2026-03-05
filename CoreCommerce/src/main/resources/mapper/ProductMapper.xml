@@ -22,6 +22,10 @@
         ORDER BY id DESC
     </select>
     
+    <select id="findAllCount" resultType="int">
+        SELECT COUNT(*) FROM product
+    </select>
+    
     <select id="search" resultMap="ProductMap">
 
 		SELECT *

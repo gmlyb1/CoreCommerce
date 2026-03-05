@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.CoreCommerce.domain.Member;
+import com.CoreCommerce.domain.Pagination;
 import com.CoreCommerce.domain.Product;
 import com.CoreCommerce.repository.ProductRepository;
 import com.CoreCommerce.repository.ReviewRepository;
@@ -54,20 +55,24 @@ public class ProductController {
 					            @RequestParam(required = false) Integer minPrice,
 					            @RequestParam(required = false) Integer maxPrice,
 					            @RequestParam(defaultValue = "latest") String sort,
+					            @RequestParam(defaultValue = "1") int page,
 					            HttpSession session, Model model) {
     	
     	List<Product> products;
+    	int size = 10;
+    	int offset = (page - 1) * size;
+    	int totalCount = productRepository.findAllCount();
     	if(keyword == null && minPrice == null && maxPrice == null) {
-    		products = productRepository.findAll();
+    		products = productRepository.findPaging(offset,size);
     	}else {
     		products = productRepository.search(keyword, minPrice, maxPrice, sort);
     	}
         model.addAttribute("products", products);
-        
         model.addAttribute("keyword", keyword);
         model.addAttribute("minPrice", minPrice);
         model.addAttribute("maxPrice", maxPrice);
         model.addAttribute("sort", sort);
+        model.addAttribute("pagination", new Pagination(page, size, totalCount));
         return "product/list";
     }
 
