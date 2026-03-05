@@ -171,6 +171,14 @@
 				   >
 				    🎟
 				</a>
+				
+				<a th:if="${loginUser != null and loginUser.role == 'MANAGER'}"
+				   href="/admin/dashboard"
+				   class="btn btn-light border rounded-circle me-2"
+				   style="width:45px;height:45px;"
+				   >
+				    📊
+				</a>
 
             </div>
 

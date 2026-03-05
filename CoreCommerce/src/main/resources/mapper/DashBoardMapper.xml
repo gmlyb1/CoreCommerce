@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.CoreCommerce.repository.DashboardRepository">
+	
+	 <select id="countMember" resultType="int">
+        SELECT COUNT(*) FROM member
+    </select>
+
+    <select id="countOrder" resultType="int">
+        SELECT COUNT(*) FROM orders
+    </select>
+
+    <select id="todaySales" resultType="int">
+        SELECT COALESCE(SUM(total_price),0)
+        FROM orders
+        WHERE DATE(created_at) = CURDATE()
+    </select>
+
+    <select id="totalSales" resultType="int">
+        SELECT COALESCE(SUM(total_price),0)
+        FROM orders
+    </select>
+
+   <!-- ================= 상품 판매 통계 ================= -->
+	<select id="productSalesStats" resultType="com.CoreCommerce.domain.SalesStats">
+	    SELECT p.name AS label,
+	           SUM(oi.quantity * oi.price) AS value
+	    FROM order_item oi
+	    JOIN product p ON oi.product_id = p.id
+	    GROUP BY p.id, p.name
+	    ORDER BY value DESC
+	</select>
+	
+	
+	<!-- ================= 주문 상태 통계 ================= -->
+	<select id="orderStatusStats" resultType="com.CoreCommerce.domain.SalesStats">
+	    SELECT status AS label,
+	           COUNT(*) AS value
+	    FROM orders
+	    GROUP BY status
+	</select>
+	
+	
+	<!-- ================= 최근 30일 일별 매출 ================= -->
+	<select id="dailySalesStats" resultType="com.CoreCommerce.domain.SalesStats">
+	    SELECT DATE(created_at) AS label,
+	           SUM(total_price) AS value
+	    FROM orders
+	    WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+	    GROUP BY DATE(created_at)
+	    ORDER BY label
+	</select>
+	
+	
+	<!-- ================= 월별 매출 ================= -->
+	<select id="monthlySalesStats" resultType="com.CoreCommerce.domain.SalesStats">
+	    SELECT DATE_FORMAT(created_at,'%Y-%m') AS label,
+	           SUM(total_price) AS value
+	    FROM orders
+	    GROUP BY label
+	    ORDER BY label
+	</select>
+	
+</mapper>

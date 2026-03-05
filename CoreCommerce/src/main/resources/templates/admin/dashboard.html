@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/head :: head"></head>
+
+<body>
+
+<div th:replace="layout/header :: header"></div>
+
+<div class="container py-5">
+
+    <!-- ================= KPI 영역 ================= -->
+    <div class="row g-4 text-center">
+
+        <div class="col-md-3">
+            <div class="card shadow p-4">
+                <h6>총 회원</h6>
+                <h3 th:text="${#numbers.formatInteger(totalMember,3,'COMMA')}">0</h3>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow p-4">
+                <h6>총 주문</h6>
+                <h3 th:text="${#numbers.formatInteger(totalOrder,3,'COMMA')}">0</h3>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow p-4">
+                <h6>오늘 매출</h6>
+                <h3 th:text="${#numbers.formatInteger(todaySales,3,'COMMA')} + '원'">0원</h3>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow p-4">
+                <h6>총 매출</h6>
+                <h3 th:text="${#numbers.formatInteger(totalSales,3,'COMMA')} + '원'">0원</h3>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- ================= 그래프 영역 ================= -->
+    <div class="row mt-5 g-4">
+
+        <div class="col-lg-6">
+            <div class="card shadow p-4">
+                <h5 class="mb-3">상품 판매 순위</h5>
+                <canvas id="productChart"></canvas>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow p-4">
+                <h5 class="mb-3">주문 상태 통계</h5>
+                <canvas id="statusChart"></canvas>
+            </div>
+        </div>
+
+        <div class="col-lg-12">
+            <div class="card shadow p-4">
+                <h5 class="mb-3">최근 30일 일별 매출</h5>
+                <canvas id="dailySalesChart"></canvas>
+            </div>
+        </div>
+
+        <div class="col-lg-12">
+            <div class="card shadow p-4">
+                <h5 class="mb-3">월별 매출</h5>
+                <canvas id="monthlySalesChart"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div th:replace="layout/footer :: footer"></div>
+
+<!-- ================= Chart.js ================= -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- ================= 차트 스크립트 ================= -->
+<script th:inline="javascript">
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    /* ================= 숫자 콤마 함수 ================= */
+    function formatNumber(value) {
+        if (value == null) return 0;
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    /* ================= 데이터 ================= */
+    var productData = /*[[${productStats}]]*/ [];
+    var statusData = /*[[${statusStats}]]*/ [];
+    var dailySales = /*[[${dailySalesStats}]]*/ [];
+    var monthlySales = /*[[${monthlySalesStats2}]]*/ [];
+
+    /* ================= 공통 차트 함수 ================= */
+    function createChart(canvasId, labels, data, type, label, color) {
+
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+
+        if (!labels || labels.length === 0) {
+            canvas.parentElement.innerHTML =
+                "<div class='text-center text-muted'>데이터 없음</div>";
+            return;
+        }
+
+        new Chart(canvas, {
+            type: type,
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: label,
+                    data: data,
+                    backgroundColor: color,
+                    borderColor: color,
+                    borderWidth: 2,
+                    fill: type === "line"
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                plugins: {
+                    legend: {
+                        position: "top"
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return label + " : " + formatNumber(context.raw);
+                            }
+                        }
+                    }
+                },
+
+                scales: type !== "pie" ? {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return formatNumber(value);
+                            }
+                        }
+                    }
+                } : {}
+            }
+        });
+    }
+
+    /* ================= 상품 판매 ================= */
+    createChart(
+        "productChart",
+        productData.filter(m => m && m.label).map(m => m.label),
+        productData.filter(m => m && m.value).map(m => m.value),
+        "bar",
+        "상품 판매 순위",
+        "#36a2eb"
+    );
+
+    /* ================= 주문 상태 ================= */
+    createChart(
+        "statusChart",
+        statusData.filter(m => m && m.label).map(m => m.label),
+        statusData.filter(m => m && m.value).map(m => m.value),
+        "pie",
+        "주문 상태",
+        ["#ffc107", "#0d6efd", "#198754", "#dc3545"]
+    );
+
+    /* ================= 일별 매출 ================= */
+    createChart(
+        "dailySalesChart",
+        dailySales.filter(m => m && m.label).map(m => m.label),
+        dailySales.filter(m => m && m.value).map(m => m.value),
+        "line",
+        "일별 매출",
+        "#ff6b6b"
+    );
+
+    /* ================= 월별 매출 ================= */
+    createChart(
+        "monthlySalesChart",
+        monthlySales.filter(m => m && m.label).map(m => m.label),
+        monthlySales.filter(m => m && m.value).map(m => m.value),
+        "line",
+        "월별 매출",
+        "#346aff"
+    );
+
+});
+</script>
+
+<!-- ================= 스타일 ================= -->
+<style>
+canvas {
+    width: 100% !important;
+    height: 400px !important;
+}
+
+.card {
+    border-radius: 16px;
+}
+</style>
+
+</body>
+</html>
