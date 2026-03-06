@@ -145,42 +145,47 @@
             </div>
 
             <!-- 아이콘 -->
-            <div class="col-lg-3 text-end">
+            <div class="col-lg-3 d-flex justify-content-end align-items-center gap-3"
+            	 th:if="${loginUser != null}">
 
-                <a href="/wishlist/list"
-                   class="btn btn-light border rounded-circle me-2"
-                   style="width:45px;height:45px;">
-                    ❤️
-                </a>
-
-                <a href="/order/orders"
-                   class="btn btn-light border rounded-circle me-2"
-                   style="width:45px;height:45px;">
-                    📦
-                </a>
-
-                <a href="/cart/list"
-                   class="btn btn-light border rounded-circle me-2"
-                   style="width:45px;height:45px;">
-                    🛒
-                </a>
-				<a th:if="${loginUser != null and loginUser.role == 'MANAGER'}"
-				   href="/admin/coupons"
-				   class="btn btn-light border rounded-circle me-2"
-				   style="width:45px;height:45px;"
-				   >
-				    🎟
-				</a>
-				
-				<a th:if="${loginUser != null and loginUser.role == 'MANAGER'}"
-				   href="/admin/dashboard"
-				   class="btn btn-light border rounded-circle me-2"
-				   style="width:45px;height:45px;"
-				   >
-				    📊
-				</a>
-
-            </div>
+			    <!-- 찜 -->
+			    <a href="/wishlist/list"
+			       class="header-icon text-center text-decoration-none">
+			        <div class="icon-circle">❤️</div>
+			        <small>찜</small>
+			    </a>
+			
+			    <!-- 주문 -->
+			    <a href="/order/orders"
+			       class="header-icon text-center text-decoration-none">
+			        <div class="icon-circle">📦</div>
+			        <small>주문</small>
+			    </a>
+			
+			    <!-- 장바구니 -->
+			    <a href="/cart/list"
+			       class="header-icon text-center text-decoration-none">
+			        <div class="icon-circle">🛒</div>
+			        <small>장바구니</small>
+			    </a>
+			
+			    <!-- 관리자 쿠폰 -->
+			    <a th:if="${loginUser.role == 'MANAGER'}"
+			       href="/admin/coupons"
+			       class="header-icon text-center text-decoration-none">
+			        <div class="icon-circle">🎟</div>
+			        <small>쿠폰</small>
+			    </a>
+			
+			    <!-- 관리자 대시보드 -->
+			    <a th:if="${loginUser.role == 'MANAGER'}"
+			       href="/admin/dashboard"
+			       class="header-icon text-center text-decoration-none">
+			        <div class="icon-circle">📊</div>
+			        <small>통계</small>
+			    </a>
+			
+			</div>
 
         </div>
     </div>
@@ -294,6 +299,36 @@
 
 .active-line::after {
     width: 60%;
+}
+
+.header-icon {
+    color: #333;
+    font-size: 13px;
+}
+
+.icon-circle{
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    border:1px solid #ddd;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+    background:white;
+    transition: all 0.2s;
+}
+
+.header-icon:hover .icon-circle{
+    background:#212529;
+    color:white;
+    transform:translateY(-2px);
+}
+
+.header-icon small{
+    display:block;
+    margin-top:4px;
+    font-size:12px;
 }
 
 </style>
