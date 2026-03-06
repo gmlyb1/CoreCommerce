@@ -27,17 +27,17 @@ public class MemberController {
     
     @GetMapping("/member/profile")
     public String profilePage(HttpSession session, Model model) {
-    	return "/member/profile";
+    	return "member/profile";
     }
     
     @GetMapping("/member/find-id")
     public String findIdPage() {
-    	return "/member/find-id";
+    	return "member/find-id";
     }
     
     @GetMapping("/member/find-password")
     public String findPwPage() {
-    	return "/member/find-password";
+    	return "member/find-password";
     }
     
    
