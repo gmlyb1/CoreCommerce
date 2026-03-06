@@ -43,11 +43,6 @@ public class MainController {
 	
 	@GetMapping("/")
 	public String main(VisitLog log, HttpServletRequest request,Model model, HttpSession session, Authentication auth) throws Exception{
-	    ObjectMapper mapper = new ObjectMapper();
-//		System.out.println("Auth = " + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(auth));
-	    
-	    Member loginUser = (Member) session.getAttribute("loginUser");
-	    System.out.println("loginUser = "+ mapper.writerWithDefaultPrettyPrinter().writeValueAsString(loginUser));
 	    
 		log.setSessionId(request.getSession().getId());
 		log.setIpAddress(getClientIp(request));

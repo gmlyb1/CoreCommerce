@@ -15,6 +15,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -36,26 +38,24 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler{
 	 @Override
 	    public void onAuthenticationSuccess(HttpServletRequest request,
 	                                        HttpServletResponse response,
-	                                        Authentication authentication)
+	                                        Authentication authentication
+	                                        )
 	            throws IOException {
 
 	        // 🔥 OAuth 사용자 정보 가져오기
 	        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-	        String socialId = oAuth2User.getName();
-	        
-	        System.out.println("socialId:"+socialId);
-	        
-	        Optional<Member> member = memberRepository.findBySocialTypeAndSocialId("kakao", socialId);
 
+	        String socialId = oAuth2User.getName();
+	        String registrationId = ((OAuth2AuthenticationToken) authentication).getAuthorizedClientRegistrationId(); 
+	        
+	        Optional<Member> member = memberRepository.findBySocialTypeAndSocialId(registrationId, socialId);
+	        
 	        Member loginMember = member.orElse(null);
 
 	        if(loginMember != null) {
 	            HttpSession session = request.getSession();
 	            session.setAttribute("loginUser", loginMember);
 	        }
-
-	        ObjectMapper mapper = new ObjectMapper();
-	        System.out.println("member:"+ mapper.writerWithDefaultPrettyPrinter().writeValueAsString(member));
 	        
 	        // 🔥 이메일 가져오기 (없으면 기본값)
 	        String email = oAuth2User.getAttribute("email");

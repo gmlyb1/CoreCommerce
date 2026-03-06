@@ -35,21 +35,29 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
 	        String registrationId = userRequest.getClientRegistration().getRegistrationId();
 	        
-	        
 	        Map<String, Object> attributes = oAuth2User.getAttributes();
 
-	        String socialId = String.valueOf(attributes.get("id"));
+//	        String socialId = String.valueOf(attributes.get("id"));
+	        String socialId = null;
 	        String email = null;
-
-	       System.out.println("registrationId:"+registrationId);
-	       System.out.println("socialId:"+socialId);
+	        
 	        if(registrationId.equals("kakao")) {
-
+	        	socialId = String.valueOf(attributes.get("id"));
+	        	
 	            Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
 
 	            if(kakaoAccount != null) {
 	                email = (String) kakaoAccount.get("email");
 	            }
+	        }else if(registrationId.equals("naver")) {
+	        	
+	        	Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+	        	
+	        	if(response != null) {
+	        		socialId = String.valueOf(response.get("id"));
+	        		email = String.valueOf(response.get("email"));
+	        	}
+	        	
 	        }
 
 	        Member member = memberRepository
@@ -88,14 +96,28 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 	            member = newMember; // 🔥 바로 사용
 	        }
 
-	        // ✅ 반드시 return 추가
+	        Map<String, Object> newAttributes = new java.util.HashMap<>(attributes);
+
+	        if (socialId != null) {
+	            newAttributes.put("id", socialId);
+	        }
+
 	        return new DefaultOAuth2User(
 	                Collections.singleton(
 	                        new SimpleGrantedAuthority(member.getRole())
 	                ),
-	                attributes,
+	                newAttributes,
 	                "id"
 	        );
+	        
+	        // ✅ 반드시 return 추가
+//	        return new DefaultOAuth2User(
+//	                Collections.singleton(
+//	                        new SimpleGrantedAuthority(member.getRole())
+//	                ),
+//	                attributes,
+//	                "id"
+//	        );
 	    }
 
 }
