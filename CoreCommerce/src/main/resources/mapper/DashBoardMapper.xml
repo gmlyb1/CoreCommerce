@@ -14,7 +14,7 @@
     </select>
 
     <select id="todaySales" resultType="int">
-        SELECT COALESCE(SUM(total_price),0)
+        SELECT COALESCE(SUM(final_price),0)
         FROM orders
         WHERE DATE(created_at) = CURDATE()
     </select>
