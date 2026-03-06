@@ -70,39 +70,40 @@
 
             <!-- 아이디 -->
             <div class="mb-3">
-                <label class="form-label fw-semibold">아이디</label>
-                <div class="input-group">
-                    <span class="input-group-text">
-                        <i class="bi bi-person-fill"></i>
-                    </span>
-                    <input type="text"
-                           name="username"
-                           class="form-control"
-                           placeholder="이메일 또는 아이디"
-                           required>
-                </div>
-            </div>
-
-            <!-- 비밀번호 -->
-            <div class="mb-3">
-                <label class="form-label fw-semibold">비밀번호</label>
-                <div class="input-group">
-                    <span class="input-group-text">
-                        <i class="bi bi-lock-fill"></i>
-                    </span>
-                    <input type="password"
-                           name="password"
-                           class="form-control"
-                           id="password"
-                           placeholder="비밀번호"
-                           required>
-                    <button type="button"
-                            class="btn btn-outline-secondary"
-                            onclick="togglePassword()">
-                        👁
-                    </button>
-                </div>
-            </div>
+			    <label class="form-label fw-semibold">아이디</label>
+			    <div class="input-group">
+			        <span class="input-group-text">
+			            <i class="bi bi-person-fill"></i>
+			        </span>
+			        <input type="text"
+			               name="username"
+			               id="username"
+			               class="form-control"
+			               placeholder="이메일 또는 아이디">
+			    </div>
+			    <div class="text-danger small mt-1" id="usernameError"></div>
+			</div>
+			
+			<!-- 비밀번호 -->
+			<div class="mb-3">
+			    <label class="form-label fw-semibold">비밀번호</label>
+			    <div class="input-group">
+			        <span class="input-group-text">
+			            <i class="bi bi-lock-fill"></i>
+			        </span>
+			        <input type="password"
+			               name="password"
+			               class="form-control"
+			               id="password"
+			               placeholder="비밀번호">
+			        <button type="button"
+			                class="btn btn-outline-secondary"
+			                onclick="togglePassword()">
+			            👁
+			        </button>
+			    </div>
+			    <div class="text-danger small mt-1" id="passwordError"></div>
+			</div>
 
             <!-- 오류 메시지 -->
             <div class="text-danger mb-3 text-center"
@@ -165,9 +166,48 @@ function togglePassword() {
     input.type = input.type === "password" ? "text" : "password";
 }
 
+function validateLogin() {
+
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    const usernameError = document.getElementById("usernameError");
+    const passwordError = document.getElementById("passwordError");
+
+    usernameError.innerText = "";
+    passwordError.innerText = "";
+
+    let valid = true;
+
+    // 아이디 공백
+    if (username === "") {
+        usernameError.innerText = "아이디를 입력해주세요.";
+        valid = false;
+    }
+
+    // 이메일 형식 체크 (이메일 로그인일 경우)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    /* if (username !== "" && username.includes("@") && !emailRegex.test(username)) {
+        usernameError.innerText = "올바른 이메일 형식이 아닙니다.";
+        valid = false;
+    } */
+
+    // 비밀번호 공백
+    if (password === "") {
+        passwordError.innerText = "비밀번호를 입력해주세요.";
+        valid = false;
+    }
+
+    return valid;
+}
+
 document.getElementById("loginForm").addEventListener("submit", async function(e) {
     e.preventDefault();
 
+    if (!validateLogin()) {
+        return;
+    }
+    
     const email = document.querySelector("input[name='username']").value;
     const password = document.querySelector("input[name='password']").value;
 
