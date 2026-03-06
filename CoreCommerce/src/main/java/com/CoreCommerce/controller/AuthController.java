@@ -103,7 +103,7 @@ public class AuthController {
         // =====================================================
         // 🔥 4️⃣ 로그인 성공
         // =====================================================
-        String token = jwtUtil.generateToken(dbMember.getEmail());
+        String token = jwtUtil.generateToken(dbMember.getEmail(), dbMember.getRole(), dbMember.getSocialId());
 
         session.setAttribute("loginUser", dbMember);
 

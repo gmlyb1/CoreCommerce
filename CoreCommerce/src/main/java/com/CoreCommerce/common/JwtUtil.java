@@ -20,13 +20,33 @@ public class JwtUtil {
 	        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
 	    }
 
-	    public String generateToken(String email) {
+	    public String generateToken(String email, String role, String socialId) {
 	        return Jwts.builder()
 	                .setSubject(email)
+	                .claim("role", role)
+	                .claim("socialId", socialId)
 	                .setIssuedAt(new Date())
 	                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
 	                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
 	                .compact();
+	    }
+	    
+	    public String getRoleFromToken(String token) {
+	        return Jwts.parserBuilder()
+	                .setSigningKey(getSigningKey())
+	                .build()
+	                .parseClaimsJws(token)
+	                .getBody()
+	                .get("role", String.class);
+	    }
+	    
+	    public String getSocialIdFromToken(String token) {
+	        return Jwts.parserBuilder()
+	                .setSigningKey(getSigningKey())
+	                .build()
+	                .parseClaimsJws(token)
+	                .getBody()
+	                .get("socialId", String.class);
 	    }
 
 	    public String getEmailFromToken(String token) {
@@ -46,4 +66,6 @@ public class JwtUtil {
 	            return false;
 	        }
 	    }
+	    
+	    
 }

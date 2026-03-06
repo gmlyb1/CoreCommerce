@@ -29,4 +29,9 @@ public interface MemberRepository{
 
 	void unlockAccount(@Param("id")Long memberId);
 
+	Optional<Member> findBySocialTypeAndSocialId(String socialType, String socialId);
+
+	Optional<Member> findBySocialId(String socialId);
+
+
 }

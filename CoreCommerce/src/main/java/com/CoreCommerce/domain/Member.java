@@ -62,4 +62,7 @@ public class Member {
 
 	    @Column(name = "locked_until")
 	    private LocalDateTime lockedUntil;
+	    
+	    private String socialType;
+	    private String socialId;
 }

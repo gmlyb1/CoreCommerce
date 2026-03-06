@@ -21,6 +21,8 @@
 			,updated_at
 			,account_locked as accountLocked
 			,locked_until as lockedUntil
+			,social_id as socialId
+			,social_type as socialType
 		from member
 		where email = #{email}
 	</select>
@@ -41,6 +43,8 @@
 			,updated_at
 			,account_locked as accountLocked
 			,locked_until as lockedUntil
+			,social_id as socialId
+			,social_type as socialType
 		from member
 		<where>
 	        <if test="email != null and email != ''">
@@ -68,6 +72,8 @@
 	        ,zipcode
 	        ,address1
 	        ,address2
+	        ,social_id
+	        ,social_type
 	    )
 	    VALUES
 	    (
@@ -79,6 +85,8 @@
 	        ,#{zipcode}
 	        ,#{address1}
 	        ,#{address2}
+	        ,#{socialId}
+	        ,#{socialType}
 	    )
 	</insert>
 	
@@ -118,5 +126,58 @@
 			locked_until = null
 		where id = #{id}
 	</update>
+	
+	<select id="findBySocialTypeAndSocialId"
+        parameterType="map"
+        resultType="com.CoreCommerce.domain.Member">
+
+	    SELECT 
+	    	 id
+			,email
+			,password
+			,name
+			,phone
+			,zipcode
+			,address1
+			,address2
+			,profile_image as profileImage
+			,role
+			,created_at
+			,updated_at
+			,account_locked as accountLocked
+			,locked_until as lockedUntil
+			,social_id as socialId
+			,social_type as socialType
+	    FROM member
+	    WHERE social_type = #{socialType}
+	      AND social_id = #{socialId}
+	
+	</select>
+	
+	<select id="findBySocialId"
+	        parameterType="string"
+	        resultType="com.CoreCommerce.domain.Member">
+	
+	    SELECT 
+	    	 id
+			,email
+			,password
+			,name
+			,phone
+			,zipcode
+			,address1
+			,address2
+			,profile_image as profileImage
+			,role
+			,created_at
+			,updated_at
+			,account_locked as accountLocked
+			,locked_until as lockedUntil
+			,social_id as socialId
+			,social_type as socialType
+	    FROM member
+	    WHERE social_id = #{socialId}
+	
+	</select>
 
 </mapper>
