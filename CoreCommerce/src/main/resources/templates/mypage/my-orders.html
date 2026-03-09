@@ -29,9 +29,10 @@
                 </thead>
 
                 <tbody>
-                <tr th:each="order : ${orders}">
+                <tr th:each="order, iterStat : ${orders}">
                     <!-- 주문번호 -->
-                    <td th:text="${order.id}"></td>
+                    <!-- <td th:text="${order.id}"></td> -->
+                    <td th:text="${pagination.offset + iterStat.index + 1}"></td>
 
                     <!-- 금액 -->
                     <td th:text="${#numbers.formatInteger(order.totalPrice, 0, 'COMMA')} + '원'"></td>

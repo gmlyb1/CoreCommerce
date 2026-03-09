@@ -44,7 +44,7 @@
                 </tr>
 
                 <!-- 🔹 일반 공지 (중요 제외) -->
-                    <tr th:each="notice : ${notices}"
+                    <tr th:each="notice, iterStat : ${notices}"
 					    th:classappend="${notice.isPinned == true} ? 'pinned-row'"
 					    style="cursor:pointer;"
 					    th:onclick="|location.href='@{/notice/{id}(id=${notice.id})}'|">
@@ -54,9 +54,12 @@
 					          class="badge bg-danger px-3 py-2">
 					        📢 중요 공지
 					    </span>
-					    <span th:if="${notice.isPinned != true}"
+					    <!-- <span th:if="${notice.isPinned != true}"
 					          th:text="${notice.id}">
-					    </span>
+					    </span> -->
+					    <span th:if="${notice.isPinned != true}"
+         					  th:text="${pagination.offset + iterStat.index + 1}">
+         				</span>
 					</td>
 
                     <td class="fs-6">
