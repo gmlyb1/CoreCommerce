@@ -33,5 +33,12 @@ public interface MemberRepository{
 
 	Optional<Member> findBySocialId(String socialId);
 
+	List<Member> findAllWithPaging(@Param("size")int size, @Param("offset")int offset ,
+			@Param("email") String email,
+	        @Param("name") String name,
+	        @Param("role") String role);
+
+	int findAllForTotalCount();
+
 
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.CoreCommerce.domain.Member;
+import com.CoreCommerce.domain.Pagination;
 import com.CoreCommerce.repository.MemberRepository;
 
 @Controller
@@ -24,17 +25,27 @@ public class MemberManageController {
 	private MemberRepository memberRepository;
 	
 	 @GetMapping("/list")
-    public String AdminMemberListPage(HttpSession session,Model model, Member member) {
+    public String AdminMemberListPage(@RequestParam(defaultValue = "1") int page,HttpSession session,Model model, Member member) {
 	 
 		Member loginUser = (Member) session.getAttribute("loginUser");
 		
 		if(!loginUser.getRole().equals("MANAGER")) {
 			return "redirect:/";
 		}
+		
+		int size = 10;
+		int offset = (page - 1) * size;
+		String email = member.getEmail();
+		String name = member.getName();
+		String role = member.getRole();
 		 
-	 	List<Member> memberList = memberRepository.findAll(member);
+//	 	List<Member> memberList = memberRepository.findAll(member);
+		int totalCount = memberRepository.findAllForTotalCount();
+		List<Member> memberList = memberRepository.findAllWithPaging(size,offset,email,name,role);
+		
 	 	model.addAttribute("members", memberList);
 	 	model.addAttribute("search", member);
+	 	model.addAttribute("pagination", new Pagination(page, size, totalCount));
 	 	
     	return "/admin/member/list";
     }

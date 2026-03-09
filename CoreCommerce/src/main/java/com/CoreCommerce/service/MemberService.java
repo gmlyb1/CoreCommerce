@@ -56,4 +56,13 @@ public class MemberService {
     public void unlockAccount(Long memberId) {
     	memberRepository.unlockAccount(memberId);
     }
+    
+    public List<Member> findAllWithPaging(int size, int offset,String email, String name, String role) {
+    	return memberRepository.findAllWithPaging(size, offset,email,name,role);
+    }
+
+	public int findAllForTotalCount() {
+		return memberRepository.findAllForTotalCount();
+	}
+    
 }
