@@ -46,7 +46,7 @@
                         </a>
 
                         <div class="product-price"
-                             th:text="${#numbers.formatInteger(p.price,3,'COMMA') + '원'}">
+                             th:text="${#numbers.formatInteger(p.price,0,'COMMA') + '원'}">
                         </div>
 
                     </div>

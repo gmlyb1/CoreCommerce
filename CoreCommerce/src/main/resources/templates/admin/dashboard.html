@@ -14,28 +14,28 @@
         <div class="col-md-3">
             <div class="card shadow p-4">
                 <h6>총 회원</h6>
-                <h3 th:text="${#numbers.formatInteger(totalMember,3,'COMMA')}">0</h3>
+                <h3 th:text="${#numbers.formatInteger(totalMember,0,'COMMA')}">0</h3>
             </div>
         </div>
 
         <div class="col-md-3">
             <div class="card shadow p-4">
                 <h6>총 주문</h6>
-                <h3 th:text="${#numbers.formatInteger(totalOrder,3,'COMMA')}">0</h3>
+                <h3 th:text="${#numbers.formatInteger(totalOrder,0,'COMMA')}">0</h3>
             </div>
         </div>
 
         <div class="col-md-3">
             <div class="card shadow p-4">
                 <h6>오늘 매출</h6>
-                <h3 th:text="${#numbers.formatInteger(todaySales,3,'COMMA')} + '원'">0원</h3>
+                <h3 th:text="${#numbers.formatInteger(todaySales,0,'COMMA')} + '원'">0원</h3>
             </div>
         </div>
 
         <div class="col-md-3">
             <div class="card shadow p-4">
                 <h6>총 매출</h6>
-                <h3 th:text="${#numbers.formatInteger(totalSales,3,'COMMA')} + '원'">0원</h3>
+                <h3 th:text="${#numbers.formatInteger(totalSales,0,'COMMA')} + '원'">0원</h3>
             </div>
         </div>
 
