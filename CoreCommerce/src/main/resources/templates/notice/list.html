@@ -13,7 +13,8 @@
         <h2 class="fw-bold">📢 공지사항</h2>
 
         <a href="/notice/admin/write"
-           class="btn btn-dark px-4 rounded-3">
+           class="btn btn-dark px-4 rounded-3"
+           th:if="${loginUser != null and loginUser.role == 'MANAGER'}">
             + 공지 작성
         </a>
     </div>
