@@ -11,108 +11,73 @@
 
     <!-- 검색 헤더 -->
     <div class="search-header text-center mb-5">
-        <h2 class="fw-bold mb-2">
-            🔍 통합검색
-        </h2>
-
+        <h2 class="fw-bold mb-2">🔍 통합검색</h2>
         <p class="text-muted">
             "<span class="keyword" th:text="${keyword}"></span>" 검색 결과
         </p>
     </div>
 
-
     <!-- ================= 상품 ================= -->
     <div class="mb-5">
-
-        <div class="section-title">
+        <div class="section-title d-flex justify-content-between align-items-center">
             🛒 상품
+            <a th:href="@{/product/list(keyword=${keyword})}" class="btn btn-sm btn-outline-primary">
+                더보기
+            </a>
         </div>
 
         <div class="row g-4" th:if="${productList != null and !#lists.isEmpty(productList)}">
-
             <div class="col-md-3" th:each="p : ${productList}">
-
                 <div class="product-card">
-
                     <div class="product-img">
                         <img th:src="${p.imageUrl}" alt="">
                     </div>
-
                     <div class="product-body">
-
-                        <a th:href="@{/product/{id}(id=${p.id})}"
-                           class="product-title"
-                           th:text="${p.name}">
-                        </a>
-
+                        <a th:href="@{/product/{id}(id=${p.id})}" class="product-title" th:text="${p.name}"></a>
                         <div class="product-price"
-                             th:text="${#numbers.formatInteger(p.price,0,'COMMA') + '원'}">
-                        </div>
-
+                             th:text="${#numbers.formatInteger(p.price,0,'COMMA') + '원'}"></div>
                     </div>
-
                 </div>
-
             </div>
-
         </div>
 
-        <div class="empty-box"
-             th:if="${productList == null or #lists.isEmpty(productList)}">
+        <div class="empty-box" th:if="${productList == null or #lists.isEmpty(productList)}">
             검색된 상품이 없습니다
         </div>
-
     </div>
-
 
     <!-- ================= 공지 ================= -->
-
     <div class="mb-5">
-
-        <div class="section-title">
+        <div class="section-title d-flex justify-content-between align-items-center">
             📢 공지사항
+            <a th:href="@{/notice(keyword=${keyword})}" class="btn btn-sm btn-outline-primary">
+                더보기
+            </a>
         </div>
 
-        <div class="notice-box"
-             th:if="${noticeList != null and !#lists.isEmpty(noticeList)}">
-
-            <div class="notice-item"
-                 th:each="n : ${noticeList}">
-
-                <a th:href="@{/notice/{id}(id=${n.id})}"
-                   class="notice-title"
-                   th:text="${n.title}">
-                </a>
-
-                <span class="notice-date"
-                      th:text="${#temporals.format(n.createdAt,'yyyy-MM-dd')}">
-                </span>
-
+        <div class="notice-box" th:if="${noticeList != null and !#lists.isEmpty(noticeList)}">
+            <div class="notice-item" th:each="n : ${noticeList}">
+                <a th:href="@{/notice/{id}(id=${n.id})}" class="notice-title" th:text="${n.title}"></a>
+                <span class="notice-date" th:text="${#temporals.format(n.createdAt,'yyyy-MM-dd')}"></span>
             </div>
-
         </div>
 
-        <div class="empty-box"
-             th:if="${noticeList == null or #lists.isEmpty(noticeList)}">
+        <div class="empty-box" th:if="${noticeList == null or #lists.isEmpty(noticeList)}">
             검색된 공지사항이 없습니다
         </div>
-
     </div>
 
-
     <!-- ================= 문의 ================= -->
-
     <div class="mb-5">
-
-        <div class="section-title">
+        <div class="section-title d-flex justify-content-between align-items-center">
             📩 1:1 문의
+            <a th:href="@{/inquiry/list(keyword=${keyword})}" class="btn btn-sm btn-outline-primary">
+                더보기
+            </a>
         </div>
 
-        <div class="inquiry-box"
-             th:if="${inquiryList != null and !#lists.isEmpty(inquiryList)}">
-
+        <div class="inquiry-box" th:if="${inquiryList != null and !#lists.isEmpty(inquiryList)}">
             <table class="table align-middle">
-
                 <thead>
                 <tr>
                     <th>번호</th>
@@ -122,238 +87,55 @@
                     <th>작성일</th>
                 </tr>
                 </thead>
-
                 <tbody>
-
                 <tr th:each="i : ${inquiryList}">
-
                     <td th:text="${i.id}"></td>
-
                     <td>
-                        <a th:href="@{/inquiry/{id}(id=${i.id})}"
-                           class="inquiry-title"
-                           th:text="${i.title}">
-                        </a>
+                        <a th:href="@{/inquiry/{id}(id=${i.id})}" class="inquiry-title" th:text="${i.title}"></a>
                     </td>
-
                     <td th:text="${i.memberId}"></td>
-
                     <td>
-
-                        <span th:if="${i.status == 'WAIT'}"
-                              class="badge bg-warning text-dark">
-                            답변대기
-                        </span>
-
-                        <span th:if="${i.status == 'DONE'}"
-                              class="badge bg-success">
-                            답변완료
-                        </span>
-
+                        <span th:if="${i.status == 'WAIT'}" class="badge bg-warning text-dark">답변대기</span>
+                        <span th:if="${i.status == 'DONE'}" class="badge bg-success">답변완료</span>
                     </td>
-
                     <td th:text="${#temporals.format(i.createdAt,'yyyy-MM-dd')}"></td>
-
                 </tr>
-
                 </tbody>
-
             </table>
-
         </div>
 
-        <div class="empty-box"
-             th:if="${inquiryList == null or #lists.isEmpty(inquiryList)}">
+        <div class="empty-box" th:if="${inquiryList == null or #lists.isEmpty(inquiryList)}">
             검색된 문의가 없습니다
         </div>
-
     </div>
 
 </div>
 
-
 <div th:replace="layout/footer :: footer"></div>
 
-
 <style>
-
-/* 검색 헤더 */
-
-.search-header{
-    padding:40px;
-    background:white;
-    border-radius:15px;
-    box-shadow:0 5px 20px rgba(0,0,0,0.05);
-}
-
-.keyword{
-    color:#0d6efd;
-    font-weight:700;
-}
-
-
-/* 섹션 제목 */
-
-.section-title{
-    font-size:20px;
-    font-weight:700;
-    margin-bottom:20px;
-}
-
-
-/* 상품 카드 */
-
-.product-card{
-
-    background:white;
-    border-radius:15px;
-    overflow:hidden;
-    transition:all 0.25s;
-    box-shadow:0 4px 15px rgba(0,0,0,0.06);
-
-}
-
-.product-card:hover{
-
-    transform:translateY(-6px);
-    box-shadow:0 10px 25px rgba(0,0,0,0.12);
-
-}
-
-.product-img{
-
-    height:180px;
-    background:#f3f3f3;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-}
-
-.product-img img{
-
-    max-height:140px;
-
-}
-
-.product-body{
-
-    padding:15px;
-
-}
-
-.product-title{
-
-    display:block;
-    font-weight:600;
-    color:#333;
-    text-decoration:none;
-
-}
-
-.product-title:hover{
-
-    color:#0d6efd;
-
-}
-
-.product-price{
-
-    margin-top:8px;
-    font-size:18px;
-    font-weight:700;
-    color:#0d6efd;
-
-}
-
-
-/* 공지 */
-
-.notice-box{
-
-    background:white;
-    border-radius:12px;
-    padding:15px;
-    box-shadow:0 4px 15px rgba(0,0,0,0.05);
-
-}
-
-.notice-item{
-
-    display:flex;
-    justify-content:space-between;
-    padding:12px;
-    border-bottom:1px solid #eee;
-
-}
-
-.notice-item:last-child{
-
-    border-bottom:none;
-
-}
-
-.notice-title{
-
-    text-decoration:none;
-    font-weight:500;
-    color:#333;
-
-}
-
-.notice-title:hover{
-
-    color:#0d6efd;
-
-}
-
-.notice-date{
-
-    color:#888;
-    font-size:14px;
-
-}
-
-
-/* 문의 */
-
-.inquiry-box{
-
-    background:white;
-    border-radius:12px;
-    padding:20px;
-    box-shadow:0 4px 15px rgba(0,0,0,0.05);
-
-}
-
-.inquiry-title{
-
-    text-decoration:none;
-    font-weight:500;
-    color:#333;
-
-}
-
-.inquiry-title:hover{
-
-    color:#0d6efd;
-
-}
-
-
-/* 결과 없음 */
-
-.empty-box{
-
-    background:white;
-    padding:40px;
-    border-radius:12px;
-    text-align:center;
-    color:#888;
-    box-shadow:0 4px 15px rgba(0,0,0,0.05);
-
-}
-
+/* ================== 기존 스타일 유지 ================== */
+.search-header{padding:40px;background:white;border-radius:15px;box-shadow:0 5px 20px rgba(0,0,0,0.05);}
+.keyword{color:#0d6efd;font-weight:700;}
+.section-title{font-size:20px;font-weight:700;margin-bottom:20px;}
+.product-card{background:white;border-radius:15px;overflow:hidden;transition:all 0.25s;box-shadow:0 4px 15px rgba(0,0,0,0.06);}
+.product-card:hover{transform:translateY(-6px);box-shadow:0 10px 25px rgba(0,0,0,0.12);}
+.product-img{height:180px;background:#f3f3f3;display:flex;align-items:center;justify-content:center;}
+.product-img img{max-height:140px;}
+.product-body{padding:15px;}
+.product-title{display:block;font-weight:600;color:#333;text-decoration:none;}
+.product-title:hover{color:#0d6efd;}
+.product-price{margin-top:8px;font-size:18px;font-weight:700;color:#0d6efd;}
+.notice-box{background:white;border-radius:12px;padding:15px;box-shadow:0 4px 15px rgba(0,0,0,0.05);}
+.notice-item{display:flex;justify-content:space-between;padding:12px;border-bottom:1px solid #eee;}
+.notice-item:last-child{border-bottom:none;}
+.notice-title{text-decoration:none;font-weight:500;color:#333;}
+.notice-title:hover{color:#0d6efd;}
+.notice-date{color:#888;font-size:14px;}
+.inquiry-box{background:white;border-radius:12px;padding:20px;box-shadow:0 4px 15px rgba(0,0,0,0.05);}
+.inquiry-title{text-decoration:none;font-weight:500;color:#333;}
+.inquiry-title:hover{color:#0d6efd;}
+.empty-box{background:white;padding:40px;border-radius:12px;text-align:center;color:#888;box-shadow:0 4px 15px rgba(0,0,0,0.05);}
 </style>
 
 </body>

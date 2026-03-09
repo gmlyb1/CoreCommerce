@@ -36,6 +36,10 @@ public class SearchController {
 
 		Member loginUser = (Member) session.getAttribute("loginUser");
 		
+		if(loginUser == null) {
+			return "redirect:/login";
+		}
+		
         // 1. 상품 검색
         List<Product> productList = productRepository.searchByKeyword(keyword);
 
