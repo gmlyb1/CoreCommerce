@@ -103,8 +103,6 @@ public class ProductController {
         	canReview = orderRepository.hasUserPurchasedProduct(loginUser.getId(),id);
         }
         
-        System.out.println("canReview:"+canReview);
-        
         model.addAttribute("canReview", canReview);
         
         return "product/detail";
