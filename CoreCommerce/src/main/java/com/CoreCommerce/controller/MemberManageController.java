@@ -47,7 +47,7 @@ public class MemberManageController {
 	 	model.addAttribute("search", member);
 	 	model.addAttribute("pagination", new Pagination(page, size, totalCount));
 	 	
-    	return "/admin/member/list";
+    	return "admin/member/list";
     }
 	 
 	@PostMapping("/role")
