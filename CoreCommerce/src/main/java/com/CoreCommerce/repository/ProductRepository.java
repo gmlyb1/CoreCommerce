@@ -35,4 +35,6 @@ public interface ProductRepository{
 	List<Product> findPaging(int offset, int limit);
 
 	int findAllCount();
+
+	List<Product> searchByKeyword(String keyword);
 }

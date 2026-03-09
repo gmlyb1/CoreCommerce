@@ -42,4 +42,8 @@ public interface InquiryRepository {
 
 	List<Inquiry> findByMemberIdPaged(String email,@Param("offset") int offset, @Param("size") int size);
 
+	List<Inquiry> searchByKeyword(String keyword);
+
+	List<Inquiry> searchByKeywordAndMember(String keyword, String email);
+
 }

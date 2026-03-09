@@ -25,4 +25,6 @@ public interface NoticeRepository {
 
 	void delete(Long id);
 
+	List<Notice> searchByKeyword(String keyword);
+
 }

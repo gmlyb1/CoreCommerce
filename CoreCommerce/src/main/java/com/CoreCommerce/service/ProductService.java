@@ -73,4 +73,8 @@ public class ProductService {
     public int findAllCount() {
     	return productRepository.findAllCount();
     }
+    
+    public List<Product> searchByKeyword(String keyword) {
+    	return productRepository.searchByKeyword(keyword);
+    }
 }

@@ -141,4 +141,39 @@
 	    DELETE FROM inquiry_answer
 	    WHERE inquiry_id = #{inquiryId}
 	</delete>
+	
+	<select id="searchByKeyword" resultType="com.CoreCommerce.domain.Inquiry">
+	    SELECT 
+	    	id as id
+           ,member_id as memberId
+           ,title as title
+           ,content as content
+           ,status as status
+           ,created_at as createdAt
+           ,updated_at as updatedAt
+	    FROM inquiry
+	    WHERE title LIKE CONCAT('%', #{keyword}, '%')
+	       OR content LIKE CONCAT('%', #{keyword}, '%')
+	    ORDER BY created_at DESC
+	</select>
+	
+	<select id="searchByKeywordAndMember" resultType="com.CoreCommerce.domain.Inquiry">
+
+	SELECT 
+			id as id
+           ,member_id as memberId
+           ,title as title
+           ,content as content
+           ,status as status
+           ,created_at as createdAt
+           ,updated_at as updatedAt
+	FROM inquiry
+	WHERE member_id = #{email}
+	AND (
+	    title LIKE CONCAT('%', #{keyword}, '%')
+	    OR content LIKE CONCAT('%', #{keyword}, '%')
+	)
+	
+	</select>
+	
 </mapper>

@@ -43,5 +43,9 @@ public class NoticeService {
 	public void delete(Long id) {
 		noticeRepository.delete(id);
 	}
+	
+	public List<Notice> searchByKeyword(String keyword) {
+		return noticeRepository.searchByKeyword(keyword);
+	}
 
 }

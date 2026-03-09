@@ -77,4 +77,18 @@
 	    WHERE id = #{id}
 	</delete>
 
+	<select id="searchByKeyword" resultType="com.CoreCommerce.domain.Notice">
+    SELECT 
+    	id,
+        title,
+        content,
+        writer,
+        is_pinned as isPinned,
+        created_at AS createdAt,  
+        updated_at AS updatedAt
+	    FROM notice
+	    WHERE title LIKE CONCAT('%', #{keyword}, '%')
+	       OR content LIKE CONCAT('%', #{keyword}, '%')
+	    ORDER BY created_at DESC
+	</select>
 </mapper>

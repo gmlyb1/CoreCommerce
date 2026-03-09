@@ -79,4 +79,12 @@ public class InquiryService {
 	public List<Inquiry> findByMemberIdPaged(String email, int offset, int size){
 		return inquiryRepository.findByMemberIdPaged(email, offset, size);
 	}
+	
+	public List<Inquiry> searchByKeyword(String keyword) {
+		return inquiryRepository.searchByKeyword(keyword);
+	}
+	
+	public List<Inquiry> searchByKeywordAndMember(String keyword, String email) {
+		return inquiryRepository.searchByKeywordAndMember(keyword, email);
+	}
 }

@@ -127,10 +127,11 @@
 
             <!-- 검색 -->
             <div class="col-lg-6">
-                <form action="/product/list" method="get">
+                <form action="/search" method="get" onsubmit="return validateSearch()">
                     <div class="input-group rounded-pill border overflow-hidden shadow-sm">
 
                         <input type="text"
+                        	   id="searchKeyword"
                                name="keyword"
                                class="form-control border-0 px-4 py-2"
                                placeholder="검색어를 입력하세요">
@@ -257,6 +258,21 @@
 
 
 <!-- ================= NAV STYLE (고급 라인 애니메이션) ================= -->
+
+<script>
+function validateSearch(){
+
+    const keyword = document.getElementById("searchKeyword").value.trim();
+
+    if(keyword === ""){
+        alert("검색어를 입력해주세요.");
+        document.getElementById("searchKeyword").focus();
+        return false;
+    }
+
+    return true;
+}
+</script>
 
 <style>
 

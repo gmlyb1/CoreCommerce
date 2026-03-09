@@ -121,6 +121,10 @@
 		
 	</select>
 
-
+	<select id="searchByKeyword" resultMap="ProductMap">
+	    SELECT * FROM product
+	    WHERE name LIKE CONCAT('%', #{keyword}, '%')
+	       OR description LIKE CONCAT('%', #{keyword}, '%')
+	</select>
 
 </mapper>
