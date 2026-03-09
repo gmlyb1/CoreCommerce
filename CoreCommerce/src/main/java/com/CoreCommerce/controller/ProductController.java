@@ -59,7 +59,7 @@ public class ProductController {
 					            HttpSession session, Model model) {
     	
     	List<Product> products;
-    	int size = 10;
+    	int size = 9;
     	int offset = (page - 1) * size;
     	int totalCount = productRepository.findAllCount();
     	if(keyword == null && minPrice == null && maxPrice == null) {
