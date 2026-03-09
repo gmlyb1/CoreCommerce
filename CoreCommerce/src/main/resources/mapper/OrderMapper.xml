@@ -184,5 +184,13 @@
 	    WHERE id = #{orderId}
 	</update>
 	
+	<select id="hasUserPurchasedProduct" resultType="boolean" parameterType="map">
+        SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END
+        FROM orders o
+        JOIN order_item oi ON o.id = oi.order_id
+        WHERE o.member_id = #{memberId}
+          AND oi.product_id = #{productId}
+    </select>
+	
 	
 </mapper>

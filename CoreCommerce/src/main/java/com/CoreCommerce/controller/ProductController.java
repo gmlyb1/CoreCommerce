@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.CoreCommerce.domain.Member;
 import com.CoreCommerce.domain.Pagination;
 import com.CoreCommerce.domain.Product;
+import com.CoreCommerce.repository.OrderRepository;
 import com.CoreCommerce.repository.ProductRepository;
 import com.CoreCommerce.repository.ReviewRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -44,6 +45,10 @@ public class ProductController {
 	
 	@Autowired
 	private final ReviewRepository reviewRepository;
+	
+	@Autowired
+	private final OrderRepository orderRepository;
+	
 	  // application.properties에서 지정한 이미지 저장 경로
     @Value("${upload.path}")
     private String uploadPath;
@@ -91,6 +96,17 @@ public class ProductController {
         model.addAttribute("reviewList", reviewRepository.findByProductId(id));
         model.addAttribute("avgRating", reviewRepository.getAverageRating(id));
         model.addAttribute("product", product);
+        
+        boolean canReview = false;
+        
+        if(loginUser != null) {
+        	canReview = orderRepository.hasUserPurchasedProduct(loginUser.getId(),id);
+        }
+        
+        System.out.println("canReview:"+canReview);
+        
+        model.addAttribute("canReview", canReview);
+        
         return "product/detail";
     }
     

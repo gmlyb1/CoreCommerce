@@ -152,7 +152,7 @@
     <h4 class="fw-bold mb-3">⭐ 상품 후기</h4>
 
     <!-- 🔥 리뷰 작성 폼 -->
-    <div th:if="${loginUser != null}" class="mb-4">
+    <div th:if="${loginUser != null and canReview}" class="mb-4">
 
         <form action="/review/add" method="post">
 

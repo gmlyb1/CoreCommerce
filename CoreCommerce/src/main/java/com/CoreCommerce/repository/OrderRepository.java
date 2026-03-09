@@ -64,6 +64,9 @@ public interface OrderRepository {
 
 	void updateFinalPrice(@Param("orderId")Long realOrderId, @Param("finalPrice")int finalPrice);
 
+	boolean hasUserPurchasedProduct(@Param("memberId") Long memberId, @Param("productId") Long productId);
+
+
 
 
 

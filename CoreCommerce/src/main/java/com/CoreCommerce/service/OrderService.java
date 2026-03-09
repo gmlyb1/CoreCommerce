@@ -305,5 +305,8 @@ public class OrderService {
 		orderRepository.updateFinalPrice(realOrderId, finalPrice);
 	}
 	
+	public boolean hasUserPurchasedProduct(@Param("memberId") Long memberId, @Param("productId") Long productId) {
+		return orderRepository.hasUserPurchasedProduct(memberId, productId);
+	}
     
 }
