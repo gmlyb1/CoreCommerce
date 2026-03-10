@@ -104,17 +104,6 @@
 				                Previous
 				            </a>
 				        </li>
-				
-				        <!-- 🔥 페이지 번호 -->
-				       <!--  <li class="page-item"
-				            th:each="i : ${#numbers.sequence(1, pagination.totalPages)}"
-				            th:classappend="${pagination.page == i} ? 'active'">
-				            <a class="page-link"
-				               th:href="@{/admin/banner/list(page=${i})}"
-				               th:text="${i}">
-				            </a>
-				        </li> -->
-				        
 				        <li class="page-item"
 				            th:each="i : ${#numbers.sequence(
 				                T(java.lang.Math).max(1, pagination.page - 2),
@@ -126,9 +115,7 @@
 				               th:href="@{/admin/banner/list(page=${i})}"
 				               th:text="${i}">
 				            </a>
-				
 				        </li>
-								        
 				
 				        <!-- 🔥 다음 -->
 				        <li class="page-item"
