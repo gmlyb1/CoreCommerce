@@ -88,7 +88,7 @@
                 <tr th:each="member, iterStat : ${members}">
 
                     <!-- <td th:text="${member.id}"></td> -->
-                    <td th:text="${pagination.offset + iterStat.index + 1}"></td>
+                    <td th:text="${pagination.totalCount - (pagination.offset + iterStat.index)}"></td>
                     <td th:text="${member.email}"></td>
                     <td th:text="${member.name}"></td>
 

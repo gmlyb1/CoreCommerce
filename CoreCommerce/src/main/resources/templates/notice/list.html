@@ -54,11 +54,8 @@
 					          class="badge bg-danger px-3 py-2">
 					        📢 중요 공지
 					    </span>
-					    <!-- <span th:if="${notice.isPinned != true}"
-					          th:text="${notice.id}">
-					    </span> -->
 					    <span th:if="${notice.isPinned != true}"
-         					  th:text="${pagination.offset + iterStat.index + 1}">
+         					  th:text="${pagination.totalCount - (pagination.offset + iterStat.index)}">
          				</span>
 					</td>
 

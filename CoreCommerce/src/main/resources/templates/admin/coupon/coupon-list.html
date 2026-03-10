@@ -43,7 +43,7 @@
             <tr th:each="coupon, iterStat : ${coupons}">
 
                 <!-- <td th:text="${coupon.id}"></td> -->
-                <td th:text="${pagination.offset + iterStat.index + 1}"></td>
+                <td th:text="${pagination.totalCount - (pagination.offset + iterStat.index)}"></td>
 
                 <td th:text="${coupon.name}"></td>
 

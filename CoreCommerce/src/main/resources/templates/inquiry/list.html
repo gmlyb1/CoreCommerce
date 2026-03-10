@@ -40,7 +40,7 @@
 
                 <tr th:each="inquiry, iterStat : ${list}">
                     <!-- <td th:text="${inquiry.id}"></td> -->
-                    <td th:text="${pagination.offset + iterStat.index + 1}"></td>
+                    <td th:text="${pagination.totalCount - (pagination.offset + iterStat.index)}"></td>
                     <td>
                         <a th:href="@{'/inquiry/' + ${inquiry.id}}"
                            class="text-decoration-none fw-semibold">
