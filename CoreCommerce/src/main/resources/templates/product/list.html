@@ -48,11 +48,8 @@ button:disabled {
 <div th:replace="layout/header :: header"></div>
 
 <div class="container mt-5 mb-5">
-
     <h3 class="mb-4 fw-bold">상품 목록</h3>
-
 	<form method="get" action="/product/list" class="mb-4">
-		
 		<div th:if="${loginUser != null and 
              (loginUser.role == 'MANAGER' or loginUser.role == 'PRODUCTER')}"
 		     class="mb-3">
@@ -61,11 +58,9 @@ button:disabled {
 		       class="btn btn-primary">
 		        ➕ 상품 등록
 		    </a>
-		
 		</div>
 		
 	    <div class="row g-2 align-items-end">
-	
 	        <div class="col-md-4">
 	            <input type="text"
 	                   name="keyword"
@@ -114,14 +109,9 @@ button:disabled {
 	                🔍 검색
 	            </button>
 	        </div>
-	
 	    </div>
-	
 	</form>
-		
-
     <div class="row">
-
         <!-- 상품 반복 -->
         <div class="col-md-4 mb-4"
              th:each="p : ${products}">
@@ -174,27 +164,19 @@ button:disabled {
                            class="btn btn-sm btn-info me-2">
                             수정
                         </a>
-
                         <button class="btn btn-sm btn-danger"
                                 th:onclick="'deleteProduct(' + ${p.id} + ')'">
                             삭제
                         </button>
-
                     </div> 
-
                 </div>
             </div>
-
         </div>
-
     </div>
     
     <!-- 🔥 더보기 버튼 -->
-	<div class="mt-4 pb-4" th:if="${pagination != null and pagination.totalPages > 1}">
-
+	<div class="mt-4 pb-4">
          <ul class="pagination justify-content-center">
-
-             <!-- 이전 -->
              <li class="page-item"
                  th:classappend="${pagination.first} ? 'disabled'">
 
@@ -203,21 +185,18 @@ button:disabled {
                      ‹
                  </a>
              </li>
-             
              <li class="page-item"
-        th:each="i : ${#numbers.sequence(
-            T(java.lang.Math).max(1, pagination.page - 2),
-            T(java.lang.Math).min(pagination.totalPages, pagination.page + 2)
-        )}"
-        th:classappend="${i == pagination.page} ? 'active'">
+       			 th:each="i : ${#numbers.sequence(
+		            T(java.lang.Math).max(1, pagination.page - 2),
+		            T(java.lang.Math).min(pagination.totalPages, pagination.page + 2)
+		        )}"
+		        th:classappend="${i == pagination.page} ? 'active'">
 
-        <a class="page-link"
-           th:href="@{/product/list(page=${i})}"
-           th:text="${i}">
-        </a>
-
-    </li>
-
+		        <a class="page-link"
+		           th:href="@{/product/list(page=${i})}"
+		           th:text="${i}">
+		        </a>
+		    </li>
              <!-- 다음 -->
              <li class="page-item"
                  th:classappend="${pagination.last} ? 'disabled'">
@@ -227,10 +206,8 @@ button:disabled {
                      ›
                  </a>
              </li>
-
          </ul>
      </div>
-    
 </div>
 
 <style>
@@ -367,9 +344,6 @@ function appendProducts(products){
         container.appendChild(div);
     });
 }
-
-
-
 </script>
 
 <!-- 푸터 -->

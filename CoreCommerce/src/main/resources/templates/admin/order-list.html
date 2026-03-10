@@ -13,27 +13,20 @@
 
     <table class="table table-bordered text-center mt-4">
         <thead class="table-dark">
-        <tr>
-            <th>주문번호</th>
-            <th>회원ID</th>
-            <th>총금액</th>
-            <th>상태</th>
-            <th>변경</th>
-        </tr>
+	        <tr>
+	            <th>주문번호</th>
+	            <th>회원ID</th>
+	            <th>총금액</th>
+	            <th>상태</th>
+	            <th>변경</th>
+	        </tr>
         </thead>
-
         <tbody>
 
         <tr th:each="order : ${orders}">
             <td th:text="${order.id}"></td>
             <td th:text="${order.email}"></td>
             <td th:text="${order.totalPrice}"></td>
-
-            <!-- <td>
-                <span class="badge bg-primary"
-                      th:text="${order.status}">
-                </span>
-            </td> -->
             <td>
             	<span class="badge"
 				      th:classappend="${
@@ -56,61 +49,53 @@
             </td>
 
            <td>
-
-		    <!-- 상태 -->
-		   <select th:id="'status-' + ${order.id}" class="form-select mb-2">
-			    <option th:each="s : ${T(java.util.Arrays).asList('READY','PAID','SHIPPED','CANCELLED','DELIVERED')}"
-			            th:value="${s}"
-			            th:text="${s}"
-			            th:selected="${order.status == s}">
-			    </option>
-			</select>
+			   <select th:id="'status-' + ${order.id}" class="form-select mb-2">
+				    <option th:each="s : ${T(java.util.Arrays).asList('READY','PAID','SHIPPED','CANCELLED','DELIVERED')}"
+				            th:value="${s}"
+				            th:text="${s}"
+				            th:selected="${order.status == s}">
+				    </option>
+				</select>
+			
+			    <!-- 택배사 -->
+			    <select th:id="'courier-' + ${order.id}" class="form-select mb-2">
+				    <option value="" th:selected="${order.courier == null or order.courier == ''}">
+				        택배사 선택
+				    </option>
+				    <option value="CJ대한통운" th:selected="${order.courier == 'CJ대한통운'}">
+				        CJ대한통운
+				    </option>
+				    <option value="한진택배" th:selected="${order.courier == '한진택배'}">
+				        한진택배
+				    </option>
+				    <option value="롯데택배" th:selected="${order.courier == '롯데택배'}">
+				        롯데택배
+				    </option>
+				    <option value="우체국" th:selected="${order.courier == '우체국'}">
+				        우체국
+				    </option>
+				</select>
 		
-		    <!-- 택배사 -->
-		    <select th:id="'courier-' + ${order.id}" class="form-select mb-2">
-			    <option value="" th:selected="${order.courier == null or order.courier == ''}">
-			        택배사 선택
-			    </option>
-			    <option value="CJ대한통운" th:selected="${order.courier == 'CJ대한통운'}">
-			        CJ대한통운
-			    </option>
-			    <option value="한진택배" th:selected="${order.courier == '한진택배'}">
-			        한진택배
-			    </option>
-			    <option value="롯데택배" th:selected="${order.courier == '롯데택배'}">
-			        롯데택배
-			    </option>
-			    <option value="우체국" th:selected="${order.courier == '우체국'}">
-			        우체국
-			    </option>
-			</select>
+			    <!-- 송장 번호 -->
+			    <input type="text"
+				       th:id="'tracking-' + ${order.id}"
+				       class="form-control mb-2"
+				       placeholder="송장번호 입력"
+				       th:value="${order.trackingNumber}">
 		
-		    <!-- 송장 번호 -->
-		    <input type="text"
-			       th:id="'tracking-' + ${order.id}"
-			       class="form-control mb-2"
-			       placeholder="송장번호 입력"
-			       th:value="${order.trackingNumber}">
-		
-		    <!-- 변경 버튼 -->
-		    <button class="btn btn-sm btn-success"
-		            th:onclick="'updateStatus(' + ${order.id} + ')'">
-		        변경
-		    </button>
-		
-		</td>
-
-        </tr>
-
+			    <!-- 변경 버튼 -->
+			    <button class="btn btn-sm btn-success"
+			            th:onclick="'updateStatus(' + ${order.id} + ')'">
+			        변경
+			    </button>
+			</td>
+          </tr>
         </tbody>
     </table>
 	
 	<!-- ================= 페이징 ================= -->
-	<div class="mt-4"
-	     th:if="${pagination != null and pagination.totalPages > 1}">
-	
+	<div class="mt-4">
 	    <ul class="pagination justify-content-center d-flex flex-row">
-	
 	        <li class="page-item"
 	            th:classappend="${pagination.first} ? 'disabled'">
 	
@@ -119,17 +104,6 @@
 	                ‹
 	            </a>
 	        </li>
-	
-	        <!-- <li class="page-item"
-	            th:each="i : ${#numbers.sequence(1, pagination.totalPages)}"
-	            th:classappend="${i == pagination.page} ? 'active'">
-	
-	            <a class="page-link"
-	               th:href="@{/admin/orders(page=${i})}"
-	               th:text="${i}">
-	            </a>
-	
-	        </li> -->
 	        
 	        <li class="page-item"
 	            th:each="i : ${#numbers.sequence(
@@ -153,16 +127,11 @@
 	                ›
 	            </a>
 	        </li>
-	
 	    </ul>
-	
 	</div>
-
-
 </div>
 
 <script>
-
 function updateStatus(orderId){
 
     const status = document.getElementById("status-" + orderId).value;

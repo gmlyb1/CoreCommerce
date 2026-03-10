@@ -30,40 +30,35 @@
 
                 <tbody>
                 <tr th:each="order, iterStat : ${orders}">
-                    <!-- 주문번호 -->
-                    <!-- <td th:text="${order.id}"></td> -->
                     <td th:text="${pagination.offset + iterStat.index + 1}"></td>
 
-                    <!-- 금액 -->
                     <td th:text="${#numbers.formatInteger(order.totalPrice, 0, 'COMMA')} + '원'"></td>
-
-                    <!-- 상태 뱃지 -->
-                   <td th:switch="${order.status}">
-					    <span th:case="'READY'"
-					          class="badge bg-secondary px-3 py-2">
-					        결제대기
-					    </span>
-					
-					    <span th:case="'PAID'"
-					          class="badge bg-primary px-3 py-2">
-					        결제완료
-					    </span>
-					
-					    <span th:case="'SHIPPED'"
-					          class="badge bg-warning text-dark px-3 py-2">
-					        배송중
-					    </span>
-					
-					    <span th:case="'DELIVERED'"
-					          class="badge bg-success px-3 py-2">
-					        배송완료
-					    </span>
-					
-					    <span th:case="'CANCELLED'"
-					          class="badge bg-danger px-3 py-2">
-					        주문취소
-					    </span>
-					</td>
+	                   <td th:switch="${order.status}">
+						    <span th:case="'READY'"
+						          class="badge bg-secondary px-3 py-2">
+						        결제대기
+						    </span>
+						
+						    <span th:case="'PAID'"
+						          class="badge bg-primary px-3 py-2">
+						        결제완료
+						    </span>
+						
+						    <span th:case="'SHIPPED'"
+						          class="badge bg-warning text-dark px-3 py-2">
+						        배송중
+						    </span>
+						
+						    <span th:case="'DELIVERED'"
+						          class="badge bg-success px-3 py-2">
+						        배송완료
+						    </span>
+						
+						    <span th:case="'CANCELLED'"
+						          class="badge bg-danger px-3 py-2">
+						        주문취소
+						    </span>
+						</td>
 
                     <!-- 배송 정보 -->
                     <td>
@@ -98,8 +93,7 @@
                 </tbody>
             </table>
 
-			<div class="mt-4" th:if="${pagination != null and pagination.totalPages > 1}">
-	
+			<div class="mt-4">
 			    <ul class="pagination justify-content-center d-flex flex-row">
 			
 			        <li class="page-item"
@@ -110,30 +104,18 @@
 			                ‹
 			            </a>
 			        </li>
-			
-			        <!-- <li class="page-item"
-			            th:each="i : ${#numbers.sequence(1, pagination.totalPages)}"
+			        <li class="page-item"
+			            th:each="i : ${#numbers.sequence(
+			                T(java.lang.Math).max(1, pagination.page - 2),
+			                T(java.lang.Math).min(pagination.totalPages, pagination.page + 2)
+			            )}"
 			            th:classappend="${i == pagination.page} ? 'active'">
 			
 			            <a class="page-link"
 			               th:href="@{/order/mypage/my-orders(page=${i})}"
 			               th:text="${i}">
 			            </a>
-			
-			        </li> -->
-			        <li class="page-item"
-				            th:each="i : ${#numbers.sequence(
-				                T(java.lang.Math).max(1, pagination.page - 2),
-				                T(java.lang.Math).min(pagination.totalPages, pagination.page + 2)
-				            )}"
-				            th:classappend="${i == pagination.page} ? 'active'">
-				
-				            <a class="page-link"
-				               th:href="@{/order/mypage/my-orders(page=${i})}"
-				               th:text="${i}">
-				            </a>
-				
-				        </li>
+			        </li>
 			
 			        <li class="page-item"
 			            th:classappend="${pagination.last} ? 'disabled'">
@@ -143,15 +125,10 @@
 			                ›
 			            </a>
 			        </li>
-			
 			    </ul>
-			
 			</div>
-
-
         </div>
     </div>
-
 </div>
 
 <!-- ✅ Footer -->

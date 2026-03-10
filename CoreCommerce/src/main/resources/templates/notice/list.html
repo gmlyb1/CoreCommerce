@@ -87,8 +87,7 @@
             <!-- ===================================================== -->
             <!-- 🔥 3️⃣ 페이징 -->
             <!-- ===================================================== -->
-            <div class="mt-4 pb-4"
-                 th:if="${pagination != null and pagination.totalPages > 1}">
+            <div class="mt-4 pb-4">
 
                 <ul class="pagination justify-content-center">
 
@@ -101,17 +100,6 @@
                             ‹
                         </a>
                     </li>
-
-                    <!-- 번호 -->
-                    <!-- <li class="page-item"
-                        th:each="i : ${#numbers.sequence(1, pagination.totalPages)}"
-                        th:classappend="${i == pagination.page} ? 'active'">
-
-                        <a class="page-link"
-                           th:href="@{/notice(page=${i})}"
-                           th:text="${i}">
-                        </a>
-                    </li> -->
                     
                     <li class="page-item"
 			            th:each="i : ${#numbers.sequence(

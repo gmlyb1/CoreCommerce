@@ -23,76 +23,63 @@
 
             <table class="table table-hover align-middle text-center">
                 <thead class="table-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>이미지</th>
-                    <th>제목</th>
-                    <th>기간</th>
-                    <th>상태</th>
-                    <th>관리</th>
-                </tr>
-                </thead>
-
-                <tbody>
-
-                <tr th:if="${popupList == null or #lists.isEmpty(popupList)}">
-                    <td colspan="6" class="py-5 text-muted">
-                        📭 등록된 팝업이 없습니다.
-                    </td>
-                </tr>
-
-                <tr th:each="popup : ${popupList}">
-
-                    <td th:text="${popup.id}"></td>
-
-                    <td>
-                        <img th:if="${popup.imageUrl != null}"
-                             th:src="@{${popup.imageUrl}}"
-                             style="width:100px; border-radius:8px;">
-                    </td>
-
-                    <td th:text="${popup.title}"></td>
-
-                    <td class="small">
-                        <div th:text="${#temporals.format(popup.startDate,'yyyy-MM-dd HH:mm')}"></div>
-                        ~
-                        <div th:text="${#temporals.format(popup.endDate,'yyyy-MM-dd HH:mm')}"></div>
-                    </td>
-
-                    <td>
-                        <span th:if="${popup.isActive}"
-                              class="badge bg-success">
-                            ON
-                        </span>
-
-                        <span th:if="${!popup.isActive}"
-                              class="badge bg-secondary">
-                            OFF
-                        </span>
-                    </td>
-
-                    <td>
-
-                        <a th:href="@{/admin/popup/edit/{id}(id=${popup.id})}"
-						   class="btn btn-sm btn-warning">
-						    수정
-						</a>
-
-                        <a th:href="@{/admin/popup/delete/{id}(id=${popup.id})}"
-                           class="btn btn-sm btn-danger"
-                           onclick="return confirm('삭제하시겠습니까?')">
-                            삭제
-                        </a>
-
-                    </td>
-
-                </tr>
-
+	                <tr>
+	                    <th>ID</th>
+	                    <th>이미지</th>
+	                    <th>제목</th>
+	                    <th>기간</th>
+	                    <th>상태</th>
+	                    <th>관리</th>
+	                </tr>
+	                </thead>
+	                <tbody>
+	                <tr th:if="${popupList == null or #lists.isEmpty(popupList)}">
+	                    <td colspan="6" class="py-5 text-muted">
+	                        📭 등록된 팝업이 없습니다.
+	                    </td>
+	                </tr>
+	
+	                <tr th:each="popup : ${popupList}">
+	                    <td th:text="${popup.id}"></td>
+	                    <td>
+	                        <img th:if="${popup.imageUrl != null}"
+	                             th:src="@{${popup.imageUrl}}"
+	                             style="width:100px; border-radius:8px;">
+	                    </td>
+	                    <td th:text="${popup.title}"></td>
+	                    <td class="small">
+	                        <div th:text="${#temporals.format(popup.startDate,'yyyy-MM-dd HH:mm')}"></div>
+	                        ~
+	                        <div th:text="${#temporals.format(popup.endDate,'yyyy-MM-dd HH:mm')}"></div>
+	                    </td>
+	                    <td>
+	                        <span th:if="${popup.isActive}"
+	                              class="badge bg-success">
+	                            ON
+	                        </span>
+	
+	                        <span th:if="${!popup.isActive}"
+	                              class="badge bg-secondary">
+	                            OFF
+	                        </span>
+	                    </td>
+	                    <td>
+	                        <a th:href="@{/admin/popup/edit/{id}(id=${popup.id})}"
+							   class="btn btn-sm btn-warning">
+							    수정
+							</a>
+	
+	                        <a th:href="@{/admin/popup/delete/{id}(id=${popup.id})}"
+	                           class="btn btn-sm btn-danger"
+	                           onclick="return confirm('삭제하시겠습니까?')">
+	                            삭제
+	                        </a>
+	                    </td>
+	                </tr>
                 </tbody>
             </table>
 
-			<div class="d-flex justify-content-center mt-4"
-			     th:if="${pagination != null and pagination.totalPages > 1}">
+			<div class="d-flex justify-content-center mt-4">
 			    <ul class="pagination d-flex flex-row gap-1">
 			        <!-- 🔥 이전 -->
 			        <li class="page-item"
@@ -103,15 +90,6 @@
 			                Previous
 			            </a>
 			        </li>
-			        <!-- 🔥 페이지 번호 -->
-			        <!-- <li class="page-item"
-			            th:each="i : ${#numbers.sequence(1, pagination.totalPages)}"
-			            th:classappend="${pagination.page == i} ? 'active'">
-			            <a class="page-link"
-			               th:href="@{/admin/banner/list(page=${i})}"
-			               th:text="${i}">
-			            </a>
-			        </li> -->
 			        
 			        <li class="page-item"
 			            th:each="i : ${#numbers.sequence(
@@ -129,7 +107,6 @@
 			        <!-- 🔥 다음 -->
 			        <li class="page-item"
 			            th:classappend="${pagination.page >= pagination.totalPages} ? 'disabled'">
-			
 			            <a class="page-link"
 			               th:href="@{/admin/banner/list(page=${pagination.page < pagination.totalPages ? pagination.page + 1 : pagination.totalPages})}">
 			                Next
