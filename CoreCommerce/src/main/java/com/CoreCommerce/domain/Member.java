@@ -65,4 +65,6 @@ public class Member {
 	    
 	    private String socialType;
 	    private String socialId;
+	    private String sessionId;
+	    private boolean isLoggedIn;
 }

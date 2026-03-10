@@ -41,4 +41,5 @@ public interface MemberRepository{
 	int findAllForTotalCount();
 
 
+
 }

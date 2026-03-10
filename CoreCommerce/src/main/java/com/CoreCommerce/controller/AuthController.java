@@ -99,13 +99,15 @@ public class AuthController {
 
             return "비밀번호가 틀립니다";
         }
-
+        
+        
         // =====================================================
         // 🔥 4️⃣ 로그인 성공
         // =====================================================
         String token = jwtUtil.generateToken(dbMember.getEmail(), dbMember.getRole(), dbMember.getSocialId());
 
         session.setAttribute("loginUser", dbMember);
+        
 
         return "redirect:/";
     }

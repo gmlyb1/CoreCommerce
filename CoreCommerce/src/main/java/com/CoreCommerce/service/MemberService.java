@@ -64,5 +64,5 @@ public class MemberService {
 	public int findAllForTotalCount() {
 		return memberRepository.findAllForTotalCount();
 	}
-    
+	
 }
