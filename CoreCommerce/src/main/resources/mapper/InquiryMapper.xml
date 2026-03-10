@@ -155,6 +155,7 @@
 	    WHERE title LIKE CONCAT('%', #{keyword}, '%')
 	       OR content LIKE CONCAT('%', #{keyword}, '%')
 	    ORDER BY created_at DESC
+	    LIMIT #{size} OFFSET #{offset}
 	</select>
 	
 	<select id="searchByKeywordAndMember" resultType="com.CoreCommerce.domain.Inquiry">
@@ -173,7 +174,21 @@
 	    title LIKE CONCAT('%', #{keyword}, '%')
 	    OR content LIKE CONCAT('%', #{keyword}, '%')
 	)
+	LIMIT #{size} OFFSET #{offset}
 	
+	</select>
+	
+	<select id="iTotCount" resultType="int">
+		SELECT COUNT(*) FROM inquiry
+		WHERE title LIKE CONCAT('%', #{keyword}, '%')
+	       OR content LIKE CONCAT('%', #{keyword}, '%')
+	</select> 
+	
+	<select id="iTotCountForMember" resultType="int">
+		SELECT COUNT(*) FROM inquiry 
+		WHERE title LIKE CONCAT('%', #{keyword}, '%')
+	       OR content LIKE CONCAT('%', #{keyword}, '%')
+		AND member_id = #{email}
 	</select>
 	
 </mapper>

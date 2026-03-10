@@ -44,8 +44,12 @@ public class NoticeService {
 		noticeRepository.delete(id);
 	}
 	
-	public List<Notice> searchByKeyword(String keyword) {
-		return noticeRepository.searchByKeyword(keyword);
+	public List<Notice> searchByKeyword(String keyword,int offset,int size) {
+		return noticeRepository.searchByKeyword(keyword,offset,size);
+	}
+	
+	public int nTotCnt(String keyword) {
+		return noticeRepository.nTotCnt(keyword);
 	}
 
 }

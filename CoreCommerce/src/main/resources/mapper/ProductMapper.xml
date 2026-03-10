@@ -125,6 +125,13 @@
 	    SELECT * FROM product
 	    WHERE name LIKE CONCAT('%', #{keyword}, '%')
 	       OR description LIKE CONCAT('%', #{keyword}, '%')
+	    LIMIT #{size} OFFSET #{offset}
 	</select>
+	
+	<select id="pTotCnt" resultType="int">
+		SELECT COUNT(*) FROM product
+		WHERE name LIKE CONCAT('%', #{keyword}, '%')
+	       OR description LIKE CONCAT('%', #{keyword}, '%')
+	</select> 
 
 </mapper>

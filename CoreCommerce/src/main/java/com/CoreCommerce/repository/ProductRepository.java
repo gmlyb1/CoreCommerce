@@ -36,5 +36,7 @@ public interface ProductRepository{
 
 	int findAllCount();
 
-	List<Product> searchByKeyword(String keyword);
+	List<Product> searchByKeyword(String keyword,@Param("offset")int offset, @Param("size")int size);
+
+	int pTotCnt(String keyword);
 }

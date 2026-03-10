@@ -25,6 +25,8 @@ public interface NoticeRepository {
 
 	void delete(Long id);
 
-	List<Notice> searchByKeyword(String keyword);
+	List<Notice> searchByKeyword(String keyword,@Param("offset")int offset, @Param("size")int size);
+
+	int nTotCnt(String keyword);
 
 }

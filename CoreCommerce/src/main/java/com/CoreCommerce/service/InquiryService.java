@@ -80,11 +80,19 @@ public class InquiryService {
 		return inquiryRepository.findByMemberIdPaged(email, offset, size);
 	}
 	
-	public List<Inquiry> searchByKeyword(String keyword) {
-		return inquiryRepository.searchByKeyword(keyword);
+	public List<Inquiry> searchByKeyword(String keyword,int offset,int size) {
+		return inquiryRepository.searchByKeyword(keyword,offset,size);
 	}
 	
-	public List<Inquiry> searchByKeywordAndMember(String keyword, String email) {
-		return inquiryRepository.searchByKeywordAndMember(keyword, email);
+	public List<Inquiry> searchByKeywordAndMember(String keyword, String email,int offset, int size) {
+		return inquiryRepository.searchByKeywordAndMember(keyword, email,offset, size);
+	}
+	
+	public int iTotCount(String keyword) {
+		return inquiryRepository.iTotCount(keyword);
+	}
+	
+	public int iTotCountForMember(String keyword, String email) {
+		return inquiryRepository.iTotCountForMember(keyword, email);
 	}
 }

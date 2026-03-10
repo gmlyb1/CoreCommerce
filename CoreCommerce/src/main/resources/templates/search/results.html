@@ -41,6 +41,30 @@
             </div>
         </div>
 
+        <!-- 상품 페이징 -->
+        <div class="mt-4 pb-4" th:if="${productList != null and !#lists.isEmpty(productList)}">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${pTotCount.first} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/search(pPage=${pTotCount.page - 1}, nPage=${nTotCount.page}, iPage=${iTotCount.page}, keyword=${keyword})}">‹</a>
+                </li>
+                <li class="page-item"
+                    th:each="i : ${#numbers.sequence(
+                        T(java.lang.Math).max(1, pTotCount.page - 2),
+                        T(java.lang.Math).min(pTotCount.totalPages, pTotCount.page + 2)
+                    )}"
+                    th:classappend="${i == pTotCount.page} ? 'active'">
+                    <a class="page-link"
+                       th:href="@{/search(pPage=${i}, nPage=${nTotCount.page}, iPage=${iTotCount.page}, keyword=${keyword})}"
+                       th:text="${i}"></a>
+                </li>
+                <li class="page-item" th:classappend="${pTotCount.last} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/search(pPage=${pTotCount.page + 1}, nPage=${nTotCount.page}, iPage=${iTotCount.page}, keyword=${keyword})}">›</a>
+                </li>
+            </ul>
+        </div>
+
         <div class="empty-box" th:if="${productList == null or #lists.isEmpty(productList)}">
             검색된 상품이 없습니다
         </div>
@@ -60,6 +84,30 @@
                 <a th:href="@{/notice/{id}(id=${n.id})}" class="notice-title" th:text="${n.title}"></a>
                 <span class="notice-date" th:text="${#temporals.format(n.createdAt,'yyyy-MM-dd')}"></span>
             </div>
+        </div>
+
+        <!-- 공지사항 페이징 -->
+        <div class="mt-4 pb-4" th:if="${noticeList != null and !#lists.isEmpty(noticeList)}">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${nTotCount.first} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/search(pPage=${pTotCount.page}, nPage=${nTotCount.page - 1}, iPage=${iTotCount.page}, keyword=${keyword})}">‹</a>
+                </li>
+                <li class="page-item"
+                    th:each="i : ${#numbers.sequence(
+                        T(java.lang.Math).max(1, nTotCount.page - 2),
+                        T(java.lang.Math).min(nTotCount.totalPages, nTotCount.page + 2)
+                    )}"
+                    th:classappend="${i == nTotCount.page} ? 'active'">
+                    <a class="page-link"
+                       th:href="@{/search(pPage=${pTotCount.page}, nPage=${i}, iPage=${iTotCount.page}, keyword=${keyword})}"
+                       th:text="${i}"></a>
+                </li>
+                <li class="page-item" th:classappend="${nTotCount.last} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/search(pPage=${pTotCount.page}, nPage=${nTotCount.page + 1}, iPage=${iTotCount.page}, keyword=${keyword})}">›</a>
+                </li>
+            </ul>
         </div>
 
         <div class="empty-box" th:if="${noticeList == null or #lists.isEmpty(noticeList)}">
@@ -104,6 +152,30 @@
             </table>
         </div>
 
+        <!-- 문의 페이징 -->
+        <div class="mt-4 pb-4" th:if="${inquiryList != null and !#lists.isEmpty(inquiryList)}">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${iTotCount.first} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/search(pPage=${pTotCount.page}, nPage=${nTotCount.page}, iPage=${iTotCount.page - 1}, keyword=${keyword})}">‹</a>
+                </li>
+                <li class="page-item"
+                    th:each="i : ${#numbers.sequence(
+                        T(java.lang.Math).max(1, iTotCount.page - 2),
+                        T(java.lang.Math).min(iTotCount.totalPages, iTotCount.page + 2)
+                    )}"
+                    th:classappend="${i == iTotCount.page} ? 'active'">
+                    <a class="page-link"
+                       th:href="@{/search(pPage=${pTotCount.page}, nPage=${nTotCount.page}, iPage=${i}, keyword=${keyword})}"
+                       th:text="${i}"></a>
+                </li>
+                <li class="page-item" th:classappend="${iTotCount.last} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/search(pPage=${pTotCount.page}, nPage=${nTotCount.page}, iPage=${iTotCount.page + 1}, keyword=${keyword})}">›</a>
+                </li>
+            </ul>
+        </div>
+
         <div class="empty-box" th:if="${inquiryList == null or #lists.isEmpty(inquiryList)}">
             검색된 문의가 없습니다
         </div>
@@ -136,6 +208,15 @@
 .inquiry-title{text-decoration:none;font-weight:500;color:#333;}
 .inquiry-title:hover{color:#0d6efd;}
 .empty-box{background:white;padding:40px;border-radius:12px;text-align:center;color:#888;box-shadow:0 4px 15px rgba(0,0,0,0.05);}
+
+/* 페이징 가로 정렬 */
+.pagination {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.page-item { margin: 0 4px; }
 </style>
 
 </body>

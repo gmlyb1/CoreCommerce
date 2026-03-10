@@ -42,8 +42,13 @@ public interface InquiryRepository {
 
 	List<Inquiry> findByMemberIdPaged(String email,@Param("offset") int offset, @Param("size") int size);
 
-	List<Inquiry> searchByKeyword(String keyword);
+	List<Inquiry> searchByKeyword(String keyword,@Param("offset")int offset, @Param("size")int size);
 
-	List<Inquiry> searchByKeywordAndMember(String keyword, String email);
+	List<Inquiry> searchByKeywordAndMember(String keyword, String email,@Param("offset")int offset, @Param("size")int size);
+
+	int iTotCount(String keyword);
+
+	int iTotCountForMember(String keyword, String email);
+
 
 }

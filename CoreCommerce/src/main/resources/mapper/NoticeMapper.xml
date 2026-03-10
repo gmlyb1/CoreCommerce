@@ -90,5 +90,12 @@
 	    WHERE title LIKE CONCAT('%', #{keyword}, '%')
 	       OR content LIKE CONCAT('%', #{keyword}, '%')
 	    ORDER BY created_at DESC
+	    LIMIT #{size} OFFSET #{offset}
 	</select>
+	
+	<select id="nTotCnt" resultType="int">
+		SELECT COUNT(*) FROM notice
+		WHERE title LIKE CONCAT('%', #{keyword}, '%')
+       	OR content LIKE CONCAT('%', #{keyword}, '%')
+	</select> 
 </mapper>

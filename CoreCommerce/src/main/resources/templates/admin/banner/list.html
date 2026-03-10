@@ -29,18 +29,17 @@
                 <table class="table table-hover align-middle text-center">
 
                     <thead class="table-light">
-                    <tr>
-                        <th>ID</th>
-                        <th style="width:150px;">이미지</th>
-                        <th>제목</th>
-                        <th>순서</th>
-                        <th>사용 여부</th>
-                        <th>관리</th>
-                    </tr>
+	                    <tr>
+	                        <th>ID</th>
+	                        <th style="width:150px;">이미지</th>
+	                        <th>제목</th>
+	                        <th>순서</th>
+	                        <th>사용 여부</th>
+	                        <th>관리</th>
+	                    </tr>
                     </thead>
 
                     <tbody>
-
                     <!-- 데이터 없음 -->
                     <tr th:if="${bannerList == null or #lists.isEmpty(bannerList)}">
                         <td colspan="6" class="py-5 text-muted">
