@@ -56,7 +56,7 @@
         WHERE id = #{id}
     </update>
     
-    <select id="findClosedRoomsBefore" resultType="ChatRoom">
+    <select id="findClosedRoomsBefore" resultType="com.CoreCommerce.domain.ChatRoom">
 	    SELECT *
 	    FROM chat_room
 	    WHERE status = 'CLOSE'
