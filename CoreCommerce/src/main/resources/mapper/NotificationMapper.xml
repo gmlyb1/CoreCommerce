@@ -13,7 +13,14 @@
 
      <!-- 전체 알림 조회 -->
     <select id="findByUserIdOrderByCreatedAtDesc" resultType="com.CoreCommerce.domain.Notification">
-        SELECT * 
+        SELECT 
+        	 id as id
+        	,user_id as userId
+        	,type as type
+        	,content as content 
+        	,link as link
+        	,created_at as createdAt
+        	,is_read as isRead
         FROM notification
         WHERE user_id = #{userId}
         ORDER BY created_at DESC
@@ -21,7 +28,14 @@
 
     <!-- 타입별 알림 조회 -->
     <select id="findByUserIdAndTypeOrderByCreatedAtDesc" resultType="com.CoreCommerce.domain.Notification">
-        SELECT * 
+        SELECT 
+             id as id
+        	,user_id as userId
+        	,type as type
+        	,content as content 
+        	,link as link
+        	,created_at as createdAt
+        	,is_read as isRead
         FROM notification
         WHERE user_id = #{userId} AND type = #{type}
         ORDER BY created_at DESC

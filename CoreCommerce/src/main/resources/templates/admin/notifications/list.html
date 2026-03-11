@@ -54,19 +54,28 @@
         <ul class="list-group list-group-flush">
 
             <li th:each="note : ${notifications}"
-                class="list-group-item d-flex justify-content-between align-items-center">
+                th:class="'list-group-item d-flex justify-content-between align-items-center ' + (${note.isRead} ? 'read-note' : 'unread-note')">
 
-                <span>
-                    <strong class="badge bg-primary me-2"
-                            th:text="${note.type}"></strong>
+                <span class="d-flex align-items-center">
+
+                    <strong class="badge me-2"
+                            th:classappend="${note.isRead} ? 'bg-secondary' : 'bg-danger'"
+                            th:text="${note.type}">
+                    </strong>
 
                     <a th:href="@{${note.link}}"
                        th:text="${note.content}"
-                       class="text-decoration-none text-dark"></a>
+                       class="text-decoration-none notification-link">
+                    </a>
+
+                    <!-- 안읽은 표시 -->
+                    <span th:if="${!note.isRead}" class="unread-dot"></span>
+
                 </span>
 
-                <small class="text-muted"
-                       th:text="${#dates.format(note.createdAt,'yyyy-MM-dd HH:mm')}"></small>
+               <small class="text-muted"
+				       th:text="${#temporals.format(note.createdAt,'yyyy-MM-dd HH:mm')}">
+				</small>
 
             </li>
 
@@ -87,14 +96,14 @@
 
 <style>
 
-/* 메뉴 영역 */
+/* ================= 메뉴 ================= */
+
 .notification-menu{
     display:grid;
     grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
     gap:18px;
 }
 
-/* 카드 */
 .menu-card{
 
     background:white;
@@ -110,26 +119,22 @@
     transition: all 0.25s ease;
 }
 
-/* 아이콘 */
 .menu-icon{
     font-size:32px;
     margin-bottom:8px;
 }
 
-/* 제목 */
 .menu-title{
     font-weight:600;
     font-size:15px;
 }
 
-/* hover */
 .menu-card:hover{
     transform:translateY(-4px);
     box-shadow:0 8px 20px rgba(0,0,0,0.08);
     border-color:#0d6efd;
 }
 
-/* 활성 메뉴 */
 .menu-card.active{
 
     background:#0d6efd;
@@ -140,6 +145,50 @@
 
 .menu-card.active .menu-icon{
     transform:scale(1.1);
+}
+
+
+/* ================= 알림 스타일 ================= */
+
+/* 안읽은 알림 */
+.unread-note{
+
+    background:#eef5ff;
+    font-weight:600;
+
+}
+
+/* 읽은 알림 */
+.read-note{
+
+    background:white;
+    color:#888;
+
+}
+
+/* 읽은 알림 링크 */
+.read-note .notification-link{
+    color:#888;
+}
+
+/* hover */
+.unread-note:hover{
+    background:#e3efff;
+}
+
+
+/* 안읽은 빨간 점 */
+.unread-dot{
+
+    width:8px;
+    height:8px;
+    background:#ff3b3b;
+
+    border-radius:50%;
+
+    display:inline-block;
+    margin-left:6px;
+
 }
 
 </style>

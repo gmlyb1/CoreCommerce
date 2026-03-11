@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.CoreCommerce.domain.Member;
 import com.CoreCommerce.domain.Notification;
 import com.CoreCommerce.repository.NotificationRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,13 +41,11 @@ public class NotificationController {
 
     	    List<Notification> notifications;
     	    if (type != null && !type.isEmpty()) {
-    	        notifications = notificationRepository.findByUserIdAndTypeOrderByCreatedAtDesc(
-    	            loginUser.getEmail(), type
-    	        );
+    	        notifications = notificationRepository.findByUserIdAndTypeOrderByCreatedAtDesc(loginUser.getEmail(), type);
     	    } else {
     	        notifications = notificationRepository.findByUserIdOrderByCreatedAtDesc(loginUser.getEmail());
     	    }
-
+    	    
     	    model.addAttribute("notifications", notifications);
     	    model.addAttribute("currentType", type); // UI에서 현재 선택된 버튼 표시용
 
