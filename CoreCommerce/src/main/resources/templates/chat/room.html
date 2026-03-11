@@ -53,6 +53,7 @@ var roomId = [[${room.id}]];
 var customerId = [[${customerId}]];
 //var loginEmail = '[[${loginUser.email}]]';
 var loginEmail = '[[${loginUser.email}]]'.replace(/"/g, '');
+var loginName = '[[${loginUser.name}]]'.replace(/"/g, '');
 var loginRole = '[[${loginUser.role}]]'; // MANAGER / PRODUCTER / CUSTOMER 등
 
 var socket = new SockJS('/ws');
@@ -107,12 +108,11 @@ stompClient.connect({}, function(frame) {
     stompClient.subscribe('/topic/room/' + roomId + '/typing', function(message) {
         var data = JSON.parse(message.body);
         var typingDiv = document.getElementById("typingIndicator");
-
         var me = (loginRole === "MANAGER" || loginRole === "PRODUCTER") ? '관리자' : '고객';
-
+        
         if(data.sender !== loginEmail){
             if(data.typing){
-                typingDiv.innerHTML = data.displayName + "님이 입력 중...";
+                typingDiv.innerHTML = loginName + "님이 입력 중...";
             }else{
                 typingDiv.innerHTML = "";
             }
