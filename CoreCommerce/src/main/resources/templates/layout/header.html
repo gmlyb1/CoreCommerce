@@ -82,6 +82,12 @@
 						    </a>
 						</li>
 
+						<li th:if="${loginUser.role == 'MANAGER' or loginUser.role == 'PRODUCTER'}">
+						    <a class="dropdown-item" href="/admin/chat/rooms">
+						        💬 관리자 채팅방
+						    </a>
+						</li>
+
                         <li>
                             <a class="dropdown-item" href="/wishlist/list">
                                 ❤️ 찜 목록
@@ -221,6 +227,12 @@
                         상품
                     </a>
                     
+                    <a href="/chat/rooms"
+                       th:classappend="${#httpServletRequest.requestURI.startsWith('/chat/')} ? 'active-line'"
+                       class="nav-link flex-fill py-3">
+                        채팅방
+                    </a>
+                    
                      <a href="/order/mypage/my-orders"
                        th:classappend="${#httpServletRequest.requestURI.startsWith('/order/mypage')} ? 'active-line'"
                        th:if="${loginUser != null}"
@@ -346,5 +358,7 @@ function validateSearch(){
     margin-top:4px;
     font-size:12px;
 }
+
+
 
 </style>

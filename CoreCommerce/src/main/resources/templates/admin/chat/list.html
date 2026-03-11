@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout/head :: head"></head>
+<body class="bg-light">
+
+<div th:replace="layout/header :: header"></div>
+
+<div class="container py-5" style="max-width:1200px;">
+
+    <h3 class="fw-bold mb-4">💼 전체 채팅방 목록</h3>
+
+    <div class="card shadow-sm rounded-4 border-0">
+        <div class="card-body p-4">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>고객 ID</th>
+                            <th>상태</th>
+                            <th>관리</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${rooms == null or #lists.isEmpty(rooms)}">
+                            <td colspan="4" class="py-5 text-muted">📭 채팅방이 없습니다.</td>
+                        </tr>
+                        <tr th:each="room : ${rooms}">
+                            <td th:text="${room.id}"></td>
+                            <td th:text="${room.customerId}"></td>
+                            <td>
+                                <span th:text="${room.status}" class="badge bg-secondary"></span>
+                            </td>
+                            <td>
+                                <a th:href="@{/chat/room(roomId=${room.id})}" 
+                                   class="btn btn-sm btn-primary rounded-3">
+                                   입장
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div th:replace="layout/footer :: footer"></div>
+
+</body>
+</html>

@@ -251,9 +251,6 @@
 
         try {
         	const response = await axios.post('/order/create', selectedIds);
-
-        	console.log("response.data:", response.data);
-
         	const orderId = response.data;
 
         	alert('주문이 생성되었습니다.');

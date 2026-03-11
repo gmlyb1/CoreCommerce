@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout/head :: head"></head>
+
+<body class="bg-light">
+
+<!-- HEADER -->
+<div th:replace="layout/header :: header"></div>
+
+<div class="container py-5" style="max-width:1200px;">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold">💬 내 채팅방</h3>
+        <form th:action="@{/chat/rooms/create}" method="post">
+            <input type="hidden" name="customerId" th:value="${customerId}" />
+            <button class="btn btn-dark px-4 rounded-3">+ 새 채팅방 만들기</button>
+        </form>
+    </div>
+
+    <div class="card shadow-sm rounded-4 border-0">
+        <div class="card-body p-4">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>고객명</th>
+                            <th>상태</th>
+                            <th>관리</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${rooms == null or #lists.isEmpty(rooms)}">
+                            <td colspan="3" class="py-5 text-muted">📭 채팅방이 없습니다.</td>
+                        </tr>
+                        <tr th:each="room : ${rooms}">
+                            <td th:text="${room.id}"></td>
+                            <td th:text="${room.customerId}"></td>
+                            <td>
+							    <span th:text="${room.status}" 
+							          th:classappend="${room.status == 'OPEN'} ? ' bg-success' : ' bg-secondary'" 
+							          class="badge">
+							    </span>
+							</td>
+                            <td>
+                                <a th:href="@{/chat/room(roomId=${room.id}, customerId=${customerId})}" 
+                                   class="btn btn-sm btn-primary rounded-3">
+                                   입장
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- FOOTER -->
+<div th:replace="layout/footer :: footer"></div>
+
+</body>
+</html>

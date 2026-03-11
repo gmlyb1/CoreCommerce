@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.CoreCommerce.repository.ChatRoomRepository">
+	
+	<!-- 1. 채팅방 생성 -->
+    <insert id="insertRoom" parameterType="com.CoreCommerce.domain.ChatRoom" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO chat_room (customer_id, manager_id, status, created_at)
+	    VALUES (#{customerId}, #{managerId}, #{status}, #{createdAt})
+	</insert>
+
+    <!-- 2. 특정 고객 채팅방 목록 -->
+    <select id="findByCustomerId" parameterType="string" resultType="com.CoreCommerce.domain.ChatRoom">
+        SELECT 
+	       	 id as id
+	       	,customer_id as customerId
+	       	,manager_id as managerId
+	       	,status as status
+	       	,created_at as createdAt
+        FROM chat_room
+        WHERE customer_id = #{customerId}
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 3. 모든 채팅방 목록 (관리자용) -->
+    <select id="findAllRooms" resultType="com.CoreCommerce.domain.ChatRoom">
+        SELECT 
+        	 id as id
+	       	,customer_id as customerId
+	       	,manager_id as managerId
+	       	,status as status
+	       	,created_at as createdAt
+        FROM chat_room
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 4. 채팅방 단건 조회 -->
+    <select id="findById" parameterType="long" resultType="com.CoreCommerce.domain.ChatRoom">
+        SELECT 
+        	 id as id
+	       	,customer_id as customerId
+	       	,manager_id as managerId
+	       	,status as status
+	       	,created_at as createdAt
+        FROM chat_room
+        WHERE id = #{id}
+    </select>
+
+    <!-- 5. 채팅방 상태 변경 -->
+    <update id="updateStatus" parameterType="com.CoreCommerce.domain.ChatRoom">
+        UPDATE chat_room
+        SET status = #{status}
+        ,   closed_at = #{closedAt}
+        WHERE id = #{id}
+    </update>
+    
+    <select id="findClosedRoomsBefore" resultType="ChatRoom">
+	    SELECT *
+	    FROM chat_room
+	    WHERE status = 'CLOSE'
+	    AND closed_at <![CDATA[ <= ]]> #{time}
+	</select>
+	
+	<delete id="deleteRoom">
+	    DELETE FROM chat_room
+	    WHERE id = #{roomId}
+	</delete>
+	
+	<select id="findByRoomId" parameterType="long" resultType="com.CoreCommerce.domain.ChatMessage">
+	    SELECT id, room_id, sender, message, created_at
+	    FROM chat_message
+	    WHERE room_id = #{roomId}
+	    ORDER BY created_at ASC
+	</select>
+	
+</mapper>
