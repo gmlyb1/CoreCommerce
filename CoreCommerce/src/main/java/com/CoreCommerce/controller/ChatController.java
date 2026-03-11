@@ -20,6 +20,10 @@ import com.CoreCommerce.repository.ChatRepository;
 import com.CoreCommerce.repository.ChatRoomRepository;
 import com.CoreCommerce.repository.MemberRepository;
 import com.CoreCommerce.repository.NotificationRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import lombok.RequiredArgsConstructor;
 
@@ -41,7 +45,18 @@ public class ChatController {
 		    chatRepository.insertMessage(message);
 		    
 		    List<Member> targets = memberRepository.findByRoles(Arrays.asList("MANAGER", "PRODUCTER"));
+		    
+		    ObjectMapper mapper = new ObjectMapper();
+		    mapper.registerModule(new JavaTimeModule());
+		    mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
+		    try {
+		        System.out.println("message:" + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(message));
+		    } catch (JsonProcessingException e) {
+		        e.printStackTrace();
+		    }
+		    
+		    
 	        for (Member target : targets) {
 	            // 3️⃣ Notification 생성
 	            Notification note = new Notification();

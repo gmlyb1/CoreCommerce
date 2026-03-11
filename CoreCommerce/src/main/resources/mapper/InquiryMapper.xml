@@ -89,7 +89,7 @@
 	</select>
 
     <!-- 문의 등록 -->
-    <insert id="saveInquiry" parameterType="com.CoreCommerce.domain.Inquiry">
+    <insert id="saveInquiry" parameterType="com.CoreCommerce.domain.Inquiry" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO inquiry (member_id, title, content)
         VALUES (#{memberId}, #{title}, #{content})
     </insert>

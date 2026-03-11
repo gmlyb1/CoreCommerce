@@ -51,112 +51,105 @@
 
 var roomId = [[${room.id}]];
 var customerId = [[${customerId}]];
+//var loginEmail = '[[${loginUser.email}]]';
+var loginEmail = '[[${loginUser.email}]]'.replace(/"/g, '');
+var loginRole = '[[${loginUser.role}]]'; // MANAGER / PRODUCTER / CUSTOMER 등
 
 var socket = new SockJS('/ws');
 var stompClient = Stomp.over(socket);
 
-var loginRole = [[${loginUser.role}]]; 
-var loginEmail = '[[${loginUser.email}]]';
-
 stompClient.connect({}, function(frame) {
-    
-	
-	console.log('roomId:', roomId);
-	
-	 // 1️⃣ 기존 메시지 불러오기
+
+    console.log('roomId:', roomId);
+
+    // 1️⃣ 기존 메시지 불러오기
     fetch('/chat/room/messages?roomId=' + roomId)
     .then(response => response.json())
     .then(messages => {
         var chatArea = document.getElementById("chatArea");
-        chatArea.innerHTML = ""; // 초기화
+        chatArea.innerHTML = "";
         messages.forEach(msg => {
             var div = document.createElement("div");
             div.style.marginBottom = "5px";
-            div.textContent = msg.sender + " : " + msg.message;
+            // 화면에 표시할 이름
+            var displayName = (msg.sender === loginEmail) 
+                              ? ((loginRole === "MANAGER" || loginRole === "PRODUCTER") ? "관리자" : "고객") 
+                              : msg.displayName || "상대";
+            div.textContent = displayName + " : " + msg.message;
             chatArea.appendChild(div);
         });
         chatArea.scrollTop = chatArea.scrollHeight;
     });
-	
-	// =========================
+
+    // =========================
     // 채팅 메시지 구독
     // =========================
     stompClient.subscribe('/topic/room/' + roomId, function(message) {
-
         var msg = JSON.parse(message.body);
         var chatArea = document.getElementById("chatArea");
 
         var div = document.createElement("div");
         div.style.marginBottom = "5px";
-        div.textContent = msg.sender + " : " + msg.message;
+        // 화면 표시용 이름
+        var displayName = (msg.sender === loginEmail) 
+                          ? ((loginRole === "MANAGER" || loginRole === "PRODUCTER") ? "관리자" : "고객") 
+                          : msg.displayName || "상대";
+
+        div.textContent = displayName + " : " + msg.message;
 
         chatArea.appendChild(div);
-
         chatArea.scrollTop = chatArea.scrollHeight;
-
     });
-
 
     // =========================
     // typing 표시 구독
     // =========================
     stompClient.subscribe('/topic/room/' + roomId + '/typing', function(message) {
-
         var data = JSON.parse(message.body);
         var typingDiv = document.getElementById("typingIndicator");
 
-        var me = customerId != null ? '고객' : '관리자';
+        var me = (loginRole === "MANAGER" || loginRole === "PRODUCTER") ? '관리자' : '고객';
 
-        if(data.sender !== me){
-
+        if(data.sender !== loginEmail){
             if(data.typing){
-                typingDiv.innerHTML = data.sender + "님이 입력 중...";
+                typingDiv.innerHTML = data.displayName + "님이 입력 중...";
             }else{
                 typingDiv.innerHTML = "";
             }
-
         }
-
     });
 
 });
-
 
 // =========================
 // 메시지 전송
 // =========================
 document.getElementById("sendBtn").addEventListener("click", function() {
-
     var msgInput = document.getElementById("messageInput");
     var msgContent = msgInput.value.trim();
 
     if(msgContent.length > 0){
-		var sender = (loginRole === "MANAGER" || loginRole === "PRODUCTER") ? "관리자" : "고객";
+        var displayName = (loginRole === "MANAGER" || loginRole === "PRODUCTER") ? "관리자" : "고객";
         stompClient.send("/app/chat.sendMessage", {}, JSON.stringify({
             roomId: roomId,
-            sender: sender,
+            sender: loginEmail,      // DB 저장용
+            displayName: displayName, // 화면 표시용
             message: msgContent
         }));
 
         msgInput.value = "";
         document.getElementById("typingIndicator").innerHTML = "";
-
     }
-
 });
-
 
 // =========================
 // 엔터 전송
 // =========================
 document.getElementById("messageInput").addEventListener("keypress", function(e){
-
     if(e.key === "Enter"){
         document.getElementById("sendBtn").click();
     }
-
 });
-
 
 // =========================
 // typing 이벤트
@@ -164,34 +157,32 @@ document.getElementById("messageInput").addEventListener("keypress", function(e)
 var typingTimeout;
 
 document.getElementById("messageInput").addEventListener("keyup", function(){
+    var displayName = (loginRole === "MANAGER" || loginRole === "PRODUCTER") ? "관리자" : "고객";
+
     stompClient.send("/app/chat.typing", {}, JSON.stringify({
         roomId: roomId,
-        sender: customerId != null ? "고객" : "관리자",
+        sender: loginEmail,      // DB 저장용
+        displayName: displayName, // 화면 표시용
         typing: true
     }));
 
     clearTimeout(typingTimeout);
 
     typingTimeout = setTimeout(function(){
-
         stompClient.send("/app/chat.typing", {}, JSON.stringify({
             roomId: roomId,
-            sender: customerId != null ? "고객" : "관리자",
+            sender: loginEmail,
+            displayName: displayName,
             typing: false
         }));
-
     }, 1000);
-
 });
-
 
 // =========================
 // 채팅방 나가기
 // =========================
 document.getElementById("leaveBtn").addEventListener("click", function(){
-
     if(confirm("채팅방을 나가면 대화가 종료됩니다. 나가시겠습니까?")){
-
         fetch("/chat/room/leave", {
             method: "POST",
             headers:{
@@ -204,9 +195,7 @@ document.getElementById("leaveBtn").addEventListener("click", function(){
                 window.location.href = response.url;
             }
         });
-
     }
-
 });
 
 /*]]>*/

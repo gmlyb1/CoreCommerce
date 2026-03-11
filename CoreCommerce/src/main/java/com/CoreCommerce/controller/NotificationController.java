@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.CoreCommerce.domain.Member;
 import com.CoreCommerce.domain.Notification;
+import com.CoreCommerce.domain.Pagination;
 import com.CoreCommerce.repository.NotificationRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,7 +34,7 @@ public class NotificationController {
 
     	 	int size = 10;
     	 	int offset = (page - 1 ) * size;
-    	 
+    	 	int totalCount;
     	    if (loginUser == null || 
     	        !(loginUser.getRole().equals("MANAGER") || loginUser.getRole().equals("PRODUCTER"))) {
     	        return "redirect:/login";
@@ -41,14 +42,16 @@ public class NotificationController {
 
     	    List<Notification> notifications;
     	    if (type != null && !type.isEmpty()) {
-    	        notifications = notificationRepository.findByUserIdAndTypeOrderByCreatedAtDesc(loginUser.getEmail(), type);
+    	        notifications = notificationRepository.findByUserIdAndTypeOrderByCreatedAtDesc(loginUser.getEmail(), type,size,offset);
+    	        totalCount = notificationRepository.findByUserIdAndTypeCount(loginUser.getEmail(),type);
     	    } else {
-    	        notifications = notificationRepository.findByUserIdOrderByCreatedAtDesc(loginUser.getEmail());
+    	        notifications = notificationRepository.findByUserIdOrderByCreatedAtDesc(loginUser.getEmail(),size,offset);
+    	        totalCount = notificationRepository.findByUserIdCount(loginUser.getEmail());
     	    }
     	    
     	    model.addAttribute("notifications", notifications);
     	    model.addAttribute("currentType", type); // UI에서 현재 선택된 버튼 표시용
-
+    	    model.addAttribute("pagination", new Pagination(page, size, totalCount));
     	    // 읽음 처리 (전체 or 필터링 타입)
     	    notificationRepository.markAsReadByType(loginUser.getEmail(), type);
 

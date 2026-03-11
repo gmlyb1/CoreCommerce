@@ -68,19 +68,101 @@ public class PaymentController {
         return "payment/payment";
     }
 
+//	@GetMapping("/success")
+//	public String success(@RequestParam String paymentKey,
+//	                      @RequestParam String orderId,
+//	                      @RequestParam int amount,
+//	                      @RequestParam(required = false) Long memberCouponId,
+//	                      Model model,
+//	                      HttpSession session) {
+//
+//		Member loginUser = (Member) session.getAttribute("loginUser");
+//	    String secretKey = "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6";
+//
+//	    String encodedKey = Base64.getEncoder()
+//	            .encodeToString((secretKey + ":").getBytes(StandardCharsets.UTF_8));
+//
+//	    HttpHeaders headers = new HttpHeaders();
+//	    headers.set("Authorization", "Basic " + encodedKey);
+//	    headers.setContentType(MediaType.APPLICATION_JSON);
+//
+//	    Map<String, Object> body = new HashMap<>();
+//	    body.put("paymentKey", paymentKey);
+//	    body.put("orderId", orderId);
+//	    body.put("amount", amount);
+//
+//	    HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
+//
+//	    RestTemplate restTemplate = new RestTemplate();
+//	    restTemplate.postForEntity(
+//	            "https://api.tosspayments.com/v1/payments/confirm",
+//	            request,
+//	            String.class
+//	    );
+//	    
+//	    Long realOrderId = Long.parseLong(orderId.replace("ORD_", ""));
+//	    
+//	    orderService.completeOrder(realOrderId);
+//
+//	    Order order = orderService.getOrder(realOrderId);
+//	    
+//	    Notification note = new Notification();
+//	    note.setUserId(loginUser.getEmail());
+//	    note.setType("ORDER");
+//	    note.setContent("주문 #" + order.getId() + "결제가 완료되었습니다.");
+//	    note.setLink("/order/mypage/"+order.getEmail());
+//	    note.setCreatedAt(LocalDateTime.now());
+//	    note.setRead(false);
+//	    notificationRepository.insert(note);
+//	    
+//	    int discount = 0;
+//	    int finalPrice = order.getTotalPrice();
+//	    
+//	    if(memberCouponId != null) {
+//	    	discount = couponService.calculateDiscount(memberCouponId, order.getTotalPrice());
+//	    	if(discount < 0) {
+//	    		discount = 0;
+//	    	}
+//	    	
+//	    	finalPrice = order.getTotalPrice() - discount;
+//	    	if(finalPrice < 0) {
+//	    		finalPrice = 0;
+//	    	}
+//	    	
+//	    	couponService.useCoupon(memberCouponId, realOrderId);
+//	    }
+//	    
+//	    orderService.updateFinalPrice(realOrderId,finalPrice);
+//	    
+//	    // ✅ 주문 조회 후 모델에 추가
+//	    model.addAttribute("order", order);
+//
+//	    return "payment/success";
+//	}
+	
 	@GetMapping("/success")
 	public String success(@RequestParam String paymentKey,
 	                      @RequestParam String orderId,
 	                      @RequestParam int amount,
-	                      @RequestParam(required = false) Long memberCouponId,
+	                      @RequestParam(required = false) String memberCouponId, // String으로 받음
 	                      Model model,
 	                      HttpSession session) {
 
-		Member loginUser = (Member) session.getAttribute("loginUser");
-	    String secretKey = "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6";
+	    Member loginUser = (Member) session.getAttribute("loginUser");
 
-	    String encodedKey = Base64.getEncoder()
-	            .encodeToString((secretKey + ":").getBytes(StandardCharsets.UTF_8));
+	    // 1️⃣ memberCouponId를 Long으로 안전하게 변환
+	    Long couponId = null;
+	    if(memberCouponId != null && !memberCouponId.equals("null") && !memberCouponId.isEmpty()) {
+	        try {
+	            couponId = Long.valueOf(memberCouponId);
+	        } catch(NumberFormatException e) {
+	            couponId = null; // 안전하게 null 처리
+	        }
+	    }
+
+	    // 2️⃣ 결제 확인
+	    String secretKey = "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6";
+	    String encodedKey = Base64.getEncoder().encodeToString((secretKey + ":").getBytes(StandardCharsets.UTF_8));
 
 	    HttpHeaders headers = new HttpHeaders();
 	    headers.set("Authorization", "Basic " + encodedKey);
@@ -92,49 +174,40 @@ public class PaymentController {
 	    body.put("amount", amount);
 
 	    HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
-
 	    RestTemplate restTemplate = new RestTemplate();
-	    restTemplate.postForEntity(
-	            "https://api.tosspayments.com/v1/payments/confirm",
-	            request,
-	            String.class
-	    );
-	    
-	    Long realOrderId = Long.parseLong(orderId.replace("ORD_", ""));
-	    
-	    orderService.completeOrder(realOrderId);
+	    restTemplate.postForEntity("https://api.tosspayments.com/v1/payments/confirm", request, String.class);
 
+	    // 3️⃣ 주문 ID 처리
+	    Long realOrderId = Long.parseLong(orderId.replace("ORD_", ""));
+	    orderService.completeOrder(realOrderId);
 	    Order order = orderService.getOrder(realOrderId);
 	    
+	    // 4️⃣ 알림
 	    Notification note = new Notification();
 	    note.setUserId(loginUser.getEmail());
 	    note.setType("ORDER");
-	    note.setContent("주문 #" + order.getId() + "결제가 완료되었습니다.");
-	    note.setLink("/order/mypage/"+order.getId());
+	    note.setContent("주문 #" + order.getId() + " 결제가 완료되었습니다.");
+	    note.setLink("/order/mypage/" + order.getId());
 	    note.setCreatedAt(LocalDateTime.now());
 	    note.setRead(false);
 	    notificationRepository.insert(note);
-	    
+
+	    // 5️⃣ 쿠폰 적용
 	    int discount = 0;
 	    int finalPrice = order.getTotalPrice();
-	    
-	    if(memberCouponId != null) {
-	    	discount = couponService.calculateDiscount(memberCouponId, order.getTotalPrice());
-	    	if(discount < 0) {
-	    		discount = 0;
-	    	}
-	    	
-	    	finalPrice = order.getTotalPrice() - discount;
-	    	if(finalPrice < 0) {
-	    		finalPrice = 0;
-	    	}
-	    	
-	    	couponService.useCoupon(memberCouponId, realOrderId);
+	    if(couponId != null) {
+	        discount = couponService.calculateDiscount(couponId, order.getTotalPrice());
+	        if(discount < 0) discount = 0;
+
+	        finalPrice = order.getTotalPrice() - discount;
+	        if(finalPrice < 0) finalPrice = 0;
+
+	        couponService.useCoupon(couponId, realOrderId);
 	    }
-	    
-	    orderService.updateFinalPrice(realOrderId,finalPrice);
-	    
-	    // ✅ 주문 조회 후 모델에 추가
+
+	    orderService.updateFinalPrice(realOrderId, finalPrice);
+
+	    // 6️⃣ 모델 추가
 	    model.addAttribute("order", order);
 
 	    return "payment/success";

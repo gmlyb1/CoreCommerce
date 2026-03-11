@@ -24,6 +24,7 @@
         FROM notification
         WHERE user_id = #{userId}
         ORDER BY created_at DESC
+        LIMIT #{size} OFFSET #{offset}
     </select>
 
     <!-- 타입별 알림 조회 -->
@@ -39,6 +40,7 @@
         FROM notification
         WHERE user_id = #{userId} AND type = #{type}
         ORDER BY created_at DESC
+        LIMIT #{size} OFFSET #{offset}
     </select>
 
     <!-- 읽음 처리 -->
@@ -50,5 +52,19 @@
             AND type = #{type}
         </if>
     </update>
+    
+    <select id="findByUserIdAndTypeCount" resultType="int">
+    	 SELECT 
+            count(*)
+        FROM notification
+        WHERE user_id = #{userId} AND type = #{type}
+    </select>
+    
+      <select id="findByUserIdCount" resultType="int">
+    	 SELECT 
+        	 count(*)
+        FROM notification
+        WHERE user_id = #{userId}
+       </select>
 	
 </mapper>

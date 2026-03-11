@@ -91,22 +91,21 @@ public class InquiryController {
 	
 	     Member loginUser = (Member) session.getAttribute("loginUser");
 	     inquiry.setMemberId(loginUser.getEmail());
+	     inquiryRepository.saveInquiry(inquiry);
+
 	     List<Member> targets = memberRepository.findByRoles(Arrays.asList("MANAGER","PRODUCTER"));
 	     for(Member target : targets){
-
-	         Notification note = new Notification();
-	         note.setUserId(target.getEmail());
-	         note.setType("INQUIRY");
-	         note.setContent("새로운 1:1 문의가 등록되었습니다.");
-	         note.setLink("/inquiry/"+inquiry.getId());
-	         note.setCreatedAt(LocalDateTime.now());
-	         note.setRead(false);
-
-	         notificationRepository.insert(note);
+	    	 
+	    	 Notification note = new Notification();
+	    	 note.setUserId(target.getEmail());
+	    	 note.setType("INQUIRY");
+	    	 note.setContent("새로운 1:1 문의가 등록되었습니다.");
+	    	 note.setLink("/inquiry/"+inquiry.getId());
+	    	 note.setCreatedAt(LocalDateTime.now());
+	    	 note.setRead(false);
+	    	 
+	    	 notificationRepository.insert(note);
 	     }
-	     
-	     
-	     inquiryRepository.saveInquiry(inquiry);
 	
 	     return "redirect:/inquiry/list";
 	 }

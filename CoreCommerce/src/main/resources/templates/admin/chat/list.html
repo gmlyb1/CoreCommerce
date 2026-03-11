@@ -30,8 +30,11 @@
                             <td th:text="${room.id}"></td>
                             <td th:text="${room.customerId}"></td>
                             <td>
-                                <span th:text="${room.status}" class="badge bg-secondary"></span>
-                            </td>
+							    <span th:text="${room.status}" 
+							          th:classappend="${room.status == 'OPEN'} ? ' bg-success' : ' bg-secondary'" 
+							          class="badge">
+							    </span>
+							</td>
                             <td>
                                 <a th:href="@{/chat/room(roomId=${room.id})}" 
                                    class="btn btn-sm btn-primary rounded-3">
