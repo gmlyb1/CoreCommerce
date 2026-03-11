@@ -1,5 +1,7 @@
 package com.CoreCommerce.controller;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -16,8 +18,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.CoreCommerce.domain.Inquiry;
 import com.CoreCommerce.domain.InquiryAnswer;
 import com.CoreCommerce.domain.Member;
+import com.CoreCommerce.domain.Notification;
 import com.CoreCommerce.domain.Pagination;
 import com.CoreCommerce.repository.InquiryRepository;
+import com.CoreCommerce.repository.MemberRepository;
+import com.CoreCommerce.repository.NotificationRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -30,7 +35,12 @@ public class InquiryController {
 	
 	@Autowired
 	private InquiryRepository inquiryRepository;
+	
+	@Autowired
+	private NotificationRepository notificationRepository;
 
+	@Autowired
+	private MemberRepository memberRepository;
 	// 내 문의 목록
 	@GetMapping("/list")
 	public String inquiryList(@RequestParam(defaultValue = "1") int page,
@@ -81,7 +91,21 @@ public class InquiryController {
 	
 	     Member loginUser = (Member) session.getAttribute("loginUser");
 	     inquiry.setMemberId(loginUser.getEmail());
-	
+	     List<Member> targets = memberRepository.findByRoles(Arrays.asList("MANAGER","PRODUCTER"));
+	     for(Member target : targets){
+
+	         Notification note = new Notification();
+	         note.setUserId(target.getEmail());
+	         note.setType("INQUIRY");
+	         note.setContent("새로운 1:1 문의가 등록되었습니다.");
+	         note.setLink("/inquiry/"+inquiry.getId());
+	         note.setCreatedAt(LocalDateTime.now());
+	         note.setRead(false);
+
+	         notificationRepository.insert(note);
+	     }
+	     
+	     
 	     inquiryRepository.saveInquiry(inquiry);
 	
 	     return "redirect:/inquiry/list";

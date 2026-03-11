@@ -1,7 +1,10 @@
 package com.CoreCommerce.controller;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Base64;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +28,9 @@ import org.springframework.web.client.RestTemplate;
 
 import com.CoreCommerce.domain.Member;
 import com.CoreCommerce.domain.MemberCoupon;
+import com.CoreCommerce.domain.Notification;
 import com.CoreCommerce.domain.Order;
+import com.CoreCommerce.repository.NotificationRepository;
 import com.CoreCommerce.repository.OrderRepository;
 import com.CoreCommerce.repository.PaymentRepository;
 import com.CoreCommerce.service.CouponService;
@@ -43,8 +48,10 @@ import lombok.RequiredArgsConstructor;
 public class PaymentController {
 
 	private final PaymentRepository paymentRepository;
+	private final NotificationRepository notificationRepository;
 	private final OrderService orderService;
 	private final CouponService couponService;
+	
 	
 	@GetMapping
     public String paymentPage(HttpSession session,@RequestParam Long orderId, Model model) {
@@ -66,8 +73,10 @@ public class PaymentController {
 	                      @RequestParam String orderId,
 	                      @RequestParam int amount,
 	                      @RequestParam(required = false) Long memberCouponId,
-	                      Model model) {
+	                      Model model,
+	                      HttpSession session) {
 
+		Member loginUser = (Member) session.getAttribute("loginUser");
 	    String secretKey = "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6";
 
 	    String encodedKey = Base64.getEncoder()
@@ -96,6 +105,16 @@ public class PaymentController {
 	    orderService.completeOrder(realOrderId);
 
 	    Order order = orderService.getOrder(realOrderId);
+	    
+	    Notification note = new Notification();
+	    note.setUserId(loginUser.getEmail());
+	    note.setType("ORDER");
+	    note.setContent("주문 #" + order.getId() + "결제가 완료되었습니다.");
+	    note.setLink("/order/mypage/"+order.getId());
+	    note.setCreatedAt(LocalDateTime.now());
+	    note.setRead(false);
+	    notificationRepository.insert(note);
+	    
 	    int discount = 0;
 	    int finalPrice = order.getTotalPrice();
 	    

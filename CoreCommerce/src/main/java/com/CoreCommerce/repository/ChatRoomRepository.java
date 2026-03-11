@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.CoreCommerce.domain.ChatRoom;
+import com.CoreCommerce.domain.Member;
 
 @Mapper
 public interface ChatRoomRepository {
@@ -26,7 +27,5 @@ public interface ChatRoomRepository {
 	List<ChatRoom> findClosedRoomsBefore(LocalDateTime targetTime);
 
 	void deleteRoom(Long roomId);
-
-
 
 }

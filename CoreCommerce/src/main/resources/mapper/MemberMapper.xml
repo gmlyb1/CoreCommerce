@@ -231,5 +231,13 @@
 	
 	</select>
 
+	<select id="findByRoles" resultType="com.CoreCommerce.domain.Member">
+        SELECT *
+        FROM member
+        WHERE role IN 
+        <foreach item="role" collection="list" open="(" separator="," close=")">
+            #{role}
+        </foreach>
+    </select>
 
 </mapper>

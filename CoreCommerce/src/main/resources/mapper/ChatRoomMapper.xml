@@ -75,4 +75,11 @@
 	    ORDER BY created_at ASC
 	</select>
 	
+	<select id="getTargetParticipantsWithoutRoom" parameterType="long" resultType="com.CoreCommerce.domain.Member">
+	    SELECT id, username, role
+	    FROM member
+	    WHERE role IN ('MANAGER', 'PRODUCTER')
+	      AND id != #{senderId}
+	</select>
+	
 </mapper>

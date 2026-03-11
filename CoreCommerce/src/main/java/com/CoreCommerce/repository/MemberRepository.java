@@ -40,6 +40,8 @@ public interface MemberRepository{
 
 	int findAllForTotalCount();
 
+	List<Member> findByRoles(List<String> asList);
+
 
 
 }

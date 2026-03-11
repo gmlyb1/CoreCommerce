@@ -65,4 +65,8 @@ public class MemberService {
 		return memberRepository.findAllForTotalCount();
 	}
 	
+	public List<Member> findByRoles(List<String> asList) {
+		return memberRepository.findByRoles(asList);
+	}
+	
 }

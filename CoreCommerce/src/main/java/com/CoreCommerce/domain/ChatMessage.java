@@ -21,4 +21,5 @@ public class ChatMessage {
 	private String sender; // CUSTOMER / MANAGER
 	private String message;
 	private LocalDateTime createdAt;
+	private String type;
 }

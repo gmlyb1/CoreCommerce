@@ -229,7 +229,8 @@
                     
                     <a href="/chat/rooms"
                        th:classappend="${#httpServletRequest.requestURI.startsWith('/chat/')} ? 'active-line'"
-                       class="nav-link flex-fill py-3">
+                       class="nav-link flex-fill py-3"
+                       th:if="${loginUser != null}">
                         채팅방
                     </a>
                     
@@ -258,6 +259,21 @@
                        class="nav-link flex-fill py-3">
                         1:1문의
                     </a>
+
+                    <!-- <a href="/admin/notifications?type=INQUIRY"
+                       th:classappend="${#httpServletRequest.requestURI.startsWith('/admin/notifications')} ? 'active-line'"
+                       class="nav-link flex-fill py-3"
+                       th:if="${loginUser != null}">
+                        알림
+                    </a> -->
+                    <a th:href="${loginUser.role == 'MANAGER'} 
+					                ? @{/admin/notifications(type='INQUIRY')} 
+					                : @{/admin/notifications(type='CHAT')}"
+					   th:classappend="${#httpServletRequest.requestURI.startsWith('/admin/notifications')} ? 'active-line'"
+					   class="nav-link flex-fill py-3"
+					   th:if="${loginUser != null}">
+					    알림
+					</a>
 
                 </div>
 

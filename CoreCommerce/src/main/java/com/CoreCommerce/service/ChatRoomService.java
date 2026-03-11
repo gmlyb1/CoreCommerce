@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.CoreCommerce.domain.ChatRoom;
+import com.CoreCommerce.domain.Member;
 import com.CoreCommerce.repository.ChatRoomRepository;
 
 import lombok.RequiredArgsConstructor;
