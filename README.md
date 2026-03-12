@@ -29,7 +29,7 @@ CoreCommerce는 Spring Boot 기반으로 구현한 쇼핑몰 서비스입니다.
 - Bootstrap
 
 ### Database
-- MySQL
+- MARIADB
 
 ### DevOps
 - GitHub
