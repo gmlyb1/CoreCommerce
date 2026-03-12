@@ -72,10 +72,20 @@
             </h5>
 
             <!-- 상태 -->
-            <span th:class="'status-badge status-' + ${order.status}"
-                  th:text="${order.status}">
-            </span>
-            
+            <span class="badge px-3 py-2"
+			      th:classappend="${order.status == 'READY'} ? 'bg-secondary' :
+			                      (${order.status == 'PAID'} ? 'bg-primary' :
+			                      (${order.status == 'SHIPPED'} ? 'bg-warning text-dark' :
+			                      (${order.status == 'DELIVERED'} ? 'bg-success' :
+			                      (${order.status == 'CANCELLED'} ? 'bg-danger' : 'bg-dark'))))">
+			
+			    <span th:text="${order.status == 'READY'} ? '결제대기' :
+			                   (${order.status == 'PAID'} ? '결제완료' :
+			                   (${order.status == 'SHIPPED'} ? '배송중' :
+			                   (${order.status == 'DELIVERED'} ? '배송완료' :
+			                   (${order.status == 'CANCELLED'} ? '주문취소' : ''))))">
+			    </span>
+			</span>
         </div>
 
         <hr>
@@ -94,7 +104,6 @@
                       th:text="${#temporals.format(order.createdAt,'yyyy-MM-dd HH:mm')}">
                 </span>
             </div>
-
         </div>
 
         <!-- ✅ 주문 취소 버튼 -->

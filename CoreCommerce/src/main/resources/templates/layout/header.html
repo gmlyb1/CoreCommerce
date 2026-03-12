@@ -211,7 +211,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse navbar-collapse" id="navbarCollapse">
+            <!-- <div class="collapse navbar-collapse" id="navbarCollapse">
 
                 <div class="navbar-nav w-100 text-center">
 
@@ -260,12 +260,12 @@
                         1:1문의
                     </a>
 
-                    <!-- <a href="/admin/notifications?type=INQUIRY"
+                    <a href="/admin/notifications?type=INQUIRY"
                        th:classappend="${#httpServletRequest.requestURI.startsWith('/admin/notifications')} ? 'active-line'"
                        class="nav-link flex-fill py-3"
                        th:if="${loginUser != null}">
                         알림
-                    </a> -->
+                    </a>
                     <a th:href="${loginUser.role == 'MANAGER'} 
 					                ? @{/admin/notifications(type='INQUIRY')} 
 					                : @{/admin/notifications(type='CHAT')}"
@@ -277,10 +277,107 @@
 
                 </div>
 
-            </div>
-
+            </div> -->
+            
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+			    <ul class="navbar-nav w-100 justify-content-center">
+			        <!-- 고객센터 -->
+			        <li class="nav-item dropdown px-4">
+			            <a class="nav-link dropdown-toggle py-3"
+			               data-bs-toggle="dropdown">
+			                홈
+			            </a>
+			            <ul class="dropdown-menu shadow-sm">
+			                <li>
+			                    <a href="/notice"
+			                       class="dropdown-item"
+			                       th:classappend="${#httpServletRequest.requestURI.startsWith('/notice')} ? 'active'">
+			                        공지사항
+			                    </a>
+			                </li>
+			
+			                <li>
+			                    <a href="/inquiry/list"
+			                       class="dropdown-item"
+			                       th:classappend="${#httpServletRequest.requestURI.startsWith('/inquiry')} ? 'active'">
+			                        1:1문의
+			                    </a>
+			                </li>
+			
+			            </ul>
+			        </li>
+			
+			        <!-- 커뮤니케이션 -->
+			        <li class="nav-item dropdown px-4"
+			            th:if="${loginUser != null}">
+			
+			            <a class="nav-link dropdown-toggle py-3"
+			               data-bs-toggle="dropdown">
+			                커뮤니케이션
+			            </a>
+			
+			            <ul class="dropdown-menu shadow-sm">
+			
+			                <li>
+			                    <a href="/chat/rooms"
+			                       class="dropdown-item"
+			                       th:classappend="${#httpServletRequest.requestURI.startsWith('/chat')} ? 'active'">
+			                        채팅방
+			                    </a>
+			                </li>
+			
+			                <li>
+			                    <a th:href="${loginUser.role == 'MANAGER'} 
+			                                   ? @{/admin/notifications(type='INQUIRY')} 
+			                                   : @{/admin/notifications(type='CHAT')}"
+			                       class="dropdown-item"
+			                       th:classappend="${#httpServletRequest.requestURI.startsWith('/admin/notifications')} ? 'active'">
+			                        알림
+			                    </a>
+			                </li>
+			
+			            </ul>
+			        </li>
+			
+			
+			        <!-- 쇼핑 -->
+			        <li class="nav-item dropdown px-4">
+			
+			            <a class="nav-link dropdown-toggle py-3"
+			               data-bs-toggle="dropdown">
+			                쇼핑
+			            </a>
+			
+			            <ul class="dropdown-menu shadow-sm">
+			
+			                <li>
+			                    <a href="/product/list"
+			                       class="dropdown-item"
+			                       th:classappend="${#httpServletRequest.requestURI.startsWith('/product')} ? 'active'">
+			                        상품
+			                    </a>
+			                </li>
+			
+			                <li th:if="${loginUser != null}">
+			                    <a href="/order/mypage/my-orders"
+			                       class="dropdown-item"
+			                       th:classappend="${#httpServletRequest.requestURI.startsWith('/order/mypage')} ? 'active'">
+			                        주문상품
+			                    </a>
+			                </li>
+			
+			                <li th:if="${loginUser != null}">
+			                    <a href="/coupons/list"
+			                       class="dropdown-item"
+			                       th:classappend="${#httpServletRequest.requestURI.startsWith('/coupons')} ? 'active'">
+			                        쿠폰
+			                    </a>
+			                </li>
+			            </ul>
+			        </li>
+			    </ul>
+			</div>
         </nav>
-
     </div>
 </div>
 
