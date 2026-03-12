@@ -32,7 +32,7 @@
                     </thead>
                     <tbody>
                         <tr th:if="${rooms == null or #lists.isEmpty(rooms)}">
-                            <td colspan="3" class="py-5 text-muted">📭 채팅방이 없습니다.</td>
+                            <td colspan="4" class="py-5 text-muted">📭 채팅방이 없습니다.</td>
                         </tr>
                         <tr th:each="room : ${rooms}">
                             <td th:text="${room.id}"></td>
