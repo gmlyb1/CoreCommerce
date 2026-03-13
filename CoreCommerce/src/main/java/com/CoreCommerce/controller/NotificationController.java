@@ -35,10 +35,10 @@ public class NotificationController {
     	 	int size = 10;
     	 	int offset = (page - 1 ) * size;
     	 	int totalCount;
-    	    if (loginUser == null || 
-    	        !(loginUser.getRole().equals("MANAGER") || loginUser.getRole().equals("PRODUCTER"))) {
-    	        return "redirect:/login";
-    	    }
+//    	    if (loginUser == null || 
+//    	        !(loginUser.getRole().equals("MANAGER") || loginUser.getRole().equals("PRODUCTER"))) {
+//    	        return "redirect:/login";
+//    	    }
 
     	    List<Notification> notifications;
     	    if (type != null && !type.isEmpty()) {
