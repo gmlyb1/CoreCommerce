@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>404 페이지</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 600px;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 120px;
+            color: #346aff;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #666;
+        }
+
+        .btn-home {
+            display: inline-block;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            background: linear-gradient(90deg,#346aff,#1f4ed8);
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-home:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(52,106,255,0.4);
+        }
+
+        /* 약간의 장난스러운 그림자 효과 */
+        .shadow {
+            position: relative;
+            display: inline-block;
+        }
+
+        .shadow::after {
+            content: '';
+            position: absolute;
+            width: 80%;
+            height: 10px;
+            background: rgba(0,0,0,0.1);
+            bottom: -20px;
+            left: 10%;
+            border-radius: 50%;
+            filter: blur(8px);
+        }
+
+        @media(max-width: 480px){
+            h1 { font-size: 80px; }
+            h2 { font-size: 24px; }
+            p { font-size: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="shadow">500</h1>
+	<h2>Internal Server Error</h2>
+	<p>죄송합니다. 서버 내부 오류가 발생했습니다.<br>
+	잠시 후 다시 시도하거나 관리자에게 문의해 주세요.</p>
+	<a href="/" class="btn-home">홈으로 돌아가기</a>
+</div>
+
+</body>
+</html>

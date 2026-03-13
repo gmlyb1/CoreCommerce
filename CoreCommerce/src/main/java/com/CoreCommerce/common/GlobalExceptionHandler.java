@@ -13,9 +13,9 @@ public class GlobalExceptionHandler {
         return "IllegalStateAlert";
     }
 	
-	@ExceptionHandler(RuntimeException.class)
-	public String RuntimeExceptionHandlerState(RuntimeException e , Model model) {
-		model.addAttribute("errorMessage", e.getMessage());
-		return "RuntimeAlert";
-	}
+//	@ExceptionHandler(RuntimeException.class)
+//	public String RuntimeExceptionHandlerState(RuntimeException e , Model model) {
+//		model.addAttribute("errorMessage", e.getMessage());
+//		return "RuntimeAlert";
+//	}
 }
