@@ -94,7 +94,7 @@
             <div class="col-md-6">
                 <p><strong>💰 총 결제금액</strong></p>
                 <h4 class="text-danger fw-bold"
-                    th:text="${T(java.lang.String).format('%,d원', order.totalPrice)}">
+                    th:text="${T(java.lang.String).format('%,d원', order.finalPrice)}">
                 </h4>
             </div>
 

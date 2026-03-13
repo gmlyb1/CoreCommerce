@@ -35,7 +35,7 @@
                 <div class="col-md-6">
                     <div class="text-muted small">총 결제금액</div>
                     <div class="fs-4 fw-bold text-dark"
-                         th:text="${#numbers.formatInteger(order.totalPrice,0,'COMMA')} + '원'">
+                         th:text="${#numbers.formatInteger(order.finalPrice,0,'COMMA')} + '원'">
                     </div>
                 </div>
 

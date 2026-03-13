@@ -32,7 +32,7 @@
                 <tr th:each="order, iterStat : ${orders}">
                     <td th:text="${pagination.offset + iterStat.index + 1}"></td>
 
-                    <td th:text="${#numbers.formatInteger(order.totalPrice, 0, 'COMMA')} + '원'"></td>
+                    <td th:text="${#numbers.formatInteger(order.finalPrice, 0, 'COMMA')} + '원'"></td>
 	                   <td th:switch="${order.status}">
 						    <span th:case="'READY'"
 						          class="badge bg-secondary px-3 py-2">
