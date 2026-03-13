@@ -13,6 +13,12 @@ public class GlobalExceptionHandler {
         return "IllegalStateAlert";
     }
 	
+	@ExceptionHandler(NullPointerException.class)
+    public String handleNullPointerException(NullPointerException e, Model model) {
+        model.addAttribute("errorMessage", "서버 내부 오류가 발생했습니다.");
+        return "error/500";
+    }
+	
 //	@ExceptionHandler(RuntimeException.class)
 //	public String RuntimeExceptionHandlerState(RuntimeException e , Model model) {
 //		model.addAttribute("errorMessage", e.getMessage());
