@@ -23,6 +23,7 @@ import com.CoreCommerce.domain.Pagination;
 import com.CoreCommerce.repository.InquiryRepository;
 import com.CoreCommerce.repository.MemberRepository;
 import com.CoreCommerce.repository.NotificationRepository;
+import com.CoreCommerce.service.NotificationService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -39,6 +40,9 @@ public class InquiryController {
 	@Autowired
 	private NotificationRepository notificationRepository;
 
+	@Autowired
+	private NotificationService notificationService;
+	
 	@Autowired
 	private MemberRepository memberRepository;
 	// 내 문의 목록

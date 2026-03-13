@@ -19,9 +19,9 @@ public class NotificationService {
 		return notificationRepository.findByUserIdOrderByCreatedAtDesc(userId,size,offset);
 	}
 	
-	public void markAsRead(Long userId) {
-		notificationRepository.markAsRead(userId);
-	}
+//	public void markAsRead(Long userId) {
+//		notificationRepository.markAsRead(userId);
+//	}
 	
 	public void insert(Notification note) {
 		notificationRepository.insert(note);

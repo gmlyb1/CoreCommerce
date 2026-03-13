@@ -37,6 +37,18 @@ public class JwtFilter extends OncePerRequestFilter{
 	         throws ServletException, IOException {
 
 		 
+		 String uri = request.getRequestURI();
+		 
+		 if(uri.startsWith("/ws")) {
+			    filterChain.doFilter(request, response);
+			    return;
+			}
+
+			if(uri.contains("/ws")) {
+			    filterChain.doFilter(request, response);
+			    return;
+			}
+		 
 	     String token = null;
 
 	     // 🔥 쿠키에서 token 추출

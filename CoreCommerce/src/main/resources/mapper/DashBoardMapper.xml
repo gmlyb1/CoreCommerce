@@ -20,7 +20,7 @@
     </select>
 
     <select id="totalSales" resultType="int">
-        SELECT COALESCE(SUM(total_price),0)
+        SELECT COALESCE(SUM(final_price),0)
         FROM orders
     </select>
 
@@ -47,7 +47,7 @@
 	<!-- ================= 최근 30일 일별 매출 ================= -->
 	<select id="dailySalesStats" resultType="com.CoreCommerce.domain.SalesStats">
 	    SELECT DATE(created_at) AS label,
-	           SUM(total_price) AS value
+	           SUM(final_price) AS value
 	    FROM orders
 	    WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
 	    GROUP BY DATE(created_at)
@@ -58,7 +58,7 @@
 	<!-- ================= 월별 매출 ================= -->
 	<select id="monthlySalesStats" resultType="com.CoreCommerce.domain.SalesStats">
 	    SELECT DATE_FORMAT(created_at,'%Y-%m') AS label,
-	           SUM(total_price) AS value
+	           SUM(final_price) AS value
 	    FROM orders
 	    GROUP BY label
 	    ORDER BY label

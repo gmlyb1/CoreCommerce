@@ -23,7 +23,7 @@ public class ChatCleanupScheduler {
 	 private final ChatRepository chatRepository;
 
 	    // 5분마다 실행
-	    @Scheduled(cron = "0 */5 * * * *")
+	 	@Scheduled(cron = "0 0 * * * *")
 	    public void deleteClosedChatRooms() {
 
 	    	System.out.println("채팅방 클린 시스템 작동!!!!!!!!!!!!!");

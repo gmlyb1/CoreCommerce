@@ -30,15 +30,15 @@ public class NotificationController {
 
     @GetMapping
     public String listNotifications(@RequestParam(defaultValue ="1") int page,HttpSession session, Model model,@RequestParam(required = false) String type) {
-    	 	Member loginUser = (Member) session.getAttribute("loginUser");
+    	 Member loginUser = (Member) session.getAttribute("loginUser");
 
     	 	int size = 10;
     	 	int offset = (page - 1 ) * size;
     	 	int totalCount;
-//    	    if (loginUser == null || 
-//    	        !(loginUser.getRole().equals("MANAGER") || loginUser.getRole().equals("PRODUCTER"))) {
-//    	        return "redirect:/login";
-//    	    }
+    	    if (loginUser == null || 
+    	        !(loginUser.getRole().equals("MANAGER") || loginUser.getRole().equals("PRODUCTER"))) {
+    	        return "redirect:/login";
+    	    }
 
     	    List<Notification> notifications;
     	    if (type != null && !type.isEmpty()) {
