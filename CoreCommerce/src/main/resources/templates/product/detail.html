@@ -111,10 +111,18 @@
                         🛒 장바구니 담기
                     </button>
 
-                    <button class="btn btn-outline-danger py-3"
+                    <!-- <button class="btn btn-outline-danger py-3"
                             th:onclick="'toggleWishlist(' + ${product.id} + ')'">
                         ❤️ 찜하기
-                    </button>
+                    </button> -->
+                    <button id="wishlistBtn"
+					        class="btn py-3"
+					        th:classappend="${isLiked} ? 'btn-danger' : 'btn-outline-danger'"
+					        th:onclick="'toggleWishlist(' + ${product.id} + ')'">
+					
+					    <span th:text="${isLiked} ? '❤️ 찜 취소' : '🤍 찜하기'"></span>
+					
+					</button>
 
                     <a href="/product/list"
                        class="btn btn-outline-secondary py-3">
@@ -304,7 +312,7 @@ function addToCart(productId) {
     });
 }
 
-function toggleWishlist(productId) {
+/* function toggleWishlist(productId) {
 
     fetch("/wishlist/toggle", {
         method: "POST",
@@ -328,6 +336,46 @@ function toggleWishlist(productId) {
     })
     .catch(() => alert("오류 발생"));
 
+} */
+function toggleWishlist(productId) {
+
+    const btn = document.getElementById("wishlistBtn");
+
+    fetch("/wishlist/toggle", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "productId=" + productId
+    })
+    .then(res => {
+
+        if (res.status === 401) {
+            alert("로그인이 필요합니다.");
+            location.href = "/login";
+            return;
+        }
+
+        return res.json();
+    })
+    .then(liked => {
+
+        if(liked){
+
+            btn.innerText = "❤️ 찜 취소";
+            btn.classList.remove("btn-outline-danger");
+            btn.classList.add("btn-danger");
+
+        }else{
+
+            btn.innerText = "🤍 찜하기";
+            btn.classList.remove("btn-danger");
+            btn.classList.add("btn-outline-danger");
+
+        }
+
+    })
+    .catch(() => alert("오류 발생"));
 }
 
 function toggleEdit(id) {

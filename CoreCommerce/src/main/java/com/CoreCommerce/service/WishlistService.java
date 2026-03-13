@@ -23,7 +23,7 @@ public class WishlistService {
 
 	    int exists = wishlistRepository.existsWishlist(memberId, productId);
 
-	    System.out.println("exists:"+exists);
+//	    System.out.println("exists:"+exists);
 	    
 	    if (exists > 0) {
 	        wishlistRepository.deleteWishlist(memberId, productId);

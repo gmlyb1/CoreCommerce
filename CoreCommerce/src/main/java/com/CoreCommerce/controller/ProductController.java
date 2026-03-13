@@ -29,6 +29,7 @@ import com.CoreCommerce.domain.Product;
 import com.CoreCommerce.repository.OrderRepository;
 import com.CoreCommerce.repository.ProductRepository;
 import com.CoreCommerce.repository.ReviewRepository;
+import com.CoreCommerce.repository.WishlistRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -48,6 +49,9 @@ public class ProductController {
 	
 	@Autowired
 	private final OrderRepository orderRepository;
+	
+	@Autowired
+	private final WishlistRepository wishlistRepository;
 	
 	  // application.properties에서 지정한 이미지 저장 경로
     @Value("${upload.path}")
@@ -104,6 +108,15 @@ public class ProductController {
         }
         
         model.addAttribute("canReview", canReview);
+        
+        boolean  isLiked = false;
+        
+        if(loginUser != null) {
+        	isLiked = wishlistRepository.existsWishlist(loginUser.getId(), id) > 0;
+        }
+        
+        model.addAttribute("isLiked", isLiked);
+        
         
         return "product/detail";
     }
