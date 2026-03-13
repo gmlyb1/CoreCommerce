@@ -17,6 +17,10 @@ import com.CoreCommerce.domain.Member;
 import com.CoreCommerce.domain.MemberCoupon;
 import com.CoreCommerce.domain.Pagination;
 import com.CoreCommerce.service.CouponService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import lombok.RequiredArgsConstructor;
 
@@ -43,7 +47,7 @@ public class CouponMemberController {
 	    // ✅ 전체 공개 쿠폰 조회
 	    List<Coupon> coupons = couponService.findAll(offset,size);
 	    int totalCount = couponService.countFindAll();
-
+	    
 	    // ✅ 사용자가 이미 받은 쿠폰
 	    List<MemberCoupon> myCoupons =
 	            couponService.findMemberCoupons(loginUser.getId());

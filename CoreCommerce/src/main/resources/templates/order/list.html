@@ -108,12 +108,21 @@
             </div>
 
             <!-- 금액 -->
-            <div class="col-md-3 text-md-center mt-3 mt-md-0">
+         <!--    <div class="col-md-3 text-md-center mt-3 mt-md-0">
 
                 <p class="text-muted small mb-1">결제금액</p>
 
                 <h5 class="fw-bold text-danger"
                     th:text="${T(java.lang.String).format('%,d원', order.totalPrice)}">
+                </h5>
+
+            </div> -->
+            <div class="col-md-3 text-md-center mt-3 mt-md-0">
+
+                <p class="text-muted small mb-1">결제금액</p>
+
+                <h5 class="fw-bold text-danger"
+                    th:text="${T(java.lang.String).format('%,d원', order.finalPrice)}">
                 </h5>
 
             </div>

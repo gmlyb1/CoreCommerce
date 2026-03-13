@@ -9,6 +9,9 @@
 	    <id property="id" column="id"/>
 	    <result property="memberId" column="member_id"/>
 	    <result property="totalPrice" column="total_price"/>
+	    <result property="finalPrice" column="final_price"/>
+	    <result property="discountPrice" column="discount_price"/>
+	    <result property="memberCouponId" column="member_coupon_id"/>
 	    <result property="status" column="status"/>
 	    <result property="courier" column="courier"/>
 		<result property="trackingNumber" column="tracking_number"/>
@@ -36,7 +39,17 @@
 	        resultMap="OrderMap">
 	
 	    SELECT
-	         *
+	         id
+		    ,member_id
+		    ,total_price
+		    ,discount_price
+		    ,final_price
+		    ,member_coupon_id
+		    ,status
+		    ,courier
+		    ,tracking_number
+		    ,created_at
+		    ,updated_at
 	    FROM orders
 	    WHERE id = #{id}
 	
@@ -172,8 +185,8 @@
 	
 	<update id="updateDiscount">
 	    UPDATE orders
-	    SET member_coupon_id = #{memberCouponId},
-	        discount_price = #{discountPrice},
+	    SET member_coupon_id = #{couponId},
+	        discount_price = #{discount},
 	        final_price = #{finalPrice}
 	    WHERE id = #{orderId}
 	</update>

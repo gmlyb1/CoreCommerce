@@ -190,7 +190,7 @@ document.getElementById("couponSelect")
 
 
 /* ================= 결제 ================= */
-document.getElementById("payBtn")
+/* document.getElementById("payBtn")
 .addEventListener("click", async function () {
 
     try {
@@ -210,6 +210,22 @@ document.getElementById("payBtn")
         alert("결제 요청 실패");
     }
 
+}); */
+document.getElementById("payBtn")
+.addEventListener("click", async function () {
+    try {
+        const memberCouponId = document.getElementById("couponSelect").value || "";
+
+        await widgets.requestPayment({
+            orderId: "ORD_" + rawOrderId,
+            orderName: "CoreCommerce 주문",
+            successUrl: window.location.origin + "/payment/success?memberCouponId=" + memberCouponId,
+            failUrl: window.location.origin + "/payment/fail"
+        });
+    } catch (error) {
+        console.error(error);
+        alert("결제 요청 실패");
+    }
 });
 
 /*]]>*/

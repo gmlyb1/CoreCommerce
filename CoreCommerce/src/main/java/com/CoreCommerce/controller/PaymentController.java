@@ -193,20 +193,37 @@ public class PaymentController {
 	    notificationRepository.insert(note);
 
 	    // 5️⃣ 쿠폰 적용
-	    int discount = 0;
-	    int finalPrice = order.getTotalPrice();
+//	    int discount = 0;
+//	    int finalPrice = order.getTotalPrice();
+//	    if(couponId != null) {
+//	        discount = couponService.calculateDiscount(couponId, order.getTotalPrice());
+//	        if(discount < 0) discount = 0;
+//
+//	        finalPrice = order.getTotalPrice() - discount;
+//	        if(finalPrice < 0) finalPrice = 0;
+//
+//	        couponService.useCoupon(couponId, realOrderId);
+//	    }
+	    
+	    int finalPrice = order.getTotalPrice(); // 기본값
 	    if(couponId != null) {
-	        discount = couponService.calculateDiscount(couponId, order.getTotalPrice());
+	        // DB에서 바로 쿠폰 적용 후 계산
+	        int discount = couponService.calculateDiscount(couponId, order.getTotalPrice());
 	        if(discount < 0) discount = 0;
 
 	        finalPrice = order.getTotalPrice() - discount;
 	        if(finalPrice < 0) finalPrice = 0;
 
 	        couponService.useCoupon(couponId, realOrderId);
+
+	        // DB 업데이트
+	        orderService.updateDiscount(realOrderId, couponId, discount, finalPrice);
 	    }
 
 	    orderService.updateFinalPrice(realOrderId, finalPrice);
-
+	    
+	    order = orderService.getOrder(realOrderId);
+	    
 	    // 6️⃣ 모델 추가
 	    model.addAttribute("order", order);
 

@@ -14,150 +14,124 @@
     <!-- ================= 쿠폰 반복 ================= -->
     <div th:each="coupon : ${coupons}"
          class="card shadow-sm rounded-4 p-4 mb-4 coupon-card"
-         th:classappend="${!coupon.active or (coupon.totalQuantity > 0 and coupon.totalQuantity - coupon.issuedQuantity <= 0)} ? 'coupon-disabled'">
+         th:classappend="${!coupon.coupon.active 
+                          or (coupon.coupon.totalQuantity > 0 
+                              and coupon.coupon.totalQuantity - coupon.coupon.issuedQuantity <= 0)} ? 'coupon-disabled'">
 
         <!-- ================= 쿠폰 헤더 ================= -->
         <div class="d-flex justify-content-between align-items-center mb-3">
 
             <div>
-                <h5 class="fw-bold mb-1"
-                    th:text="${coupon.name}">
-                </h5>
-
-                <span class="badge bg-dark">
-                    <span th:text="${coupon.type}"></span>
-                </span>
-
+                <h5 class="fw-bold mb-1" th:text="${coupon.coupon.name}"></h5>
+                <span class="badge bg-dark" th:text="${coupon.coupon.type}"></span>
             </div>
 
             <!-- 수량 -->
             <div class="text-end">
                 <div class="small text-muted">
-                    총 발급 :
-                    <span th:text="${coupon.totalQuantity}"></span>
+                    총 발급 : <span th:text="${coupon.coupon.totalQuantity}"></span>
                 </div>
                 <div class="small text-muted">
-                    발급 완료 :
-                    <span th:text="${coupon.issuedQuantity}"></span>
+                    발급 완료 : <span th:text="${coupon.coupon.issuedQuantity}"></span>
                 </div>
                 <div class="small text-danger fw-bold"
-                     th:if="${coupon.totalQuantity > 0}">
-                    남은 수량 :
-                    <span th:text="${coupon.totalQuantity - coupon.issuedQuantity}"></span>
+                     th:if="${coupon.coupon.totalQuantity > 0 
+                             and coupon.coupon.totalQuantity - coupon.coupon.issuedQuantity > 0}">
+                    남은 수량 : <span th:text="${coupon.coupon.totalQuantity - coupon.coupon.issuedQuantity}"></span>
                 </div>
             </div>
         </div>
 
         <!-- ================= 쿠폰 상세 ================= -->
-
         <div class="mb-2">
             💰 할인 :
-            <span class="fw-bold text-primary"
-                  th:text="${coupon.discountValue}">
-            </span>
-            <span th:if="${coupon.type == 'PERCENT'}">%</span>
-            <span th:if="${coupon.type == 'FIXED'}">원</span>
+            <span class="fw-bold text-primary" th:text="${coupon.coupon.discountValue}"></span>
+            <span th:if="${coupon.coupon.type == 'PERCENT'}">%</span>
+            <span th:if="${coupon.coupon.type == 'FIXED'}">원</span>
         </div>
 
         <div class="mb-2">
-            🛒 최소 주문 금액 :
-            <span th:text="${#numbers.formatInteger(coupon.minOrderPrice,0,'COMMA')}"></span> 원
+            🛒 최소 주문 금액 : <span th:text="${#numbers.formatInteger(coupon.coupon.minOrderPrice,0,'COMMA')}"></span> 원
         </div>
 
         <div class="mb-2">
             ⏰ 유효기간 :
-            <span th:text="${coupon.startDate}"></span>
-            ~
-            <span th:text="${coupon.endDate}"></span>
+            <span th:text="${coupon.coupon.startDate}"></span> ~ <span th:text="${coupon.coupon.endDate}"></span>
         </div>
 
+        <!-- ================= 쿠폰 상태 배지 ================= -->
         <div class="mb-3">
-            🔥 상태 :
-            <span th:if="${coupon.active}"
-                  class="badge bg-success">
+            <!-- 이미 보유하고 사용 안 함 -->
+            <span class="badge bg-secondary"
+                  th:if="${myCouponIds.contains(coupon.id) and !coupon.used}">
+                ✅ 보유중
+            </span>
+
+            <!-- 사용 완료 -->
+            <span class="badge bg-danger"
+                  th:if="${myCouponIds.contains(coupon.id) and coupon.used}">
+                ❌ 사용 완료
+            </span>
+
+            <!-- 사용 가능 -->
+            <span class="badge bg-success"
+                  th:if="${!myCouponIds.contains(coupon.id) 
+                           and coupon.coupon.active
+                           and (coupon.coupon.totalQuantity == 0 
+                                or coupon.coupon.totalQuantity - coupon.coupon.issuedQuantity > 0)}">
                 사용 가능
             </span>
-            <span th:if="${!coupon.active}"
-                  class="badge bg-danger">
+
+            <!-- 사용 불가 -->
+            <span class="badge bg-danger"
+                  th:if="${!coupon.coupon.active and !myCouponIds.contains(coupon.id)}">
                 사용 불가
+            </span>
+
+            <!-- 쿠폰 소진 -->
+            <span class="badge bg-dark"
+                  th:if="${coupon.coupon.totalQuantity > 0 
+                           and coupon.coupon.totalQuantity - coupon.coupon.issuedQuantity <= 0 
+                           and !myCouponIds.contains(coupon.id)}">
+                소진
             </span>
         </div>
 
         <!-- ================= 쿠폰 버튼 ================= -->
-
         <div class="text-end">
-
-		    <!-- 이미 보유 -->
-		    <span class="badge bg-secondary px-4 py-2 fs-6"
-			      th:if="${myCouponIds.contains(coupon.id)}">
-			    ✅ 보유중
-			</span>
-		    <!-- 쿠폰 소진 -->
-		    <button class="btn btn-dark rounded-pill px-4"
-		            th:if="${coupon.totalQuantity > 0 and coupon.totalQuantity - coupon.issuedQuantity <= 0 
-		                    and !myCouponIds.contains(coupon.id)}"
-		            disabled>
-		        🔥 쿠폰 소진
-		    </button>
-		    <!-- 사용 불가 -->
-		    <button class="btn btn-danger rounded-pill px-4"
-		            th:if="${!coupon.active and !myCouponIds.contains(coupon.id)}"
-		            disabled>
-		        ❌ 사용 불가
-		    </button>
-		    <!-- 발급 가능 -->
-		    <form method="post"
-		          th:action="@{/coupons/receive}"
-		          th:if="${coupon.active 
-		                  and (coupon.totalQuantity == 0 or coupon.totalQuantity - coupon.issuedQuantity > 0)
-		                  and !myCouponIds.contains(coupon.id)}">
-		
-		        <input type="hidden"
-		               name="couponId"
-		               th:value="${coupon.id}">
-		
-		        <button class="btn btn-primary rounded-pill px-4">
-		            🎟 쿠폰 받기
-		        </button>
-		    </form>
-		</div>
+            <!-- 발급 가능 -->
+            <form method="post" th:action="@{/coupons/receive}"
+                  th:if="${coupon.coupon.active 
+                          and (coupon.coupon.totalQuantity == 0 
+                               or coupon.coupon.totalQuantity - coupon.coupon.issuedQuantity > 0)
+                          and !myCouponIds.contains(coupon.id)}">
+                <input type="hidden" name="couponId" th:value="${coupon.id}">
+                <button class="btn btn-primary rounded-pill px-4">🎟 쿠폰 받기</button>
+            </form>
+        </div>
     </div>
 
     <!-- ================= 페이지네이션 ================= -->
     <div>
         <ul class="pagination justify-content-center">
             <!-- 이전 -->
-            <li class="page-item"
-                th:classappend="${pagination.first} ? 'disabled'">
-
-                <a class="page-link"
-                   th:href="@{/coupons/list(page=${pagination.page - 1})}">
-                    ‹
-                </a>
+            <li class="page-item" th:classappend="${pagination.first} ? 'disabled'">
+                <a class="page-link" th:href="@{/coupons/list(page=${pagination.page - 1})}">‹</a>
             </li>
 
-            <!-- 페이지 -->
+            <!-- 페이지 번호 -->
             <li class="page-item"
                 th:each="i : ${#numbers.sequence(
                     T(java.lang.Math).max(1, pagination.page - 2),
                     T(java.lang.Math).min(pagination.totalPages, pagination.page + 2)
                 )}"
                 th:classappend="${i == pagination.page} ? 'active'">
-
-                <a class="page-link"
-                   th:href="@{/coupons/list(page=${i})}"
-                   th:text="${i}">
-                </a>
+                <a class="page-link" th:href="@{/coupons/list(page=${i})}" th:text="${i}"></a>
             </li>
 
             <!-- 다음 -->
-            <li class="page-item"
-                th:classappend="${pagination.last} ? 'disabled'">
-
-                <a class="page-link"
-                   th:href="@{/coupons/list(page=${pagination.page + 1})}">
-                    ›
-                </a>
+            <li class="page-item" th:classappend="${pagination.last} ? 'disabled'">
+                <a class="page-link" th:href="@{/coupons/list(page=${pagination.page + 1})}">›</a>
             </li>
         </ul>
     </div>
@@ -166,29 +140,23 @@
 <style>
 .pagination {
     display: flex;
-    flex-direction: row;
     justify-content: center;
     gap: 5px;
 }
-
-.pagination .page-item {
-    display: inline-block;
-}
+.pagination .page-item { display: inline-block; }
 
 /* 비활성 쿠폰 */
-
-.coupon-disabled{
-    opacity:0.6;
-    background:#f5f5f5;
+.coupon-disabled {
+    opacity: 0.6;
+    background: #f5f5f5;
 }
 
-.coupon-card{
-    transition:all 0.2s;
+.coupon-card {
+    transition: all 0.2s;
 }
-
-.coupon-card:hover{
-    transform:translateY(-3px);
-    box-shadow:0 8px 25px rgba(0,0,0,0.1);
+.coupon-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
 }
 </style>
 

@@ -45,34 +45,34 @@
                 <!-- <td th:text="${coupon.id}"></td> -->
                 <td th:text="${pagination.totalCount - (pagination.offset + iterStat.index)}"></td>
 
-                <td th:text="${coupon.name}"></td>
+                <td th:text="${coupon.coupon.name}"></td>
 
-                <td th:text="${coupon.type}"></td>
+                <td th:text="${coupon.coupon.type}"></td>
 
                 <td>
-                    <span th:text="${coupon.discountValue}"></span>
+                    <span th:text="${coupon.coupon.discountValue}"></span>
                 </td>
 
                 <td>
-                    <span th:text="${#numbers.formatInteger(coupon.minOrderPrice,0,'COMMA')} + '원'"></span>
+                    <span th:text="${#numbers.formatInteger(coupon.coupon.minOrderPrice,0,'COMMA')} + '원'"></span>
                 </td>
 				<th>
-					<span th:text="${coupon.startDate}"></span>
+					<span th:text="${coupon.coupon.startDate}"></span>
 				</th>
 				<th>
-					<span th:text="${coupon.endDate}"></span>
+					<span th:text="${coupon.coupon.endDate}"></span>
 				</th>
                 <td>
-                    <span th:text="${coupon.issuedQuantity}"></span>
+                    <span th:text="${coupon.coupon.issuedQuantity}"></span>
                     /
-                    <span th:text="${coupon.totalQuantity}"></span>
+                    <span th:text="${coupon.coupon.totalQuantity}"></span>
                 </td>
 
                 <td>
                     <span class="badge px-3 py-2"
-                          th:classappend="${coupon.active} ? 'bg-success' : 'bg-danger'">
+                          th:classappend="${coupon.coupon.active} ? 'bg-success' : 'bg-danger'">
 
-                        <span th:text="${coupon.active} ? '활성' : '비활성'"></span>
+                        <span th:text="${coupon.coupon.active} ? '활성' : '비활성'"></span>
 
                     </span>
                 </td>

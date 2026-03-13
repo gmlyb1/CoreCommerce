@@ -64,11 +64,14 @@
 	</insert>
 	
 	
-	<select id="findAll" resultMap="CouponMap">
+	<select id="findAll" resultMap="MemberCouponMap">
 	    SELECT 
-	    	* 
-	    FROM coupon 
-	    ORDER BY created_at DESC
+	    	c.*
+	       ,mc.* 
+	    FROM coupon c
+	    LEFT JOIN member_coupon mc
+	    ON c.id = mc.coupon_id
+	    ORDER BY c.created_at DESC
 	    LIMIT #{size} OFFSET #{offset}
 	</select>
 	
@@ -132,11 +135,6 @@
 	    WHERE id = #{id}
 	</select>
 	
-	<!-- <select id="findMemberCoupons" resultMap="MemberCouponMap">
-	    SELECT *
-	    FROM member_coupon
-	    WHERE member_id = #{memberId}
-	</select> -->
 	<select id="findMemberCoupons" resultMap="MemberCouponMap">
 	    SELECT 
 	    	mc.*,
