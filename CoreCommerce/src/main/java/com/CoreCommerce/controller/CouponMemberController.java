@@ -56,7 +56,7 @@ public class CouponMemberController {
 	            myCoupons.stream()
 	                    .map(MemberCoupon::getCouponId)
 	                    .collect(Collectors.toList());
-
+	    
 	    model.addAttribute("myCouponIds", myCouponIds);
 	    model.addAttribute("coupons", coupons);
 	    model.addAttribute("myCoupons", myCoupons);
