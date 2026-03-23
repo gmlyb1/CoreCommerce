@@ -14,9 +14,13 @@
     <!-- ================= 쿠폰 반복 ================= -->
     <div th:each="coupon : ${coupons}"
          class="card shadow-sm rounded-4 p-4 mb-4 coupon-card"
-         th:classappend="${!coupon.coupon.active 
-                          or (coupon.coupon.totalQuantity > 0 
-                              and coupon.coupon.totalQuantity - coupon.coupon.issuedQuantity <= 0)} ? 'coupon-disabled'">
+         th:classappend="${
+             coupon.used ? ' coupon-used' :
+             (!coupon.coupon.active 
+              or (coupon.coupon.totalQuantity > 0 
+                  and coupon.coupon.totalQuantity - coupon.coupon.issuedQuantity <= 0))
+             ? ' coupon-disabled' : ''
+         }">
 
         <!-- ================= 쿠폰 헤더 ================= -->
         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -51,29 +55,28 @@
         </div>
 
         <div class="mb-2">
-            🛒 최소 주문 금액 : <span th:text="${#numbers.formatInteger(coupon.coupon.minOrderPrice,0,'COMMA')}"></span> 원
+            🛒 최소 주문 금액 :
+            <span th:text="${#numbers.formatInteger(coupon.coupon.minOrderPrice,0,'COMMA')}"></span> 원
         </div>
 
         <div class="mb-2">
             ⏰ 유효기간 :
-            <span th:text="${coupon.coupon.startDate}"></span> ~ <span th:text="${coupon.coupon.endDate}"></span>
+            <span th:text="${coupon.coupon.startDate}"></span> ~
+            <span th:text="${coupon.coupon.endDate}"></span>
         </div>
 
         <!-- ================= 쿠폰 상태 배지 ================= -->
         <div class="mb-3">
-            <!-- 이미 보유하고 사용 안 함 -->
             <span class="badge bg-secondary"
                   th:if="${myCouponIds.contains(coupon.id) and !coupon.used}">
                 ✅ 보유중
             </span>
 
-            <!-- 사용 완료 -->
             <span class="badge bg-danger"
                   th:if="${myCouponIds.contains(coupon.id) and coupon.used}">
                 ❌ 사용 완료
             </span>
 
-            <!-- 사용 가능 -->
             <span class="badge bg-success"
                   th:if="${!myCouponIds.contains(coupon.id) 
                            and coupon.coupon.active
@@ -82,13 +85,11 @@
                 사용 가능
             </span>
 
-            <!-- 사용 불가 -->
             <span class="badge bg-danger"
                   th:if="${!coupon.coupon.active and !myCouponIds.contains(coupon.id)}">
                 사용 불가
             </span>
 
-            <!-- 쿠폰 소진 -->
             <span class="badge bg-dark"
                   th:if="${coupon.coupon.totalQuantity > 0 
                            and coupon.coupon.totalQuantity - coupon.coupon.issuedQuantity <= 0 
@@ -99,7 +100,6 @@
 
         <!-- ================= 쿠폰 버튼 ================= -->
         <div class="text-end">
-            <!-- 발급 가능 -->
             <form method="post" th:action="@{/coupons/receive}"
                   th:if="${coupon.coupon.active 
                           and (coupon.coupon.totalQuantity == 0 
@@ -109,17 +109,21 @@
                 <button class="btn btn-primary rounded-pill px-4">🎟 쿠폰 받기</button>
             </form>
         </div>
+
+        <!-- ================= 사용완료 도장 ================= -->
+        <div class="coupon-stamp" th:if="${coupon.used}">
+            USED
+        </div>
+
     </div>
 
     <!-- ================= 페이지네이션 ================= -->
     <div>
         <ul class="pagination justify-content-center">
-            <!-- 이전 -->
             <li class="page-item" th:classappend="${pagination.first} ? 'disabled'">
                 <a class="page-link" th:href="@{/coupons/list(page=${pagination.page - 1})}">‹</a>
             </li>
 
-            <!-- 페이지 번호 -->
             <li class="page-item"
                 th:each="i : ${#numbers.sequence(
                     T(java.lang.Math).max(1, pagination.page - 2),
@@ -129,7 +133,6 @@
                 <a class="page-link" th:href="@{/coupons/list(page=${i})}" th:text="${i}"></a>
             </li>
 
-            <!-- 다음 -->
             <li class="page-item" th:classappend="${pagination.last} ? 'disabled'">
                 <a class="page-link" th:href="@{/coupons/list(page=${pagination.page + 1})}">›</a>
             </li>
@@ -151,12 +154,51 @@
     background: #f5f5f5;
 }
 
+/* 카드 기본 */
 .coupon-card {
     transition: all 0.2s;
+    position: relative;
 }
 .coupon-card:hover {
     transform: translateY(-3px);
     box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+/* ================= 사용완료 스타일 ================= */
+.coupon-used {
+    opacity: 0.75;
+    filter: grayscale(40%);
+}
+
+/* hover 막기 */
+.coupon-used:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+/* 도장 */
+.coupon-stamp {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-20deg);
+
+    border: 4px dashed #dc3545;
+    color: #dc3545;
+    font-size: 34px;
+    font-weight: 900;
+    padding: 12px 40px;
+
+    border-radius: 10px;
+    background: rgba(255,255,255,0.7);
+
+    letter-spacing: 4px;
+    text-transform: uppercase;
+
+    z-index: 10;
+    pointer-events: none;
+
+    box-shadow: 0 0 0 4px rgba(220,53,69,0.15);
 }
 </style>
 
