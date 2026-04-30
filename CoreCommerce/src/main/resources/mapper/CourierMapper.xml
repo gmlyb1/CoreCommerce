@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.CoreCommerce.repository.CourierRepository">
+	
+	<select id="selectCourierList">
+	    SELECT 
+	    	courier_no
+	    	,courier_name
+	    FROM courier 
+	    LIMIT #{size} OFFSET #{offset}
+	</select>
+	
+	<select id="selectCourierListAll">
+	    SELECT 
+		    courier_no
+		    ,courier_name
+	    FROM courier 
+	</select>
+	
+	<select id="countFindAll" resultType="int">
+		SELECT COUNT(*) FROM courier
+	</select>
+	
+	<insert id="insertCourier">
+		insert into courier
+		(
+			courier_no,
+			courier_name
+		)
+		values
+		(
+			 #{courier_no},
+			 #{courier_name}
+		)
+	
+	</insert>
+	
+	<delete id="deleteCourier">
+		delete from courier
+		where courier_no = #{courier_no}
+	</delete>
+	
+	
+</mapper>

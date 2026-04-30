@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout/head :: head"></head>
+
+<body>
+
+<div th:replace="layout/header :: header"></div>
+
+<div class="container mt-5" style="max-width:600px;">
+
+    <h3 class="mb-4">🎟 택배사 관리</h3>
+
+    <div class="card shadow-sm rounded-4 p-4">
+
+        <form method="post" action="/admin/courier/create">
+
+            <div class="mb-3">
+                <label class="form-label">택배사 이름</label>
+                <input type="text" name="courier_name"
+                       class="form-control" required>
+            </div>
+
+            <button type="submit"
+                    class="btn btn-success w-100">
+                생성
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<div th:replace="layout/footer :: footer"></div>
+
+</body>
+</html>

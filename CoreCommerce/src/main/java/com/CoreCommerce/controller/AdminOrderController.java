@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.CoreCommerce.domain.Courier;
 import com.CoreCommerce.domain.Member;
 import com.CoreCommerce.domain.Order;
 import com.CoreCommerce.domain.Pagination;
+import com.CoreCommerce.repository.CourierRepository;
 import com.CoreCommerce.repository.OrderRepository;
 import com.CoreCommerce.service.OrderService;
 
@@ -27,6 +29,7 @@ public class AdminOrderController {
 
     private final OrderRepository orderRepository;
 
+    private final CourierRepository courierRepository;
 
     // 주문 목록
     @GetMapping
@@ -51,8 +54,11 @@ public class AdminOrderController {
                         pagination.getOffset(),
                         pagination.getSize()
                 );
+        
+        List<Courier> courierList = courierRepository.selectCourierListAll();
 
         model.addAttribute("orders", orders);
+        model.addAttribute("courierList", courierList);
         model.addAttribute("pagination", pagination);
 
         return "admin/order-list";

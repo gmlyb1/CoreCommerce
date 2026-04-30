@@ -87,6 +87,12 @@
 						        💬 관리자 채팅방
 						    </a>
 						</li>
+						
+						<li th:if="${loginUser.role == 'MANAGER'}">
+						    <a class="dropdown-item" href="/admin/courier/list">
+						        🎟 택배사 관리
+						    </a>
+						</li>
 
                         <li>
                             <a class="dropdown-item" href="/wishlist/list">
@@ -210,74 +216,6 @@
                     data-bs-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
-            <!-- <div class="collapse navbar-collapse" id="navbarCollapse">
-
-                <div class="navbar-nav w-100 text-center">
-
-                    <a href="/"
-                       th:classappend="${#httpServletRequest.requestURI == '/'} ? 'active-line'"
-                       class="nav-link flex-fill py-3">
-                        홈
-                    </a>
-
-                    <a href="/product/list"
-                       th:classappend="${#httpServletRequest.requestURI.startsWith('/product')} ? 'active-line'"
-                       class="nav-link flex-fill py-3">
-                        상품
-                    </a>
-                    
-                    <a href="/chat/rooms"
-                       th:classappend="${#httpServletRequest.requestURI.startsWith('/chat/')} ? 'active-line'"
-                       class="nav-link flex-fill py-3"
-                       th:if="${loginUser != null}">
-                        채팅방
-                    </a>
-                    
-                     <a href="/order/mypage/my-orders"
-                       th:classappend="${#httpServletRequest.requestURI.startsWith('/order/mypage')} ? 'active-line'"
-                       th:if="${loginUser != null}"
-                       class="nav-link flex-fill py-3">
-                        주문상품
-                    </a>
-
-                    <a href="/coupons/list"
-                       th:classappend="${#httpServletRequest.requestURI.startsWith('/coupons')} ? 'active-line'"
-                       th:if="${loginUser != null}"
-                       class="nav-link flex-fill py-3">
-                        쿠폰
-                    </a>
-
-                    <a href="/notice"
-                       th:classappend="${#httpServletRequest.requestURI.startsWith('/notice')} ? 'active-line'"
-                       class="nav-link flex-fill py-3">
-                        공지사항
-                    </a>
-
-                    <a href="/inquiry/list"
-                       th:classappend="${#httpServletRequest.requestURI.startsWith('/inquiry')} ? 'active-line'"
-                       class="nav-link flex-fill py-3">
-                        1:1문의
-                    </a>
-
-                    <a href="/admin/notifications?type=INQUIRY"
-                       th:classappend="${#httpServletRequest.requestURI.startsWith('/admin/notifications')} ? 'active-line'"
-                       class="nav-link flex-fill py-3"
-                       th:if="${loginUser != null}">
-                        알림
-                    </a>
-                    <a th:href="${loginUser.role == 'MANAGER'} 
-					                ? @{/admin/notifications(type='INQUIRY')} 
-					                : @{/admin/notifications(type='CHAT')}"
-					   th:classappend="${#httpServletRequest.requestURI.startsWith('/admin/notifications')} ? 'active-line'"
-					   class="nav-link flex-fill py-3"
-					   th:if="${loginUser != null}">
-					    알림
-					</a>
-
-                </div>
-
-            </div> -->
             
             <div class="collapse navbar-collapse" id="navbarCollapse">
 			    <ul class="navbar-nav w-100 justify-content-center">
